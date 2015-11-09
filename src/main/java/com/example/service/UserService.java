@@ -1,10 +1,10 @@
 package com.example.service;
 
-import com.example.model.User;
+import com.example.model.entity.User;
 import com.example.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
-import org.hibernate.type.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.facebook.api.ImageType;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,7 +33,7 @@ public class UserService {
                 user.setFacebookToken(facebookToken);
             }
 
-            String pictureUrl = mFacebookService.getPictureUrl(facebookToken, facebookUserId, ImageType.INSTANCE);
+            String pictureUrl = mFacebookService.getPictureUrl(facebookToken, facebookUserId, ImageType.LARGE);
             user.setProfilePicture(pictureUrl);
 
             String email = mFacebookService.getUserEmail(facebookToken, facebookUserId);

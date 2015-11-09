@@ -3,9 +3,9 @@ package com.example.service;
 import com.example.config.FacebookConf;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.service.spi.ServiceException;
-import org.hibernate.type.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.ApiException;
+import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.support.URIBuilder;
@@ -42,7 +42,7 @@ public class FacebookService {
     public String getFullName(String accessToken, String userId) throws ServiceException {
         try {
             User user = getFacebookTemplate(accessToken).userOperations().getUserProfile(userId);
-            return user.getFirstName()+" "+user.getLastName();
+            return user.getFirstName()+ " " + user.getLastName();
         } catch(ApiException e) {
             e.printStackTrace();
             throw new ServiceException(e.getMessage());
