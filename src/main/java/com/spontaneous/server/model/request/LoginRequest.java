@@ -1,4 +1,4 @@
-package com.example.model.request;
+package com.spontaneous.server.model.request;
 
 /**
  * Created by USER1 on 09/11/2015.
@@ -8,6 +8,9 @@ public class LoginRequest {
     private String facebookUserId;
 
     private String facebookToken;
+
+    public LoginRequest() {
+    }
 
     public String getFacebookUserId() {
         return facebookUserId;

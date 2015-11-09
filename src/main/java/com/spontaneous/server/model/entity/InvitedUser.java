@@ -1,4 +1,4 @@
-package com.example.model.entity;
+package com.spontaneous.server.model.entity;
 
 /**
  * This class represents a user invited to an event.

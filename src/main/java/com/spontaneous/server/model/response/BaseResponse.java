@@ -1,4 +1,4 @@
-package com.example.model.response;
+package com.spontaneous.server.model.response;
 
 /**
  * Created by Eidan on 12/26/2014.

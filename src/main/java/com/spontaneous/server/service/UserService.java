@@ -1,7 +1,7 @@
-package com.example.service;
+package com.spontaneous.server.service;
 
-import com.example.model.entity.User;
-import com.example.repository.UserRepository;
+import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.ImageType;

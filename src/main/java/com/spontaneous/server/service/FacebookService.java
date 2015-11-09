@@ -1,6 +1,6 @@
-package com.example.service;
+package com.spontaneous.server.service;
 
-import com.example.config.FacebookConf;
+import com.spontaneous.server.config.FacebookConf;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.model.entity;
+package com.spontaneous.server.model.entity;
 
 import javax.persistence.*;
 import java.net.MalformedURLException;

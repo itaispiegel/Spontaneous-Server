@@ -1,7 +1,8 @@
-package com.example.model.entity;
+package com.spontaneous.server.model.entity;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 /**
@@ -23,6 +24,7 @@ public abstract class BaseEntity {
      * When the entity was created.
      */
     @Column(name = "creation_time")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     protected DateTime creationTime;
 
     public BaseEntity() {

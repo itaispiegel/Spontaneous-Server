@@ -1,17 +1,17 @@
-package com.example.controller;
+package com.spontaneous.server.controller;
 
-import com.example.config.BaseComponent;
-import com.example.model.entity.User;
-import com.example.model.request.LoginRequest;
-import com.example.model.response.BaseResponse;
-import com.example.model.response.ResponseCodes;
-import com.example.service.UserService;
+import com.spontaneous.server.config.BaseComponent;
+import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.model.request.LoginRequest;
+import com.spontaneous.server.model.response.BaseResponse;
+import com.spontaneous.server.model.response.ResponseCodes;
+import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by eidan on 5/23/15.
+ * User Controller.
  */
 @RestController
 @RequestMapping(value = "/users")
@@ -36,6 +36,6 @@ public class UserController extends BaseComponent {
     public BaseResponse findUserById(@PathVariable long id) {
         User user = mUserService.getUserById(id);
 
-        return new BaseResponse<User>(ResponseCodes.SUCCESS, user);
+        return new BaseResponse<>(ResponseCodes.SUCCESS, user);
     }
 }
