@@ -1,0 +1,33 @@
+spring:
+  main:
+    show-banner: false
+
+  datasource:
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  social:
+    facebook:
+      app-id: 1643579359242605
+      app-secret: fae2da42dc4b79b81a3dd72d4e2a763b
+
+---
+
+spring:
+  profiles: production
+
+  datasource:
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://ec2-54-247-170-228.eu-west-1.compute.amazonaws.com:5432/dcvd09qhto6ids?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+      username: vkssdduaxcpeel
+      password: e0-r6dzIb-xAH2pDGpMIHGN3bD
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update

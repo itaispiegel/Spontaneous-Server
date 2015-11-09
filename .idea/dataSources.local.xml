@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Spontaneous - PostgreSQL" uuid="90f442c9-1303-48b6-9f9a-86a4a514ba42">
+      <secret-storage>master_key</secret-storage>
+      <user-name>vkssdduaxcpeel</user-name>
+    </data-source>
+    <data-source name="Damp-Taiga" uuid="8ccc0561-ca9a-4dac-9abc-a32f5dff417b">
+      <secret-storage>master_key</secret-storage>
+      <first-sync>true</first-sync>
+      <user-name>cffbbitrljpnht</user-name>
+    </data-source>
+  </component>
+</project>

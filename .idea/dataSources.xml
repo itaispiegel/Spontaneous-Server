@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1614198333">
+    <data-source source="LOCAL" name="Spontaneous - PostgreSQL" uuid="90f442c9-1303-48b6-9f9a-86a4a514ba42">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-247-170-228.eu-west-1.compute.amazonaws.com:5432/dcvd09qhto6ids</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Damp-Taiga" uuid="8ccc0561-ca9a-4dac-9abc-a32f5dff417b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-247-79-142.eu-west-1.compute.amazonaws.com:5432/dvbenl3ta76u7</jdbc-url>
+    </data-source>
+  </component>
+</project>
