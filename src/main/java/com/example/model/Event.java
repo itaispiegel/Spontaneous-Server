@@ -10,13 +10,6 @@ import java.util.Date;
 public class Event {
 
     /**
-     * The id of the event.
-     */
-    @Id
-    @GeneratedValue
-    private long id;
-
-    /**
      * The title of the event.
      */
     @Column(name = "title")

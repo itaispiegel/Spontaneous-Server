@@ -14,4 +14,5 @@ import java.util.Collection;
 
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
+    User findByFacebookUserId(@Param(value = "facebookUserId") String facebookUserId);
 }

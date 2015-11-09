@@ -1,6 +1,7 @@
 package com.example.model;
 
 import javax.persistence.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
@@ -9,19 +10,24 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
     /**
-     * Id of the user.
+     * Facebook id of the user.
      */
-    @Id
-    @GeneratedValue
-    private long id;
+    @Column(name = "facebook_user_id", unique = true)
+    private String facebookUserId;
 
-    @Column(name = "name")
+    /**
+     * Facebook token of the user.
+     */
+    @Column(name = "facebook_token")
+    private String facebookToken;
+
     /**
      * The name of the user.
      */
+    @Column(name = "name")
     private String name;
 
     @Column(name = "email")
@@ -30,27 +36,35 @@ public class User {
      */
     private String email;
 
-    @Column(name = "profile_picture")
     /**
      * Profile picture URL of the user.
      */
+    @Column(name = "profile_picture")
     private URL profilePicture;
 
-    @Column(name = "birthday")
     /**
      * Birthday of the user.
      */
+    @Column(name = "birthday")
     private Date birthday;
 
     public User() {
     }
 
-    public long getId() {
-        return id;
+    public String getFacebookUserId() {
+        return facebookUserId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setFacebookUserId(String facebookUserId) {
+        this.facebookUserId = facebookUserId;
+    }
+
+    public String getFacebookToken() {
+        return facebookToken;
+    }
+
+    public void setFacebookToken(String facebookToken) {
+        this.facebookToken = facebookToken;
     }
 
     public String getName() {
@@ -75,6 +89,14 @@ public class User {
 
     public void setProfilePicture(URL profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        try {
+            this.profilePicture = new URL(profilePicture);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Date getBirthday() {
