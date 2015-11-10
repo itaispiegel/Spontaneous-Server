@@ -7,7 +7,10 @@ import java.util.Date;
 /**
  * This class represents an event.
  */
-public class Event {
+
+@Entity
+@Table(name = "events")
+public class Event extends BaseEntity {
 
     /**
      * The title of the event.
@@ -46,7 +49,4 @@ public class Event {
      */
     @Column(name = "where")
     private String where;
-
-    public Event() {
-    }
 }

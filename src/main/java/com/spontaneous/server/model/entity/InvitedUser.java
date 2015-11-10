@@ -1,23 +1,34 @@
 package com.spontaneous.server.model.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 /**
  * This class represents a user invited to an event.
  */
-public class InvitedUser {
+
+@Entity
+@Table(name = "invited_users")
+public class InvitedUser extends BaseEntity {
 
     /**
      * The user data.
      */
+    @OneToOne
     private User user;
 
     /**
      * User status in the event.
      */
+    @Column(name = "status")
     private String status;
 
     /**
      * Is the user attending?
      */
+    @Column(name = "is_attending")
     private Boolean isAttending;
 
     public InvitedUser() {

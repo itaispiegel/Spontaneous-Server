@@ -1,5 +1,8 @@
 package com.spontaneous.server.model.entity;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,8 +48,8 @@ public class User extends BaseEntity {
     /**
      * Birthday of the user.
      */
-    @Column(name = "birthday")
-    private Date birthday;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime birthday;
 
     public User() {
     }
@@ -99,11 +102,11 @@ public class User extends BaseEntity {
         }
     }
 
-    public Date getBirthday() {
+    public DateTime getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(DateTime birthday) {
         this.birthday = birthday;
     }
 
