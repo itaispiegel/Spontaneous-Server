@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/spontaneous-server-1.0-SNAPSHOT.jar --spring.profiles.active=production
+web: java -Dserver.port=$PORT -jar target/spontaneous-server-0.0.1-SNAPSHOT.jar --spring.profiles.active=production

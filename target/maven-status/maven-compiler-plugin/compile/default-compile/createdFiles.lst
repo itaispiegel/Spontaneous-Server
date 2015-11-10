@@ -1,0 +1,16 @@
+com\spontaneous\server\model\entity\User.class
+com\spontaneous\server\model\response\BaseResponse.class
+com\spontaneous\server\controller\HelloWorldController.class
+com\spontaneous\server\model\request\LoginRequest.class
+com\spontaneous\server\model\entity\BaseEntity.class
+com\spontaneous\server\service\FacebookService$MyFacebookTemplate.class
+com\spontaneous\server\config\BaseComponent.class
+com\spontaneous\server\model\entity\InvitedUser.class
+com\spontaneous\server\model\response\ResponseCodes.class
+com\spontaneous\server\repository\UserRepository.class
+com\spontaneous\server\config\FacebookConf.class
+com\spontaneous\server\model\entity\Event.class
+com\spontaneous\server\SpontaneousApplication.class
+com\spontaneous\server\util\GsonFactory.class
+com\spontaneous\server\service\FacebookService.class
+com\spontaneous\server\service\UserService.class
