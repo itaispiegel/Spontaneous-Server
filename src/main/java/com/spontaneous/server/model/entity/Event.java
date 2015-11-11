@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * This class represents an event.
+ * This class represents an event persisted in the database.
  */
-
 @Entity
 @Table(name = "events")
 public class Event extends BaseEntity {

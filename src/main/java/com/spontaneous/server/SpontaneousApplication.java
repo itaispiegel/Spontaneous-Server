@@ -7,6 +7,7 @@ import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
+@EnableConfigurationProperties
 public class SpontaneousApplication {
 
     public static void main(String[] args) {

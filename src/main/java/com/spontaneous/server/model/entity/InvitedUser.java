@@ -7,14 +7,14 @@ import javax.persistence.Table;
 
 /**
  * This class represents a user invited to an event.
+ * This object contains data of the user specific to the event, and a pointer to the user itself.
  */
-
 @Entity
 @Table(name = "invited_users")
 public class InvitedUser extends BaseEntity {
 
     /**
-     * The user data.
+     * Pointer to the user itself.
      */
     @OneToOne
     private User user;
@@ -31,29 +31,51 @@ public class InvitedUser extends BaseEntity {
     @Column(name = "is_attending")
     private Boolean isAttending;
 
+    /**
+     * Create an empty invited user.
+     */
     public InvitedUser() {
     }
 
+    /**
+     * @return user data.
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Sets the user pointer.
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * @return user status on the event.
+     * <br/>e.g: "Looking forward for it!", "It's gonna be LEGENDARY" and etc.
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Sets user status on the event.
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public Boolean getIsAttending() {
+    /**
+     * @return whether the user is attending the event.
+     */
+    public Boolean isAttending() {
         return isAttending;
     }
 
+    /**
+     * Sets whether the user is attending the event.
+     */
     public void setIsAttending(Boolean isAttending) {
         this.isAttending = isAttending;
     }

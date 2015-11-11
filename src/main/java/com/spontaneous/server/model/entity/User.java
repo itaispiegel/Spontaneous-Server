@@ -51,49 +51,85 @@ public class User extends BaseEntity {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime birthday;
 
+    /**
+     * Create an empty user object.
+     */
     public User() {
     }
 
+    /**
+     * @return facebook user id.
+     */
     public String getFacebookUserId() {
         return facebookUserId;
     }
 
+    /**
+     * Sets the facebook user id.
+     */
     public void setFacebookUserId(String facebookUserId) {
         this.facebookUserId = facebookUserId;
     }
 
+    /**
+     * @return facebook token of the user.
+     */
     public String getFacebookToken() {
         return facebookToken;
     }
 
+    /**
+     * Sets the facebook token of the user.
+     */
     public void setFacebookToken(String facebookToken) {
         this.facebookToken = facebookToken;
     }
 
+    /**
+     * @return the name of the user.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the user.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return the email of the user.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email of the user.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * @return profile picture URL of the user.
+     */
     public URL getProfilePicture() {
         return profilePicture;
     }
 
+    /**
+     * Sets the profile picture of the user.
+     */
     public void setProfilePicture(URL profilePicture) {
         this.profilePicture = profilePicture;
     }
 
+    /**
+     * Sets the profile picture of the user.
+     */
     public void setProfilePicture(String profilePicture) {
         try {
             this.profilePicture = new URL(profilePicture);
@@ -102,14 +138,23 @@ public class User extends BaseEntity {
         }
     }
 
+    /**
+     * @return birthday of the user.
+     */
     public DateTime getBirthday() {
         return birthday;
     }
 
+    /**
+     * Sets the birthday of the user.
+     */
     public void setBirthday(DateTime birthday) {
         this.birthday = birthday;
     }
 
+    /**
+     * Return a string representation of the user.
+     */
     @Override
     public String toString() {
         return "User{" +

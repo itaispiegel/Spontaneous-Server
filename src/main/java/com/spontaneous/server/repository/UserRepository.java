@@ -8,7 +8,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 /**
  * This class is used for data access with the database.
  */
-
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByFacebookUserId(@Param(value = "facebookUserId") String facebookUserId);

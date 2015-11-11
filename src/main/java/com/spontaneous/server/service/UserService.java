@@ -33,17 +33,8 @@ public class UserService {
                 user.setFacebookToken(facebookToken);
             }
 
-            String pictureUrl = mFacebookService.getPictureUrl(facebookToken, facebookUserId, ImageType.LARGE);
-            user.setProfilePicture(pictureUrl);
-
-            String email = mFacebookService.getUserEmail(facebookToken, facebookUserId);
-            user.setEmail(email);
-
-            String fullName = mFacebookService.getFullName(facebookToken, facebookUserId);
-            user.setName(fullName);
-
-            user = mUserDao.save(user);
-            return user;
+            mFacebookService.getUserDetails(user, facebookToken, facebookUserId);
+            return mUserDao.save(user);
         } catch(ServiceException e) {
             e.printStackTrace();
             throw e;

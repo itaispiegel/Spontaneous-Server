@@ -27,26 +27,45 @@ public abstract class BaseEntity {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     protected DateTime creationTime;
 
+    /**
+     * Create a new empty entity.
+     */
     public BaseEntity() {
         this.creationTime = new DateTime();
     }
 
+    /**
+     * @return the id number of the entity.
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Sets the entity id number.
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return when the entity was created.
+     */
     public DateTime getCreationTime() {
         return creationTime;
     }
 
+    /**
+     * Sets the time that the entity was created.
+     */
     public void setCreationTime(DateTime creationTime) {
         this.creationTime = creationTime;
     }
 
+    /**
+     * @param obj to compare.
+     * @return whether the given entity is equal to this entity.
+     */
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
