@@ -4,11 +4,10 @@ import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.facebook.api.ImageType;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by eidan on 5/23/15.
+ * This class is part of the service layer of the application and is used for user manipulation in the database.
  */
 @Service
 public class UserService {
@@ -33,7 +32,7 @@ public class UserService {
                 user.setFacebookToken(facebookToken);
             }
 
-            mFacebookService.getUserDetails(user, facebookToken, facebookUserId);
+            user = mFacebookService.getUserDetails(user, facebookToken, facebookUserId);
             return mUserDao.save(user);
         } catch(ServiceException e) {
             e.printStackTrace();

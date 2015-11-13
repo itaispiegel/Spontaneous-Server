@@ -1,15 +1,16 @@
 package com.spontaneous.server.model.request;
 
 /**
- * Created by USER1 on 09/11/2015.
+ * This class represents an HTTP JSON request to login to the application.
+ * Contains Facebook user id and Facebook access token.
  */
-public class LoginRequest {
+public class FacebookLoginRequest {
 
     private String facebookUserId;
 
     private String facebookToken;
 
-    public LoginRequest() {
+    public FacebookLoginRequest() {
     }
 
     public String getFacebookUserId() {
@@ -30,7 +31,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRequest{" +
+        return "FacebookLoginRequest{" +
                 "facebookUserId='" + facebookUserId + '\'' +
                 ", facebookToken='" + facebookToken + '\'' +
                 '}';

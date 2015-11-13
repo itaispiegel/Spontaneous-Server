@@ -2,33 +2,32 @@ package com.spontaneous.server.controller;
 
 import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.model.entity.User;
-import com.spontaneous.server.model.request.LoginRequest;
+import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.model.response.BaseResponse;
-import com.spontaneous.server.model.response.ResponseCodes;
 import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by eidan on 5/23/15.
+ * This is a REST controller for user operations.
  */
 @RestController
-@RequestMapping(value = "/users-api")
+@RequestMapping(value = "/API/users")
 public class UserController extends BaseComponent {
 
     @Autowired
     private UserService mUserService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public BaseResponse login(@RequestBody LoginRequest loginRequest) {
+    public BaseResponse login(@RequestBody FacebookLoginRequest loginRequest) {
         try {
-            mLogger.info("LoginRequest = {}", loginRequest);
+            mLogger.info("FacebookLoginRequest = {}", loginRequest);
             User user = mUserService.login(loginRequest.getFacebookUserId(), loginRequest.getFacebookToken());
             mLogger.info("Login response = {}", user);
-            return new BaseResponse<>(ResponseCodes.SUCCESS, user);
+            return new BaseResponse<>(BaseResponse.SUCCESS, user);
         } catch(ServiceException e) {
-            return new BaseResponse<>(ResponseCodes.INTERNAL_ERROR, e.getMessage());
+            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
         }
     }
 
@@ -36,6 +35,6 @@ public class UserController extends BaseComponent {
     public BaseResponse findUserById(@PathVariable long id) {
         User user = mUserService.getUserById(id);
 
-        return new BaseResponse<>(ResponseCodes.SUCCESS, user);
+        return new BaseResponse<>(BaseResponse.SUCCESS, user);
     }
 }

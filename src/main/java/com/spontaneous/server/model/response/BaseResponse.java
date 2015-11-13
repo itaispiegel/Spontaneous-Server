@@ -20,17 +20,24 @@ public class BaseResponse<T> {
      */
     private T body;
 
+    // -----Response codes-----
+
     /**
-     * Create an empty response.
+     * Request was success.
      */
-    public BaseResponse() {
-    }
+    public static final int SUCCESS = 0;
+
+    /**
+     * Request ended with error.
+     */
+    public static final int INTERNAL_ERROR = -1;
+    //----------
 
     /**
      * Create a response with a body. Default response code is ResponseCodes.SUCCESS.
      */
     public BaseResponse(int statusCode, T body) {
-        this.statusCode = ResponseCodes.SUCCESS;
+        this.statusCode = SUCCESS;
         this.body = body;
     }
 

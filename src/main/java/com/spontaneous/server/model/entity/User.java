@@ -153,6 +153,13 @@ public class User extends BaseEntity {
     }
 
     /**
+     * Sets the birthday of the user.
+     */
+    public void setBirthday(String birthday) {
+        this.birthday = new DateTime(birthday);
+    }
+
+    /**
      * Return a string representation of the user.
      */
     @Override
