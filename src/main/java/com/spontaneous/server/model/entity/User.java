@@ -3,10 +3,9 @@ package com.spontaneous.server.model.entity;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
-import javax.persistence.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * This class represents a user persisted in the database.
@@ -33,23 +32,35 @@ public class User extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
     /**
      * The email of the user.
      */
+    @Column(name = "email")
     private String email;
 
     /**
      * Profile picture URL of the user.
      */
     @Column(name = "profile_picture")
-    private URL profilePicture;
+    private String profilePicture;
 
     /**
      * Birthday of the user.
      */
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime birthday;
+
+    /**
+     * Phone number of the user.
+     */
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    /**
+     * Is the user a male or a female.
+     */
+    @Column(name = "gender")
+    private Gender gender;
 
     /**
      * Create an empty user object.
@@ -116,26 +127,15 @@ public class User extends BaseEntity {
     /**
      * @return profile picture URL of the user.
      */
-    public URL getProfilePicture() {
+    public String getProfilePicture() {
         return profilePicture;
     }
 
     /**
      * Sets the profile picture of the user.
      */
-    public void setProfilePicture(URL profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    /**
-     * Sets the profile picture of the user.
-     */
     public void setProfilePicture(String profilePicture) {
-        try {
-            this.profilePicture = new URL(profilePicture);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        this.profilePicture = profilePicture;
     }
 
     /**
@@ -160,16 +160,51 @@ public class User extends BaseEntity {
     }
 
     /**
+     * @return the phone number of the user.
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Set the phone number of the user.
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * @return whether the user is a male or female.
+     */
+    public Gender getGender() {
+        return gender;
+    }
+
+    /**
+     * Set whether the user is a male or a female.
+     */
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    /**
      * Return a string representation of the user.
      */
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "facebookUserId='" + facebookUserId + '\'' +
+                ", facebookToken='" + facebookToken + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", profilePicture=" + profilePicture +
+                ", profilePicture='" + profilePicture + '\'' +
                 ", birthday=" + birthday +
-                '}';
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender=" + gender +
+                "} " + super.toString();
+    }
+
+    public enum Gender {
+        Male, Female
     }
 }

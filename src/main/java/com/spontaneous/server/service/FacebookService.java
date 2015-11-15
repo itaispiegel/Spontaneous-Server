@@ -1,7 +1,6 @@
 package com.spontaneous.server.service;
 
 import facebook4j.*;
-import facebook4j.auth.AccessToken;
 import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class FacebookService {
 
     private static Facebook getInstance(String accessToken) {
 
-        if(facebook == null) {
+        if (facebook == null) {
             ConfigurationBuilder cb = new ConfigurationBuilder()
                     .setOAuthAppSecret(APP_SECRET)
                     .setOAuthAppId(APP_ID)
@@ -75,7 +74,7 @@ public class FacebookService {
     public com.spontaneous.server.model.entity.User getUserDetails(com.spontaneous.server.model.entity.User user,
                                                                    String accessToken, String facebookUserId) {
 
-        user.setProfilePicture(fetchPictureUrl(accessToken, facebookUserId));
+        user.setProfilePicture(fetchPictureUrl(accessToken, facebookUserId).toString());
         user.setEmail(getUserEmail(accessToken, facebookUserId));
         user.setName(getFullName(accessToken, facebookUserId));
         user.setBirthday(getUserBirthday(accessToken, facebookUserId));
