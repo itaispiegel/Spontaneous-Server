@@ -7,12 +7,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/spontaneous
     username: postgres
     password: 1234
+    validation-query: SELECT 1;
+    test-on-borrow: true
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 ---
 
@@ -24,9 +26,11 @@ spring:
     url: jdbc:postgresql://ec2-54-247-170-228.eu-west-1.compute.amazonaws.com/dcvd09qhto6ids?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
     username: vkssdduaxcpeel
     password: e0-r6dzIb-xAH2pDGpMIHGN3bD
+    validation-query: SELECT 1;
+    test-on-borrow: true
 
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="dataSourceStorage">
-  <data-source name="Spontaneous - PostgreSQL" uuid="90f442c9-1303-48b6-9f9a-86a4a514ba42">
-    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
-  </data-source>
-  <data-source name="Damp-Taiga" uuid="8ccc0561-ca9a-4dac-9abc-a32f5dff417b">
-    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
-  </data-source>
-</component>

@@ -1,5 +1,8 @@
 package com.spontaneous.server.model.entity;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
@@ -40,8 +43,8 @@ public class Event extends BaseEntity {
     /**
      * When is the event.
      */
-    @Column(name = "when")
-    private Date when;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime birthday;
 
     /**
      * Where is the event.
