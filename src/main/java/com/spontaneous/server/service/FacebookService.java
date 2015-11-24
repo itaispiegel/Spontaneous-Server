@@ -1,11 +1,11 @@
 package com.spontaneous.server.service;
 
+import com.spontaneous.server.config.FacebookConf;
 import facebook4j.*;
 import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.net.URL;
 
 /**
  * This class is part of the service layer of the application and is used for Facebook integration with the application.
@@ -13,17 +13,34 @@ import java.net.URL;
 @Service
 public class FacebookService {
 
+    /**
+     * Facebook configuration class.
+     * Contains app secret and app id.
+     */
+    @Autowired
+    private FacebookConf mFacebookConf;
+
+    /**
+     * Facebook methods.
+     */
     private static Facebook facebook;
 
-    private static final String APP_ID = "1643579359242605";
-    private static final String APP_SECRET = "fae2da42dc4b79b81a3dd72d4e2a763b";
+    /**
+     * User fields to receive.
+     */
+    private static final String[] USER_FIELDS = {
+            "email", "birthday", "name", "gender", "picture"
+    };
 
-    private static Facebook getInstance(String accessToken) {
+    /**
+     * Get the Facebook instance. implements the singleton pattern.
+     */
+    private Facebook getInstance(String accessToken) {
 
         if (facebook == null) {
             ConfigurationBuilder cb = new ConfigurationBuilder()
-                    .setOAuthAppSecret(APP_SECRET)
-                    .setOAuthAppId(APP_ID)
+                    .setOAuthAppSecret(mFacebookConf.getAppSecret())
+                    .setOAuthAppId(mFacebookConf.getAppId())
                     .setOAuthAccessToken(accessToken);
 
             facebook = new FacebookFactory(cb.build()).getInstance();
@@ -32,54 +49,62 @@ public class FacebookService {
         return facebook;
     }
 
-    public String getUserEmail(String accessToken, String userId) throws ServiceException {
+    /**
+     * Get user by user id and access token.
+     */
+    private User getUser(String accessToken, String userId) throws ServiceException {
         try {
-            User user = getInstance(accessToken).getUser(userId, new Reading().fields("email"));
-            return user.getEmail();
+            return getInstance(accessToken)
+                    .getUser(userId, new Reading().fields(USER_FIELDS));
         } catch (FacebookException e) {
             e.printStackTrace();
             throw new ServiceException(e.getMessage());
         }
     }
 
-    public String getFullName(String accessToken, String userId) throws ServiceException {
+    /**
+     * Get user profile picture by user id and access token.
+     */
+    public String getProfilePicture(String accessToken, String userId) {
         try {
-            User user = getInstance(accessToken).getUser(userId, new Reading().fields("name"));
-            return user.getName();
+            return getInstance(accessToken)
+                    .getPictureURL(userId, PictureSize.large)
+                    .toString();
+
         } catch (FacebookException e) {
             e.printStackTrace();
             throw new ServiceException(e.getMessage());
         }
     }
 
-    public String getUserBirthday(String accessToken, String userId) throws ServiceException {
-        try {
-            User user = getInstance(accessToken).getUser(userId, new Reading().fields("birthday"));
-            return user.getBirthday();
-        } catch (FacebookException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    public URL fetchPictureUrl(String accessToken, String userId) {
-        try {
-            return getInstance(accessToken).getPictureURL(userId, PictureSize.large);
-        } catch (FacebookException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    public com.spontaneous.server.model.entity.User getUserDetails(com.spontaneous.server.model.entity.User user,
+    /**
+     * Set user details by user id and access token.
+     */
+    public com.spontaneous.server.model.entity.User setUserDetails(com.spontaneous.server.model.entity.User user,
                                                                    String accessToken, String facebookUserId) {
 
-        user.setProfilePicture(fetchPictureUrl(accessToken, facebookUserId).toString());
-        user.setEmail(getUserEmail(accessToken, facebookUserId));
-        user.setName(getFullName(accessToken, facebookUserId));
-        user.setBirthday(getUserBirthday(accessToken, facebookUserId));
+        User facebookUser = getUser(accessToken, facebookUserId);
+
+        user.setProfilePicture(getProfilePicture(accessToken, facebookUserId));
+        user.setEmail(facebookUser.getEmail());
+        user.setName(facebookUser.getName());
+        user.setBirthday(facebookUser.getBirthday());
+
+        // Set user gender
+        if (facebookUser.getGender().equalsIgnoreCase("male")) {
+            user.setGender(
+                    com.spontaneous.server.model.entity.User.Gender.Male
+            );
+        } else if (facebookUser.getGender().equalsIgnoreCase("female")) {
+            user.setGender(
+                    com.spontaneous.server.model.entity.User.Gender.Female
+            );
+        } else {
+            user.setGender(
+                    com.spontaneous.server.model.entity.User.Gender.Unspecified
+            );
+        }
 
         return user;
     }
-
 }

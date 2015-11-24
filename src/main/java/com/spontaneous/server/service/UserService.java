@@ -32,7 +32,7 @@ public class UserService {
                 user.setFacebookToken(facebookToken);
             }
 
-            user = mFacebookService.getUserDetails(user, facebookToken, facebookUserId);
+            user = mFacebookService.setUserDetails(user, facebookToken, facebookUserId);
             return mUserDao.save(user);
         } catch(ServiceException e) {
             e.printStackTrace();

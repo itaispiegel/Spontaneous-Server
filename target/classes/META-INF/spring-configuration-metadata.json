@@ -1,8 +1,0 @@
-{
-  "groups": [{
-    "name": "spring.social.facebook",
-    "type": "com.spontaneous.server.config.FacebookConf",
-    "sourceType": "com.spontaneous.server.config.FacebookConf"
-  }],
-  "properties": []
-}
