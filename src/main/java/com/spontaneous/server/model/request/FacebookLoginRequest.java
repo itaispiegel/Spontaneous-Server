@@ -6,10 +6,19 @@ package com.spontaneous.server.model.request;
  */
 public class FacebookLoginRequest {
 
+    /**
+     * Facebook id of the user.
+     */
     private String facebookUserId;
 
+    /**
+     * Facebook token of the user.
+     */
     private String facebookToken;
 
+    /**
+     * Create a new request.
+     */
     public FacebookLoginRequest() {
     }
 

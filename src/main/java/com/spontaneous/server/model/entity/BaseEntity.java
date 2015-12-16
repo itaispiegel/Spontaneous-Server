@@ -6,9 +6,9 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 /**
- * Created by USER1 on 09/11/2015.
+ * This is a Base Entity template.
+ * Contains id and creation time fields.
  */
-
 @MappedSuperclass
 public abstract class BaseEntity {
 

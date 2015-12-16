@@ -10,5 +10,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 @RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    /**
+     * Get a user entity given his Facebook user id.
+     * @param facebookUserId The Facebook id of the user.
+     * @return The user instance.
+     */
     User findByFacebookUserId(@Param(value = "facebookUserId") String facebookUserId);
 }

@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * This class represents an event persisted in the database.
@@ -31,6 +30,7 @@ public class Event extends BaseEntity {
      * One event has one host.
      */
     @OneToOne
+    @JoinColumn(name = "user_id")
     private User host;
 
     /**
@@ -38,17 +38,19 @@ public class Event extends BaseEntity {
      * One event has many users attending.
      */
     @OneToMany
+    @CollectionTable(name = "invited_users", joinColumns = @JoinColumn(name = "user_id"))
     private Collection<InvitedUser> invitedUsers;
 
     /**
-     * When is the event.
+     * When the event is.
      */
+    @Column(name = "date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime birthday;
+    private DateTime date;
 
     /**
-     * Where is the event.
+     * Where the event is.
      */
-    @Column(name = "where")
-    private String where;
+    @Column(name = "location")
+    private String location;
 }

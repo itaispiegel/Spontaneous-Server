@@ -19,18 +19,34 @@ public class UserController extends BaseComponent {
     @Autowired
     private UserService mUserService;
 
+    /**
+     * Login the user given a FacebookLoginRequest.
+     *
+     * @param loginRequest - Facebook login request.
+     * @return Response saying whether the login was successful, and the user details.
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public BaseResponse login(@RequestBody FacebookLoginRequest loginRequest) {
+
         try {
+
             mLogger.info("FacebookLoginRequest = {}", loginRequest);
+
             User user = mUserService.login(loginRequest.getFacebookUserId(), loginRequest.getFacebookToken());
+
             mLogger.info("Login response = {}", user);
             return new BaseResponse<>(BaseResponse.SUCCESS, user);
-        } catch(ServiceException e) {
+
+        } catch (ServiceException e) {
             return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
         }
     }
 
+    /**
+     * Find a user based on the given id.
+     * @param id of the user.
+     * @return The user instance.
+     */
     @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
     public BaseResponse findUserById(@PathVariable long id) {
         User user = mUserService.getUserById(id);

@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by Itai on 31-May-15.
+ * Just a controller for testing and playing around.
  */
-
 @RestController
 @RequestMapping(value = "/hello")
 public class HelloWorldController extends BaseComponent {
