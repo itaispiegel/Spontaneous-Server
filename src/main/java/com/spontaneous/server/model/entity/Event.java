@@ -4,7 +4,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * This class represents an event persisted in the database.
@@ -12,6 +12,21 @@ import java.util.Collection;
 @Entity
 @Table(name = "events")
 public class Event extends BaseEntity {
+
+    /**
+     * Host user of the event.
+     * One event has one host.
+     */
+    @OneToOne
+    @JoinColumn(name = "host_user_id")
+    private User host;
+
+    /**
+     * Users attending to the event.
+     * One event has many users attending.
+     */
+    @OneToMany(mappedBy = "event")
+    private List<InvitedUser> invitedUsers;
 
     /**
      * The title of the event.
@@ -24,22 +39,6 @@ public class Event extends BaseEntity {
      */
     @Column(name = "description")
     private String description;
-
-    /**
-     * Host user of the event.
-     * One event has one host.
-     */
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User host;
-
-    /**
-     * Users attending to the event.
-     * One event has many users attending.
-     */
-    @OneToMany
-    @CollectionTable(name = "invited_users", joinColumns = @JoinColumn(name = "user_id"))
-    private Collection<InvitedUser> invitedUsers;
 
     /**
      * When the event is.

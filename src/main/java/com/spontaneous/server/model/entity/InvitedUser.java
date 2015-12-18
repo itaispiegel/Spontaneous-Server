@@ -1,23 +1,27 @@
 package com.spontaneous.server.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * This class represents a user invited to an event.
- * This object contains data of the user specific to the event, and a pointer to the user itself.
+ * This object contains data of the user specific to the event, and a reference to the user itself.
  */
 @Entity
 @Table(name = "invited_users")
 public class InvitedUser extends BaseEntity {
 
     /**
-     * Pointer to the user itself.
+     * Reference to the user itself.
      */
     @OneToOne
     private User user;
+
+    /**
+     * Reference to the event the user is going to.
+     */
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     /**
      * User status in the event.
@@ -45,7 +49,7 @@ public class InvitedUser extends BaseEntity {
     }
 
     /**
-     * Sets the user pointer.
+     * Sets the user reference.
      */
     public void setUser(User user) {
         this.user = user;

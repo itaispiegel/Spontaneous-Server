@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/API/events")
-public class EventControlloer extends BaseComponent {
+public class EventController extends BaseComponent {
 
     @Autowired
     private EventService mEventService;
