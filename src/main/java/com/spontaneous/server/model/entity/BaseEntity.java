@@ -2,6 +2,7 @@ package com.spontaneous.server.model.entity;
 
 import javax.persistence.*;
 
+import com.spontaneous.server.util.GsonFactory;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -78,5 +79,10 @@ public abstract class BaseEntity {
         BaseEntity that = (BaseEntity) obj;
 
         return getId() == that.getId();
+    }
+
+    @Override
+    public String toString() {
+        return GsonFactory.getGson().toJson(this);
     }
 }
