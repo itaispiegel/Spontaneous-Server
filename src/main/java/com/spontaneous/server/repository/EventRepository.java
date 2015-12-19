@@ -24,6 +24,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     /**
      * Retrieve a list of events relevant to the given user.
+     * Order from oldest event to newest event.
      *
      * @param id of the user.
      * @return List of events the user is invited to.
@@ -31,6 +32,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT DISTINCT e FROM Event e " +
             "INNER JOIN e.invitedUsers i " +
             "WHERE i.user.id = :user_id " +
-            "ORDER BY e.id DESC")
+            "ORDER BY e.creationTime DESC")
     List<Event> findByInvitedUser(@Param(value = "user_id") long id);
 }
