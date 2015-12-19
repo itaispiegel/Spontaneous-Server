@@ -19,19 +19,19 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    protected long id;
+    private long id;
 
     /**
      * When the entity was created.
      */
     @Column(name = "creation_time")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    protected DateTime creationTime;
+    private DateTime creationTime;
 
     /**
      * Create a new empty entity.
      */
-    public BaseEntity() {
+    BaseEntity() {
         this.creationTime = new DateTime();
     }
 
@@ -67,11 +67,13 @@ public abstract class BaseEntity {
      * @param obj to compare.
      * @return whether the given entity is equal to this entity.
      */
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
             return false;
         }
+
         if (this == obj) {
             return true;
         }

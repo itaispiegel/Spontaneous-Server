@@ -7,5 +7,5 @@ import org.slf4j.LoggerFactory;
  * A base component contains a logger instance.
  */
 public class BaseComponent {
-    protected Logger mLogger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger mLogger = LoggerFactory.getLogger(this.getClass());
 }

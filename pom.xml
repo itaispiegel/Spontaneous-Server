@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>spotaneous-server</name>
+	<name>spontaneous-server</name>
 	<description>This is a server application for event planning.</description>
 
 	<parent>

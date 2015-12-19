@@ -6,7 +6,6 @@ import com.spontaneous.server.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +19,7 @@ public class EventService {
 
     /**
      * Store event in database.
+     *
      * @param event to store.
      * @return The stored event.
      */
@@ -28,12 +28,10 @@ public class EventService {
     }
 
     /**
-     * @return Events relating to users (hosting/invited to).
+     * @return Events relating to given user (hosting/invited to).
      */
     public List<Event> getUserEvents(User user) {
-        ArrayList<Event> events = new ArrayList<>();
-
-        return events;
+        return mEventRepository.findByInvitedUser(user.getId());
     }
 
 }

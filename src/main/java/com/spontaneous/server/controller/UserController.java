@@ -35,10 +35,10 @@ public class UserController extends BaseComponent {
             User user = mUserService.login(loginRequest.getFacebookUserId(), loginRequest.getFacebookToken());
 
             mLogger.info("Login response = {}", user);
-            return new BaseResponse<>(BaseResponse.SUCCESS, user);
+            return new BaseResponse<>(user);
 
         } catch (ServiceException e) {
-            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
+            return new BaseResponse<>(e.getMessage());
         }
     }
 
@@ -51,6 +51,6 @@ public class UserController extends BaseComponent {
     public BaseResponse findUserById(@PathVariable long id) {
         User user = mUserService.getUserById(id);
 
-        return new BaseResponse<>(BaseResponse.SUCCESS, user);
+        return new BaseResponse<>(user);
     }
 }

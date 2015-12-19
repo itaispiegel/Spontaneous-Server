@@ -1,6 +1,7 @@
 package com.spontaneous.server.repository;
 
 import com.spontaneous.server.model.entity.Event;
+import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

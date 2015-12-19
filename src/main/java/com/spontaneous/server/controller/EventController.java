@@ -30,10 +30,10 @@ public class EventController extends BaseComponent {
             mLogger.info("Create Event Request {}", event);
             event = mEventService.createEvent(event);
 
-            return new BaseResponse<>(BaseResponse.SUCCESS, event);
+            return new BaseResponse<>(event);
 
         } catch (ServiceException e) {
-            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
+            return new BaseResponse<>(e.getMessage());
         }
 
     }
