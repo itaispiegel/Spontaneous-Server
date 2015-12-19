@@ -1,7 +1,6 @@
 package com.spontaneous.server.repository;
 
 import com.spontaneous.server.model.entity.Event;
-import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,9 +28,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param id of the user.
      * @return List of events the user is invited to.
      */
-    @Query(value = "SELECT events.* FROM events " +
-            "INNER JOIN invited_users " +
-            "ON events.id = invited_users.event_id " +
-            "WHERE invited_users.user_id = :user_id", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT e FROM Event e " +
+            "INNER JOIN e.invitedUsers i " +
+            "WHERE i.user.id = :user_id " +
+            "ORDER BY e.id DESC")
     List<Event> findByInvitedUser(@Param(value = "user_id") long id);
 }
