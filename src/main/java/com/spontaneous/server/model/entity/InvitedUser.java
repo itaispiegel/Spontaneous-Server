@@ -13,7 +13,7 @@ public class InvitedUser extends BaseEntity {
     /**
      * Reference to the user itself.
      */
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private User user;
 
     /**
@@ -42,7 +42,7 @@ public class InvitedUser extends BaseEntity {
     }
 
     /**
-     * @return user data.
+     * @return User reference.
      */
     public User getUser() {
         return user;
@@ -53,6 +53,20 @@ public class InvitedUser extends BaseEntity {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * @return Event reference.
+     */
+    public Event getEvent() {
+        return event;
+    }
+
+    /**
+     * Sets the event reference.
+     */
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     /**
@@ -71,7 +85,7 @@ public class InvitedUser extends BaseEntity {
     }
 
     /**
-     * @return whether the user is attending the event.
+     * @return Whether the user is attending the event.
      */
     public Boolean isAttending() {
         return isAttending;

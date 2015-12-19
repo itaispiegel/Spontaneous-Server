@@ -48,6 +48,7 @@ public class User extends BaseEntity {
      * Birthday of the user.
      */
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Column(name = "birthday")
     private DateTime birthday;
 
     /**

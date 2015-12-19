@@ -17,7 +17,7 @@ public class Event extends BaseEntity {
      * Host user of the event.
      * One event has one host.
      */
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_user_id")
     private User host;
 
@@ -25,7 +25,7 @@ public class Event extends BaseEntity {
      * Users attending to the event.
      * One event has many users attending.
      */
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private List<InvitedUser> invitedUsers;
 
     /**
@@ -52,4 +52,52 @@ public class Event extends BaseEntity {
      */
     @Column(name = "location")
     private String location;
+
+    public User getHost() {
+        return host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
+    }
+
+    public List<InvitedUser> getInvitedUsers() {
+        return invitedUsers;
+    }
+
+    public void setInvitedUsers(List<InvitedUser> invitedUsers) {
+        this.invitedUsers = invitedUsers;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public DateTime getDate() {
+        return date;
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }

@@ -1,6 +1,5 @@
 package com.spontaneous.server;
 
-import com.google.gson.Gson;
 import com.spontaneous.server.util.GsonFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.HibernateEntityManagerFactory;
@@ -19,17 +18,18 @@ public class SpontaneousApplication {
     }
 
     @Bean
-    public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf) {
-        return hemf.getSessionFactory();
+    public SessionFactory sessionFactory(HibernateEntityManagerFactory managerFactory) {
+        return managerFactory.getSessionFactory();
     }
 
     @Bean
     public HttpMessageConverters customConverters() {
-        HttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        Gson gson = GsonFactory.getGson();
+        HttpMessageConverter messageConverter = new GsonHttpMessageConverter();
 
-        ((GsonHttpMessageConverter) gsonHttpMessageConverter).setGson(gson);
+        ((GsonHttpMessageConverter) messageConverter).setGson(
+                GsonFactory.getGson()
+        );
 
-        return new HttpMessageConverters(gsonHttpMessageConverter);
+        return new HttpMessageConverters(messageConverter);
     }
 }

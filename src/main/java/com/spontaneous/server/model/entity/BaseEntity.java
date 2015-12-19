@@ -1,17 +1,18 @@
 package com.spontaneous.server.model.entity;
 
-import javax.persistence.*;
-
 import com.spontaneous.server.util.GsonFactory;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * This is a Base Entity template.
  * Contains id and creation time fields.
  */
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
     /**
      * Id of the entity.
@@ -24,7 +25,7 @@ public abstract class BaseEntity {
     /**
      * When the entity was created.
      */
-    @Column(name = "creation_time")
+    @Column(name = "creation_time", nullable = false, updatable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime creationTime;
 
@@ -65,22 +66,14 @@ public abstract class BaseEntity {
 
     /**
      * @param obj to compare.
-     * @return whether the given entity is equal to this entity.
+     * @return Whether the given entity is equal to this entity.
      */
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
-        if (null == obj) {
-            return false;
-        }
+        return !(null == obj || !(obj instanceof BaseEntity))
+                && (this == obj || getId() == ((BaseEntity) obj).getId());
 
-        if (this == obj) {
-            return true;
-        }
-
-        BaseEntity that = (BaseEntity) obj;
-
-        return getId() == that.getId();
     }
 
     @Override
