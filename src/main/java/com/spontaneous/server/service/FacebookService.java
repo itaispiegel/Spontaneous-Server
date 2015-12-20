@@ -1,9 +1,7 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.config.FacebookConf;
-import com.spontaneous.server.model.entity.*;
 import facebook4j.*;
-import facebook4j.User;
 import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

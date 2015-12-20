@@ -16,7 +16,7 @@ public class DateTimeSerializer extends JsonSerializer<DateTime> {
     /**
      * The expected date format.
      */
-    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
     @Override
     public void serialize(DateTime date, JsonGenerator generator, SerializerProvider provider) throws IOException {
