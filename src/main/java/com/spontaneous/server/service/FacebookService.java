@@ -1,7 +1,9 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.config.FacebookConf;
+import com.spontaneous.server.model.entity.*;
 import facebook4j.*;
+import facebook4j.User;
 import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,21 +91,7 @@ public class FacebookService {
         user.setEmail(facebookUser.getEmail());
         user.setName(facebookUser.getName());
         user.setBirthday(facebookUser.getBirthday());
-
-        // Set user gender
-        if (facebookUser.getGender().equalsIgnoreCase("male")) {
-            user.setGender(
-                    com.spontaneous.server.model.entity.User.Gender.Male
-            );
-        } else if (facebookUser.getGender().equalsIgnoreCase("female")) {
-            user.setGender(
-                    com.spontaneous.server.model.entity.User.Gender.Female
-            );
-        } else {
-            user.setGender(
-                    com.spontaneous.server.model.entity.User.Gender.Unspecified
-            );
-        }
+        user.setGender(facebookUser.getGender());
 
         return user;
     }

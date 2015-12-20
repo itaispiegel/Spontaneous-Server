@@ -15,3 +15,5 @@ Some of the technologies that the servers uses, are:
 6. Heroku Cloud Platform
 7. Google Cloud Messaging
 
+The API is at: [https://spontaneous-server.herokuapp.com/](https://spontaneous-server.herokuapp.com/)
+

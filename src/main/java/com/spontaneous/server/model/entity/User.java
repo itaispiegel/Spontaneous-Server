@@ -189,6 +189,19 @@ public class User extends BaseEntity {
     }
 
     /**
+     * Set whether the user is a male or a female.
+     */
+    public void setGender(String gender) {
+        if(gender.equalsIgnoreCase("male")) {
+            this.gender = Gender.Male;
+        } else if(gender.equalsIgnoreCase("female")) {
+            this.gender = Gender.Female;
+        } else {
+            this.gender = Gender.Unspecified;
+        }
+    }
+
+    /**
      * Return a string representation of the user.
      */
     @Override

@@ -1,8 +1,11 @@
 package com.spontaneous.server.model.entity;
 
-import com.spontaneous.server.util.GsonFactory;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.spontaneous.server.config.DateTimeSerializer;
+import com.spontaneous.server.config.GsonFactory;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +30,8 @@ public abstract class BaseEntity implements Serializable {
      */
     @Column(name = "creation_time", nullable = false, updatable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @CreatedDate
+    @JsonSerialize(using = DateTimeSerializer.class)
     private DateTime creationTime;
 
     /**
@@ -73,7 +78,6 @@ public abstract class BaseEntity implements Serializable {
     public boolean equals(Object obj) {
         return !(null == obj || !(obj instanceof BaseEntity))
                 && (this == obj || getId() == ((BaseEntity) obj).getId());
-
     }
 
     @Override
