@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "spring.social.facebook")
-public class FacebookConf {
+public class FacebookConfiguration {
 
     private String appId;
     private String appSecret;
 
-    public FacebookConf() {
+    public FacebookConfiguration() {
     }
 
     public String getAppId() {
