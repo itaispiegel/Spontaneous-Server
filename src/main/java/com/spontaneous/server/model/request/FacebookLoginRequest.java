@@ -1,7 +1,7 @@
 package com.spontaneous.server.model.request;
 
 /**
- * This class represents an HTTP JSON request to login to the application.
+ * This class represents an HTTP POST request to login to the application.
  * Contains Facebook user id and Facebook access token.
  */
 public class FacebookLoginRequest {
@@ -22,20 +22,17 @@ public class FacebookLoginRequest {
     public FacebookLoginRequest() {
     }
 
+    private FacebookLoginRequest(Builder builder) {
+        facebookUserId = builder.facebookUserId;
+        facebookToken = builder.facebookToken;
+    }
+
     public String getFacebookUserId() {
         return facebookUserId;
     }
 
-    public void setFacebookUserId(String facebookUserId) {
-        this.facebookUserId = facebookUserId;
-    }
-
     public String getFacebookToken() {
         return facebookToken;
-    }
-
-    public void setFacebookToken(String facebookToken) {
-        this.facebookToken = facebookToken;
     }
 
     @Override
@@ -44,5 +41,48 @@ public class FacebookLoginRequest {
                 "facebookUserId='" + facebookUserId + '\'' +
                 ", facebookToken='" + facebookToken + '\'' +
                 '}';
+    }
+
+
+    /**
+     * {@code FacebookLoginRequest} builder static inner class.
+     */
+    public static final class Builder {
+        private String facebookUserId;
+        private String facebookToken;
+
+        public Builder() {
+        }
+
+        /**
+         * Sets the {@code facebookUserId} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code facebookUserId} to set
+         * @return a reference to this Builder
+         */
+        public Builder facebookUserId(String val) {
+            facebookUserId = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code facebookToken} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code facebookToken} to set
+         * @return a reference to this Builder
+         */
+        public Builder facebookToken(String val) {
+            facebookToken = val;
+            return this;
+        }
+
+        /**
+         * Returns a {@code FacebookLoginRequest} built from the parameters previously set.
+         *
+         * @return a {@code FacebookLoginRequest} built with parameters of this {@code FacebookLoginRequest.Builder}
+         */
+        public FacebookLoginRequest build() {
+            return new FacebookLoginRequest(this);
+        }
     }
 }

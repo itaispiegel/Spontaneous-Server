@@ -55,7 +55,8 @@ public class FacebookService {
     private User getUser(String accessToken, String userId) throws ServiceException {
         try {
             return getInstance(accessToken)
-                    .getUser(userId, new Reading().fields(USER_FIELDS));
+                    .getUser(userId,
+                            new Reading().fields(USER_FIELDS));
         } catch (FacebookException e) {
             e.printStackTrace();
             throw new ServiceException(e.getMessage());
@@ -70,7 +71,6 @@ public class FacebookService {
             return getInstance(accessToken)
                     .getPictureURL(userId, PictureSize.large)
                     .toString();
-
         } catch (FacebookException e) {
             e.printStackTrace();
             throw new ServiceException(e.getMessage());

@@ -8,17 +8,17 @@ public class BaseResponse<T> {
     /**
      * Status code of the HTTP Request.
      */
-    private int statusCode;
+    private final int statusCode;
+
+    /**
+     * The data itself.
+     */
+    private final T body;
 
     /**
      * Description of the error (optional).
      */
     private String description;
-
-    /**
-     * The data itself.
-     */
-    private T body;
 
     // -----Response codes-----
 
@@ -57,10 +57,6 @@ public class BaseResponse<T> {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     /**
      * @return Status code of the HTTP Request.
      */
@@ -68,18 +64,10 @@ public class BaseResponse<T> {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
     /**
      * @return The data itself.
      */
     public Object getBody() {
         return body;
-    }
-
-    public void setBody(T body) {
-        this.body = body;
     }
 }

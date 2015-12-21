@@ -80,6 +80,9 @@ public abstract class BaseEntity implements Serializable {
                 && (this == obj || getId() == ((BaseEntity) obj).getId());
     }
 
+    /**
+     * @return Convert the entity to a JSON representation.
+     */
     @Override
     public String toString() {
         return GsonFactory.getGson().toJson(this);

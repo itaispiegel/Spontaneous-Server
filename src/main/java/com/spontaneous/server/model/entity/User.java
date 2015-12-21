@@ -70,14 +70,14 @@ public class User extends BaseEntity {
     }
 
     private User(Builder builder) {
-        setFacebookUserId(builder.facebookUserId);
-        setFacebookToken(builder.facebookToken);
-        setName(builder.name);
-        setEmail(builder.email);
-        setProfilePicture(builder.profilePicture);
-        setBirthday(builder.birthday);
-        setPhoneNumber(builder.phoneNumber);
-        setGender(builder.gender);
+        this.facebookUserId = builder.facebookUserId;
+        this.facebookToken = builder.facebookToken;
+        this.name = builder.name;
+        this.email = builder.email;
+        this.profilePicture = builder.profilePicture;
+        this.birthday = builder.birthday;
+        this.phoneNumber = builder.phoneNumber;
+        this.gender = builder.gender;
     }
 
     /**
