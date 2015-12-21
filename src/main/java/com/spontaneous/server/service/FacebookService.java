@@ -1,6 +1,6 @@
 package com.spontaneous.server.service;
 
-import com.spontaneous.server.config.FacebookConf;
+import com.spontaneous.server.config.FacebookConfiguration;
 import facebook4j.*;
 import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
@@ -18,7 +18,7 @@ public class FacebookService {
      * Contains app secret and app id.
      */
     @Autowired
-    private FacebookConf mFacebookConf;
+    private FacebookConfiguration mFacebookConf;
 
     /**
      * Facebook methods.

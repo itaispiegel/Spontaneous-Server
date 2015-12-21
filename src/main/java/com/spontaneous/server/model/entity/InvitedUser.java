@@ -5,6 +5,7 @@ import javax.persistence.*;
 /**
  * This class represents a user invited to an event.
  * This object contains data of the user specific to the event, and a reference to the user itself.
+ * NOTE: This class does not extend the {@code User} class.
  */
 @Entity
 @Table(name = "invited_users")

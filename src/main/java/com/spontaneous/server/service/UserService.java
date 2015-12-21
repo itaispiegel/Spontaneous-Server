@@ -20,6 +20,7 @@ public class UserService {
 
     /**
      * Find a user with the given id.
+     *
      * @param id of the user
      * @return The user.
      */
@@ -29,6 +30,7 @@ public class UserService {
 
     /**
      * Login a user given his Facebook User Id and Facebook Token.
+     *
      * @return The user.
      * @throws ServiceException if there was a problem authenticating the user.
      */
@@ -39,16 +41,17 @@ public class UserService {
             User user = mUserRepository.findByFacebookUserId(facebookUserId);
 
             //If no user is found, create a new user instance
-            if(user == null) {
-                user = new User();
-                user.setFacebookUserId(facebookUserId);
-                user.setFacebookToken(facebookToken);
+            if (user == null) {
+                user = new User.Builder()
+                        .facebookUserId(facebookUserId)
+                        .facebookToken(facebookToken)
+                        .build();
             }
 
             //Set the user details from Facebook
             user = mFacebookService.setUserDetails(user, facebookToken, facebookUserId);
             return mUserRepository.save(user);
-        } catch(ServiceException e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
             throw e;
         }

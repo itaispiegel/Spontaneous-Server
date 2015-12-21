@@ -69,6 +69,17 @@ public class User extends BaseEntity {
     public User() {
     }
 
+    private User(Builder builder) {
+        setFacebookUserId(builder.facebookUserId);
+        setFacebookToken(builder.facebookToken);
+        setName(builder.name);
+        setEmail(builder.email);
+        setProfilePicture(builder.profilePicture);
+        setBirthday(builder.birthday);
+        setPhoneNumber(builder.phoneNumber);
+        setGender(builder.gender);
+    }
+
     /**
      * @return facebook user id.
      */
@@ -192,13 +203,10 @@ public class User extends BaseEntity {
      * Set whether the user is a male or a female.
      */
     public void setGender(String gender) {
-        if(gender.equalsIgnoreCase("male")) {
-            this.gender = Gender.Male;
-        } else if(gender.equalsIgnoreCase("female")) {
-            this.gender = Gender.Female;
-        } else {
-            this.gender = Gender.Unspecified;
-        }
+        //Uppercase the first letter so the string will match the enum pattern.
+        gender = gender.substring(0, 1).toUpperCase()
+                + gender.substring(1);
+        this.gender = Gender.valueOf(gender);
     }
 
     /**
@@ -220,5 +228,119 @@ public class User extends BaseEntity {
 
     public enum Gender {
         Male, Female, Unspecified
+    }
+
+    /**
+     * {@code User} builder static inner class.
+     */
+    public static final class Builder {
+        private String facebookUserId;
+        private String facebookToken;
+        private String name;
+        private String email;
+        private String profilePicture;
+        private DateTime birthday;
+        private String phoneNumber;
+        private Gender gender;
+
+        public Builder() {
+        }
+
+        /**
+         * Sets the {@code facebookUserId} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code facebookUserId} to set
+         * @return a reference to this Builder
+         */
+        public Builder facebookUserId(String val) {
+            facebookUserId = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code facebookToken} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code facebookToken} to set
+         * @return a reference to this Builder
+         */
+        public Builder facebookToken(String val) {
+            facebookToken = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code name} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code name} to set
+         * @return a reference to this Builder
+         */
+        public Builder name(String val) {
+            name = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code email} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code email} to set
+         * @return a reference to this Builder
+         */
+        public Builder email(String val) {
+            email = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code profilePicture} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code profilePicture} to set
+         * @return a reference to this Builder
+         */
+        public Builder profilePicture(String val) {
+            profilePicture = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code birthday} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code birthday} to set
+         * @return a reference to this Builder
+         */
+        public Builder birthday(DateTime val) {
+            birthday = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code phoneNumber} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code phoneNumber} to set
+         * @return a reference to this Builder
+         */
+        public Builder phoneNumber(String val) {
+            phoneNumber = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code gender} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code gender} to set
+         * @return a reference to this Builder
+         */
+        public Builder gender(Gender val) {
+            gender = val;
+            return this;
+        }
+
+        /**
+         * Returns a {@code User} built from the parameters previously set.
+         *
+         * @return a {@code User} built with parameters of this {@code User.Builder}
+         */
+        public User build() {
+            return new User(this);
+        }
     }
 }
