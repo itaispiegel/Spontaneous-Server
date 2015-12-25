@@ -51,13 +51,6 @@ public class BaseResponse<T> {
     }
 
     /**
-     * @return Description of the error (optional).
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
      * @return Status code of the HTTP Request.
      */
     public int getStatusCode() {
@@ -69,5 +62,12 @@ public class BaseResponse<T> {
      */
     public Object getBody() {
         return body;
+    }
+
+    /**
+     * @return Description of the error (optional).
+     */
+    public String getDescription() {
+        return description;
     }
 }

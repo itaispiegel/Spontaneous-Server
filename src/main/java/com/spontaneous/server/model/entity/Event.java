@@ -2,6 +2,7 @@ package com.spontaneous.server.model.entity;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.springframework.data.rest.core.config.Projection;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,9 +16,9 @@ public class Event extends BaseEntity {
 
     /**
      * Host user of the event.
-     * One event has one host.
+     * Many events have one host.
      */
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_user_id")
     private User host;
 
@@ -99,5 +100,28 @@ public class Event extends BaseEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+
+    /**
+     * The projection class is used to export the entity to a JSON representation.
+     */
+    @Projection(name = "event", types = Event.class)
+    public interface EventProjection {
+
+        User getHost();
+
+        String getTitle();
+
+        String getDescription();
+
+        DateTime getDate();
+
+        String getLocation();
+
+        DateTime getCreationTime();
+
+        long getId();
+
     }
 }

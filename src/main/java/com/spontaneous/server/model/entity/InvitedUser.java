@@ -1,5 +1,8 @@
 package com.spontaneous.server.model.entity;
 
+import org.joda.time.DateTime;
+import org.springframework.data.rest.core.config.Projection;
+
 import javax.persistence.*;
 
 /**
@@ -20,7 +23,7 @@ public class InvitedUser extends BaseEntity {
     /**
      * Reference to the event the user is going to.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
@@ -106,5 +109,23 @@ public class InvitedUser extends BaseEntity {
                 ", status='" + status + '\'' +
                 ", isAttending=" + isAttending +
                 '}';
+    }
+
+    /**
+     * The projection class is used to export the entity to a JSON representation.
+     */
+    @Projection(name = "invitedUser", types = InvitedUser.class)
+    public interface InvitedUserProjection {
+
+        User getUser();
+
+        String getStatus();
+
+        Boolean getIsAttending();
+
+        DateTime getCreationTime();
+
+        long getId();
+
     }
 }

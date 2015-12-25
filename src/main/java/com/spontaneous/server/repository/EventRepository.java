@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This class is used for data access with the database.
  */
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = Event.EventProjection.class)
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     /**

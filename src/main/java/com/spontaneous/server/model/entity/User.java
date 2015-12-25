@@ -1,5 +1,6 @@
 package com.spontaneous.server.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -22,8 +23,10 @@ public class User extends BaseEntity {
 
     /**
      * Facebook token of the user.
+     * The field is ignored since the data is private, and should be kept secured.
      */
     @Column(name = "facebook_token")
+    @JsonIgnore
     private String facebookToken;
 
     /**
