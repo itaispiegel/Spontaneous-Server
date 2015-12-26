@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Just a controller for testing and playing around.
  */
 @RestController
-@RequestMapping(value = "/hello")
+@RequestMapping(value = "/API/hello")
 public class HelloWorldController extends BaseComponent {
 
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)

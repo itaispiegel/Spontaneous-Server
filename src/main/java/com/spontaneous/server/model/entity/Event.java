@@ -54,6 +54,9 @@ public class Event extends BaseEntity {
     @Column(name = "location")
     private String location;
 
+    public Event() {
+    }
+
     public User getHost() {
         return host;
     }

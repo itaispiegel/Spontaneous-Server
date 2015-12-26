@@ -9,14 +9,13 @@
     <packaging>jar</packaging>
 
     <name>spontaneous-server</name>
-    <description>This is a server application for event planning.</description>
+    <description>This is a server application for an event planning Android application.</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.2.7.RELEASE</version>
         <relativePath/>
-        <!-- lookup parent from repository -->
     </parent>
 
     <properties>
@@ -88,6 +87,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

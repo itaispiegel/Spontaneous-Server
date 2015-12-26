@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FacebookConfiguration {
 
-    private String appId;
-    private String appSecret;
+    private final String appId;
+    private final String appSecret;
 
     @Autowired
     public FacebookConfiguration(@Value("${spring.social.facebook.app-id}") String appId,
