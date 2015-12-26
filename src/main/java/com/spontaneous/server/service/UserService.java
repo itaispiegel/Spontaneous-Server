@@ -1,5 +1,6 @@
 package com.spontaneous.server.service;
 
+import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
  * This class is part of the service layer of the application and is used for user manipulation in the database.
  */
 @Service
-public class UserService {
+public class UserService extends BaseComponent {
 
     @Autowired
     private UserRepository mUserRepository;
@@ -52,7 +53,7 @@ public class UserService {
             user = mFacebookService.setUserDetails(user, facebookToken, facebookUserId);
             return mUserRepository.save(user);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            mLogger.trace(e.getMessage());
             throw e;
         }
     }

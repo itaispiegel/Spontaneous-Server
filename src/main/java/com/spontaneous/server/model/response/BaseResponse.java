@@ -60,7 +60,7 @@ public class BaseResponse<T> {
     /**
      * @return The data itself.
      */
-    public Object getBody() {
+    public T getBody() {
         return body;
     }
 

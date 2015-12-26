@@ -1,5 +1,6 @@
 package com.spontaneous.server.service;
 
+import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.config.FacebookConfiguration;
 import facebook4j.*;
 import facebook4j.conf.ConfigurationBuilder;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * This class is part of the service layer of the application and is used for Facebook integration with the application.
  */
 @Service
-public class FacebookService {
+public class FacebookService extends BaseComponent {
 
     /**
      * Facebook configuration class.
@@ -35,7 +36,7 @@ public class FacebookService {
     /**
      * Get the Facebook instance. implements the singleton pattern.
      */
-    private Facebook getInstance(String accessToken) {
+    private synchronized Facebook getInstance(String accessToken) {
 
         if (facebook == null) {
             ConfigurationBuilder cb = new ConfigurationBuilder()
@@ -58,7 +59,7 @@ public class FacebookService {
                     .getUser(userId,
                             new Reading().fields(USER_FIELDS));
         } catch (FacebookException e) {
-            e.printStackTrace();
+            mLogger.trace(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
@@ -72,7 +73,7 @@ public class FacebookService {
                     .getPictureURL(userId, PictureSize.large)
                     .toString();
         } catch (FacebookException e) {
-            e.printStackTrace();
+            mLogger.trace(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }

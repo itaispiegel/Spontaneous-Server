@@ -16,12 +16,6 @@ public class FacebookLoginRequest {
      */
     private String facebookToken;
 
-    /**
-     * Create a new request.
-     */
-    public FacebookLoginRequest() {
-    }
-
     private FacebookLoginRequest(Builder builder) {
         facebookUserId = builder.facebookUserId;
         facebookToken = builder.facebookToken;
