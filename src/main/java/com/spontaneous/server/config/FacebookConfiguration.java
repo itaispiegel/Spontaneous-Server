@@ -1,19 +1,23 @@
 package com.spontaneous.server.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * A class for configuring the Facebook app credentials.
  */
 @Component
-@ConfigurationProperties(prefix = "spring.social.facebook")
 public class FacebookConfiguration {
 
     private String appId;
     private String appSecret;
 
-    public FacebookConfiguration() {
+    @Autowired
+    public FacebookConfiguration(@Value("${spring.social.facebook.app-id}") String appId,
+                                 @Value("${spring.social.facebook.app-secret}") String appSecret) {
+        this.appId = appId;
+        this.appSecret = appSecret;
     }
 
     public String getAppId() {
@@ -22,13 +26,5 @@ public class FacebookConfiguration {
 
     public String getAppSecret() {
         return appSecret;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
-
-    public void setAppSecret(String appSecret) {
-        this.appSecret = appSecret;
     }
 }
