@@ -1,7 +1,6 @@
 package com.spontaneous.server.model.entity;
 
-import org.joda.time.DateTime;
-import org.springframework.data.rest.core.config.Projection;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 
@@ -18,6 +17,7 @@ public class InvitedUser extends BaseEntity {
      * Reference to the user itself.
      */
     @OneToOne(fetch = FetchType.EAGER)
+    @Expose
     private User user;
 
     /**
@@ -31,12 +31,14 @@ public class InvitedUser extends BaseEntity {
      * User status in the event.
      */
     @Column(name = "status")
+    @Expose
     private String status;
 
     /**
      * Is the user attending?
      */
     @Column(name = "is_attending")
+    @Expose
     private Boolean isAttending;
 
     /**
@@ -91,7 +93,7 @@ public class InvitedUser extends BaseEntity {
     /**
      * @return Whether the user is attending the event.
      */
-    public Boolean isAttending() {
+    public boolean isAttending() {
         return isAttending;
     }
 
@@ -109,23 +111,5 @@ public class InvitedUser extends BaseEntity {
                 ", status='" + status + '\'' +
                 ", isAttending=" + isAttending +
                 '}';
-    }
-
-    /**
-     * The projection class is used to export the entity to a JSON representation.
-     */
-    @Projection(name = "invitedUser", types = InvitedUser.class)
-    public interface InvitedUserProjection {
-
-        User getUser();
-
-        String getStatus();
-
-        Boolean getIsAttending();
-
-        DateTime getCreationTime();
-
-        long getId();
-
     }
 }

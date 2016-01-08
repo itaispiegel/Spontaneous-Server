@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.annotations.Expose;
 import com.spontaneous.server.config.DateTimeSerializer;
 import com.spontaneous.server.config.GsonFactory;
 import org.hibernate.annotations.Type;
@@ -23,6 +24,7 @@ public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @Expose
     private long id;
 
     /**
@@ -32,6 +34,7 @@ public abstract class BaseEntity implements Serializable {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @CreatedDate
     @JsonSerialize(using = DateTimeSerializer.class)
+    @Expose
     private DateTime creationTime;
 
     /**

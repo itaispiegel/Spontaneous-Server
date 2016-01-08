@@ -47,8 +47,8 @@ public class UserController extends BaseComponent {
      * @param id of the user.
      * @return The user instance.
      */
-    @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-    public BaseResponse findUserById(@PathVariable long id) {
+    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    public BaseResponse findUserById(@RequestParam("user_id") long id) {
         User user = mUserService.getUserById(id);
 
         return new BaseResponse<>(user);

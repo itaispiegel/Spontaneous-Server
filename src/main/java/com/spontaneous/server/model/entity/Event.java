@@ -1,5 +1,6 @@
 package com.spontaneous.server.model.entity;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.data.rest.core.config.Projection;
@@ -20,6 +21,7 @@ public class Event extends BaseEntity {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_user_id")
+    @Expose
     private User host;
 
     /**
@@ -27,18 +29,21 @@ public class Event extends BaseEntity {
      * One event has many users attending.
      */
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @Expose
     private List<InvitedUser> invitedUsers;
 
     /**
      * The title of the event.
      */
     @Column(name = "title")
+    @Expose
     private String title;
 
     /**
      * The description of the event.
      */
     @Column(name = "description")
+    @Expose
     private String description;
 
     /**
@@ -46,12 +51,14 @@ public class Event extends BaseEntity {
      */
     @Column(name = "date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Expose
     private DateTime date;
 
     /**
      * Where the event is.
      */
     @Column(name = "location")
+    @Expose
     private String location;
 
     public Event() {
@@ -103,28 +110,5 @@ public class Event extends BaseEntity {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-
-    /**
-     * The projection class is used to export the entity to a JSON representation.
-     */
-    @Projection(name = "event", types = Event.class)
-    public interface EventProjection {
-
-        User getHost();
-
-        String getTitle();
-
-        String getDescription();
-
-        DateTime getDate();
-
-        String getLocation();
-
-        DateTime getCreationTime();
-
-        long getId();
-
     }
 }

@@ -1,5 +1,7 @@
 package com.spontaneous.server.model.response;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * This class holds data returned from the REST API.
  */
@@ -8,16 +10,19 @@ public class BaseResponse<T> {
     /**
      * Status code of the HTTP Request.
      */
+    @Expose
     private final int statusCode;
 
     /**
      * The data itself.
      */
+    @Expose
     private final T body;
 
     /**
      * Description of the error (optional).
      */
+    @Expose
     private String description;
 
     // -----Response codes-----

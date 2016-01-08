@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -19,6 +20,7 @@ public class User extends BaseEntity {
      * Facebook id of the user.
      */
     @Column(name = "facebook_user_id", unique = true)
+    @Expose
     private String facebookUserId;
 
     /**
@@ -33,18 +35,21 @@ public class User extends BaseEntity {
      * The name of the user.
      */
     @Column(name = "name")
+    @Expose
     private String name;
 
     /**
      * The email of the user.
      */
     @Column(name = "email")
+    @Expose
     private String email;
 
     /**
      * Profile picture URL of the user.
      */
     @Column(name = "profile_picture")
+    @Expose
     private String profilePicture;
 
     /**
@@ -52,18 +57,21 @@ public class User extends BaseEntity {
      */
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "birthday")
+    @Expose
     private DateTime birthday;
 
     /**
      * Phone number of the user.
      */
     @Column(name = "phone_number")
+    @Expose
     private String phoneNumber;
 
     /**
      * Is the user a male or a female.
      */
     @Column(name = "gender")
+    @Expose
     private Gender gender;
 
     /**
