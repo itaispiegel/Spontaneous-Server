@@ -6,6 +6,7 @@ spring:
     facebook:
       app-id: 1643579359242605
       app-secret: fae2da42dc4b79b81a3dd72d4e2a763b
+      app-namespace: Spontaneous
 
   datasource:
     driverClassName: org.postgresql.Driver
@@ -30,6 +31,7 @@ spring:
     facebook:
       app-id: 1643579359242605
       app-secret: fae2da42dc4b79b81a3dd72d4e2a763b
+      app-namespace: Spontaneous
 
   datasource:
     driverClassName: org.postgresql.Driver

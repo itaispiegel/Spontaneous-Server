@@ -1,12 +1,15 @@
 package com.spontaneous.server.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.spontaneous.server.config.BaseComponent;
-import com.spontaneous.server.config.FacebookConfiguration;
-import facebook4j.*;
-import facebook4j.conf.ConfigurationBuilder;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.facebook.api.ImageType;
+import org.springframework.social.facebook.api.User;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Service;
+
+import java.net.URI;
 
 /**
  * This class is part of the service layer of the application and is used for Facebook integration with the application.
@@ -15,36 +18,22 @@ import org.springframework.stereotype.Service;
 public class FacebookService extends BaseComponent {
 
     /**
-     * Facebook configuration class.
-     * Contains app secret and app id.
+     * The namespace of the application.
      */
-    @Autowired
-    private FacebookConfiguration mFacebookConf;
+    private static final String APP_NAMESPACE = "Spontaneous";
 
     /**
      * Facebook methods.
      */
-    private static Facebook facebook;
-
-    /**
-     * User fields to receive.
-     */
-    private static final String[] USER_FIELDS = {
-            "email", "birthday", "name", "gender", "picture"
-    };
+    private static MyFacebookTemplate facebook;
 
     /**
      * Get the Facebook instance. implements the singleton pattern.
      */
-    private synchronized Facebook getInstance(String accessToken) {
+    private static synchronized MyFacebookTemplate getInstance(String accessToken) {
 
         if (facebook == null) {
-            ConfigurationBuilder cb = new ConfigurationBuilder()
-                    .setOAuthAppSecret(mFacebookConf.getAppSecret())
-                    .setOAuthAppId(mFacebookConf.getAppId())
-                    .setOAuthAccessToken(accessToken);
-
-            facebook = new FacebookFactory(cb.build()).getInstance();
+            facebook = new MyFacebookTemplate(accessToken, APP_NAMESPACE);
         }
 
         return facebook;
@@ -54,28 +43,9 @@ public class FacebookService extends BaseComponent {
      * Get user by user id and access token.
      */
     private User getUser(String accessToken, String userId) throws ServiceException {
-        try {
-            return getInstance(accessToken)
-                    .getUser(userId,
-                            new Reading().fields(USER_FIELDS));
-        } catch (FacebookException e) {
-            mLogger.trace(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    /**
-     * Get user profile picture by user id and access token.
-     */
-    public String getProfilePicture(String accessToken, String userId) {
-        try {
-            return getInstance(accessToken)
-                    .getPictureURL(userId, PictureSize.large)
-                    .toString();
-        } catch (FacebookException e) {
-            mLogger.trace(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
+        return getInstance(accessToken)
+                .userOperations()
+                .getUserProfile(userId);
     }
 
     /**
@@ -84,14 +54,43 @@ public class FacebookService extends BaseComponent {
     public com.spontaneous.server.model.entity.User setUserDetails(com.spontaneous.server.model.entity.User user,
                                                                    String accessToken, String facebookUserId) {
 
+        //Get the user details from Facebook.
         User facebookUser = getUser(accessToken, facebookUserId);
 
-        user.setProfilePicture(getProfilePicture(accessToken, facebookUserId));
+        user.setProfilePicture(getInstance(accessToken)
+                .fetchPictureUrl(facebookUserId, ImageType.LARGE));
+
         user.setEmail(facebookUser.getEmail());
         user.setName(facebookUser.getName());
         user.setBirthday(facebookUser.getBirthday());
         user.setGender(facebookUser.getGender());
 
         return user;
+    }
+
+    /**
+     * The custom FacebookTemplate adds the {@link #fetchPictureUrl(String, ImageType)} method.
+     */
+    static class MyFacebookTemplate extends FacebookTemplate {
+
+        public MyFacebookTemplate(String accessToken, String applicationNamespace) {
+            super(accessToken, applicationNamespace);
+        }
+
+        /**
+         * @param userId    Id of the user.
+         * @param imageType {@link ImageType} is the size of the image.
+         * @return Facebook profile picture URL.
+         */
+        public String fetchPictureUrl(String userId, ImageType imageType) {
+
+            //Build the URL of the HTTP request.
+            URI uri = URIBuilder.fromUri(getBaseGraphApiUrl() + userId + "/picture" +
+                    "?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
+
+            //Send an HTTP request and get the URL.
+            JsonNode response = getRestTemplate().getForObject(uri, JsonNode.class);
+            return response.get("data").get("url").textValue();
+        }
     }
 }

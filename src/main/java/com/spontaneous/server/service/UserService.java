@@ -36,6 +36,7 @@ public class UserService extends BaseComponent {
      * @throws ServiceException if there was a problem authenticating the user.
      */
     public User login(String facebookUserId, String facebookToken) throws ServiceException {
+
         try {
 
             //Find the user
