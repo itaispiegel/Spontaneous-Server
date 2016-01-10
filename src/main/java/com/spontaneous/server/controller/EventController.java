@@ -1,12 +1,13 @@
 package com.spontaneous.server.controller;
 
-import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
 import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +18,19 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/API/events")
-public class EventController extends BaseComponent {
+public class EventController {
 
-    @Autowired
+    private final Logger mLogger;
+
     private EventService mEventService;
+    private UserService mUserService;
 
     @Autowired
-    private UserService mUserService;
+    public EventController(EventService eventService, UserService userService) {
+        mLogger =  LoggerFactory.getLogger(this.getClass());
+        mEventService = eventService;
+        mUserService = userService;
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public BaseResponse createEvent(@RequestBody Event event) {

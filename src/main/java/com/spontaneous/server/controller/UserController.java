@@ -1,11 +1,12 @@
 package com.spontaneous.server.controller;
 
-import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +15,17 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/API/users")
-public class UserController extends BaseComponent {
+public class UserController {
+
+    private Logger mLogger;
+
+    private UserService mUserService;
 
     @Autowired
-    private UserService mUserService;
+    public UserController(UserService userService) {
+        mLogger = LoggerFactory.getLogger(this.getClass());
+        mUserService = userService;
+    }
 
     /**
      * Login the user given a FacebookLoginRequest.

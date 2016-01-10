@@ -1,9 +1,10 @@
 package com.spontaneous.server.service;
 
-import com.spontaneous.server.config.BaseComponent;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,19 @@ import org.springframework.stereotype.Service;
  * This class is part of the service layer of the application and is used for user manipulation in the database.
  */
 @Service
-public class UserService extends BaseComponent {
+public class UserService {
 
-    @Autowired
+    private Logger mLogger;
+
     private UserRepository mUserRepository;
+    private FacebookService mFacebookService;
 
     @Autowired
-    private FacebookService mFacebookService;
+    public UserService(UserRepository userRepository, FacebookService facebookService) {
+        mLogger = LoggerFactory.getLogger(this.getClass());
+        mUserRepository = userRepository;
+        mFacebookService = facebookService;
+    }
 
     /**
      * Find a user with the given id.

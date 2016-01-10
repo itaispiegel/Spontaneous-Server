@@ -14,8 +14,12 @@ import java.util.List;
 @Service
 public class EventService {
 
-    @Autowired
     private EventRepository mEventRepository;
+
+    @Autowired
+    public EventService(EventRepository eventRepository) {
+        mEventRepository = eventRepository;
+    }
 
     /**
      * Store event in database.
