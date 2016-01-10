@@ -20,14 +20,6 @@ public class BaseResponse<T> {
     private final T body;
 
     /**
-     * Description of the error (optional).
-     */
-    @Expose
-    private String description;
-
-    // -----Response codes-----
-
-    /**
      * Request was success.
      */
     public static final int SUCCESS = 0;
@@ -36,7 +28,6 @@ public class BaseResponse<T> {
      * Request ended with error.
      */
     public static final int INTERNAL_ERROR = -1;
-    //----------
 
     /**
      * Create a response with a body. Default response code is ResponseCodes.SUCCESS.
@@ -49,9 +40,8 @@ public class BaseResponse<T> {
     /**
      * Create a response code with status code, description and body.
      */
-    public BaseResponse(int statusCode, String description, T body) {
-        this.statusCode = statusCode;
-        this.description = description;
+    public BaseResponse(int statusCode, T body) {
+        this.statusCode = BaseResponse.INTERNAL_ERROR;
         this.body = body;
     }
 
@@ -67,12 +57,5 @@ public class BaseResponse<T> {
      */
     public T getBody() {
         return body;
-    }
-
-    /**
-     * @return Description of the error (optional).
-     */
-    public String getDescription() {
-        return description;
     }
 }

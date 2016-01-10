@@ -24,7 +24,7 @@ public class FacebookService {
     /**
      * Get the Facebook instance. implements the singleton pattern.
      */
-    private static FacebookTemplate getFacebookTemplate(String accessToken) {
+    private FacebookTemplate getFacebookTemplate(String accessToken) {
         return new FacebookTemplate(accessToken, APP_NAMESPACE);
     }
 
@@ -38,19 +38,21 @@ public class FacebookService {
     }
 
     /**
-     *
      * @param accessToken Facebook access token of the user.
-     * @param userId Facebook id of the user.
-     * @param imageType The type of the image.
+     * @param userId      Facebook id of the user.
+     * @param imageType   The type of the image.
      * @return Facebook profile picture URL.
      */
     private String fetchProfilePictureURL(String accessToken, String userId, ImageType imageType) {
+
+        FacebookTemplate facebookTemplate = getFacebookTemplate(accessToken);
+
         //Build the URL of the HTTP request.
-        URI uri = URIBuilder.fromUri(getFacebookTemplate(accessToken).getBaseGraphApiUrl() + userId + "/picture" +
+        URI uri = URIBuilder.fromUri(facebookTemplate.getBaseGraphApiUrl() + userId + "/picture" +
                 "?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
 
         //Send an HTTP request and get the URL.
-        JsonNode response = getFacebookTemplate(accessToken).getRestTemplate().getForObject(uri, JsonNode.class);
+        JsonNode response = facebookTemplate.getRestTemplate().getForObject(uri, JsonNode.class);
         return response.get("data").get("url").textValue();
     }
 

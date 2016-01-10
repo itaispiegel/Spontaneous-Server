@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * This is a REST controller for event operations.
  */
@@ -22,16 +20,23 @@ public class EventController {
 
     private final Logger mLogger;
 
-    private EventService mEventService;
-    private UserService mUserService;
+    private final EventService mEventService;
+    private final UserService mUserService;
 
     @Autowired
     public EventController(EventService eventService, UserService userService) {
-        mLogger =  LoggerFactory.getLogger(this.getClass());
+        mLogger = LoggerFactory.getLogger(this.getClass());
         mEventService = eventService;
         mUserService = userService;
     }
 
+    /**
+     * A controller method for creating a new event, given the event details.
+     * In case of {@link ServiceException} return the error.
+     *
+     * @param event The details of the event - given in JSON.
+     * @return {@link BaseResponse} stating the result of the process.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public BaseResponse createEvent(@RequestBody Event event) {
 
@@ -47,18 +52,23 @@ public class EventController {
         }
     }
 
+    /**
+     * A controller method for requesting the user events, given the user id.
+     *
+     * @param id Of the user.
+     * @return {@link BaseResponse} stating the result of the process.
+     */
     @RequestMapping(value = "/getUserEvents", method = RequestMethod.GET)
     public BaseResponse getUserEvents(@RequestParam("user_id") long id) {
 
         try {
 
             User user = mUserService.getUserById(id);
-            mLogger.info("Getting user events for user {}", user);
-            List<Event> events = mEventService.getUserEvents(user);
+            mLogger.info("Getting user events for {}", user.getName());
+            return new BaseResponse<>(mEventService.getUserEvents(user));
 
-            return new BaseResponse<>(events);
-        } catch (ServiceException e) {
-            return new BaseResponse<>(e.getMessage());
+        } catch (NullPointerException | ServiceException e) {
+            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
         }
     }
 }

@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/API/users")
 public class UserController {
 
-    private Logger mLogger;
+    private final Logger mLogger;
 
-    private UserService mUserService;
+    private final UserService mUserService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -28,7 +28,8 @@ public class UserController {
     }
 
     /**
-     * Login the user given a FacebookLoginRequest.
+     * Login the user with a given FacebookLoginRequest.
+     * In case of {@link ServiceException} return the error.
      *
      * @param loginRequest - Facebook login request.
      * @return Response saying whether the login was successful, and the user details.
@@ -52,13 +53,18 @@ public class UserController {
 
     /**
      * Find a user based on the given id.
+     * In case of {@link NullPointerException} (user not found), return the error.
+     *
      * @param id of the user.
      * @return The user instance.
      */
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public BaseResponse findUserById(@RequestParam("user_id") long id) {
-        User user = mUserService.getUserById(id);
 
-        return new BaseResponse<>(user);
+        try {
+            return new BaseResponse<>(mUserService.getUserById(id));
+        } catch (NullPointerException e) {
+            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
+        }
     }
 }

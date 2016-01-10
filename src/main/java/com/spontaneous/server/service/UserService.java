@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private Logger mLogger;
+    private final Logger mLogger;
 
-    private UserRepository mUserRepository;
-    private FacebookService mFacebookService;
+    private final UserRepository mUserRepository;
+    private final FacebookService mFacebookService;
 
     @Autowired
     public UserService(UserRepository userRepository, FacebookService facebookService) {
@@ -32,8 +32,14 @@ public class UserService {
      * @param id of the user
      * @return The user.
      */
-    public User getUserById(long id) {
-        return mUserRepository.findOne(id);
+    public User getUserById(long id) throws NullPointerException {
+        User user = mUserRepository.findOne(id);
+
+        if(user == null) {
+            throw new NullPointerException(String.format("No such user with id #%d", id));
+        }
+
+        return user;
     }
 
     /**

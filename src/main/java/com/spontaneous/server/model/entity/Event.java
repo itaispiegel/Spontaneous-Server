@@ -3,7 +3,6 @@ package com.spontaneous.server.model.entity;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import org.springframework.data.rest.core.config.Projection;
 
 import javax.persistence.*;
 import java.util.List;

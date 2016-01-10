@@ -3,8 +3,6 @@ package com.spontaneous.server;
 import com.spontaneous.server.config.GsonFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.HibernateEntityManagerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
@@ -14,8 +12,6 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 
 @SpringBootApplication
 public class SpontaneousApplication {
-
-    public static final Logger mLogger = LoggerFactory.getLogger(SpontaneousApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(SpontaneousApplication.class, args);
