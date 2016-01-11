@@ -1,10 +1,8 @@
 package com.spontaneous.server.controller;
 
 import com.spontaneous.server.model.entity.Event;
-import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
-import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +19,11 @@ public class EventController {
     private final Logger mLogger;
 
     private final EventService mEventService;
-    private final UserService mUserService;
 
     @Autowired
-    public EventController(EventService eventService, UserService userService) {
+    public EventController(EventService eventService) {
         mLogger = LoggerFactory.getLogger(this.getClass());
         mEventService = eventService;
-        mUserService = userService;
     }
 
     /**
@@ -55,7 +51,7 @@ public class EventController {
     /**
      * A controller method for requesting the user events, given the user id.
      *
-     * @param id Of the user.
+     * @param id Of the user to get events for.
      * @return {@link BaseResponse} stating the result of the process.
      */
     @RequestMapping(value = "/getUserEvents", method = RequestMethod.GET)
@@ -63,11 +59,10 @@ public class EventController {
 
         try {
 
-            User user = mUserService.getUserById(id);
-            mLogger.info("Getting user events for {}", user.getName());
-            return new BaseResponse<>(mEventService.getUserEvents(user));
+            mLogger.info("Getting user events for user with id #{}", id);
+            return new BaseResponse<>(mEventService.getUserEvents(id));
 
-        } catch (NullPointerException | ServiceException e) {
+        } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }

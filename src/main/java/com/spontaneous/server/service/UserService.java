@@ -32,7 +32,9 @@ public class UserService {
      *
      * @param id of the user
      * @return The user.
+     * @throws ServiceException Is caught in case there no user found with the given id.
      */
+
     public User getUserById(long id) throws ServiceException {
         User user = mUserRepository.findOne(id);
 
@@ -45,10 +47,10 @@ public class UserService {
 
     /**
      * Login a user given his Facebook User Id and Facebook Token.
-     * The {@link ApiException} is caught in case the Facebook Graph API was unable to find the user with the given credentials.
      *
-     * @return The user.
-     * @throws ServiceException if there was a problem authenticating the user.
+     * @param facebookUserId Facebook id of the user.
+     * @param facebookToken  Facebook auth token of the user.
+     * @return User details of the logged in user.
      */
     public User login(String facebookUserId, String facebookToken) {
 

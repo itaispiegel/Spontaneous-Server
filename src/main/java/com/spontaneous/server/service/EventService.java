@@ -1,9 +1,8 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
-import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.repository.EventRepository;
-import org.apache.log4j.Logger;
+import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +15,13 @@ import java.util.List;
 @Service
 public class EventService {
 
-    private final Logger mLogger;
-
     private final EventRepository mEventRepository;
+    private final UserRepository mUserRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository) {
-        mLogger = Logger.getLogger(this.getClass());
+    public EventService(EventRepository eventRepository, UserRepository userRepository) {
         mEventRepository = eventRepository;
+        mUserRepository = userRepository;
     }
 
     /**
@@ -37,16 +35,19 @@ public class EventService {
     }
 
     /**
-     * @return Events relating to given user (hosting/invited to).
+     * Get events relating to the given user (hosting/invited to).
+     *
+     * @param userId Id of the user to get events for.
+     * @return List of events.
+     * @throws ServiceException In case there is no such user with the given id.
      */
-    public List<Event> getUserEvents(User user) throws ServiceException {
+    public List<Event> getUserEvents(long userId) throws ServiceException {
 
-        try {
-            return mEventRepository.findByInvitedUser(user.getId());
-        } catch(ServiceException e) {
-            mLogger.error(e.getMessage());
-            throw e;
+        //In case there is no such user, throw an exception.
+        if (!mUserRepository.exists(userId)) {
+            throw new ServiceException(String.format("No such user with id #%d.", userId));
         }
-    }
 
+        return mEventRepository.findByInvitedUser(userId);
+    }
 }

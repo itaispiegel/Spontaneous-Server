@@ -26,14 +26,20 @@ public class FacebookService {
     private static final String APP_NAMESPACE = "Spontaneous";
 
     /**
-     * Get the Facebook instance. implements the singleton pattern.
+     * @param accessToken Facebook auth access token of the user.
+     * @return Instance of {@link FacebookTemplate} object, for making HTTP requests to the Facebook Graph API.
      */
     private FacebookTemplate getFacebookTemplate(String accessToken) {
         return new FacebookTemplate(accessToken, APP_NAMESPACE);
     }
 
     /**
-     * Get user by user id and access token.
+     * Get user details by his Facebook id and access token.
+     *
+     * @param accessToken Facebook access token of the user.
+     * @param userId      Facebook user id.
+     * @return User details.
+     * @throws ApiException Is caught in case there was no user found with the given access credentials.
      */
     private User getUser(String accessToken, String userId) throws ApiException {
 
@@ -70,6 +76,12 @@ public class FacebookService {
 
     /**
      * Set user details by user id and access token.
+     *
+     * @param user           Instance of the user entity..
+     * @param accessToken    Facebook auth access token.
+     * @param facebookUserId Facebook id of the user.
+     * @return User entity with full details.
+     * @throws ApiException Is caught in case there was no user found with the given access credentials
      */
     public com.spontaneous.server.model.entity.User setUserDetails(com.spontaneous.server.model.entity.User user,
                                                                    String accessToken, String facebookUserId) throws ApiException {
