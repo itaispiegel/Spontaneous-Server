@@ -32,7 +32,7 @@ public class EventController {
 
     /**
      * A controller method for creating a new event, given the event details.
-     * In case of {@link ServiceException} return the error.
+     * In case of {@link ServiceException}, return the error.
      *
      * @param event The details of the event - given in JSON.
      * @return {@link BaseResponse} stating the result of the process.
@@ -48,7 +48,7 @@ public class EventController {
             return new BaseResponse<>(event);
 
         } catch (ServiceException e) {
-            return new BaseResponse<>(e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
 
@@ -68,7 +68,7 @@ public class EventController {
             return new BaseResponse<>(mEventService.getUserEvents(user));
 
         } catch (NullPointerException | ServiceException e) {
-            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
 }

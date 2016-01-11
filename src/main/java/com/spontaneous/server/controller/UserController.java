@@ -8,6 +8,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.ApiException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -29,7 +30,7 @@ public class UserController {
 
     /**
      * Login the user with a given FacebookLoginRequest.
-     * In case of {@link ServiceException} return the error.
+     * In case of {@link ServiceException}/{@link ApiException} return the error.
      *
      * @param loginRequest - Facebook login request.
      * @return Response saying whether the login was successful, and the user details.
@@ -46,8 +47,8 @@ public class UserController {
             mLogger.info("Login response = {}", user);
             return new BaseResponse<>(user);
 
-        } catch (ServiceException e) {
-            return new BaseResponse<>(e.getMessage());
+        } catch (ApiException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
 
@@ -63,8 +64,8 @@ public class UserController {
 
         try {
             return new BaseResponse<>(mUserService.getUserById(id));
-        } catch (NullPointerException e) {
-            return new BaseResponse<>(BaseResponse.INTERNAL_ERROR, e.getMessage());
+        } catch (ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
 }

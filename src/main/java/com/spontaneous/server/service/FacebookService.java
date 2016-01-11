@@ -1,7 +1,9 @@
 package com.spontaneous.server.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.social.ApiException;
 import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -15,6 +17,8 @@ import java.net.URI;
  */
 @Service
 public class FacebookService {
+
+    private final Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * The namespace of the application.
@@ -31,10 +35,18 @@ public class FacebookService {
     /**
      * Get user by user id and access token.
      */
-    private User getUser(String accessToken, String userId) throws ServiceException {
-        return getFacebookTemplate(accessToken)
-                .userOperations()
-                .getUserProfile(userId);
+    private User getUser(String accessToken, String userId) throws ApiException {
+
+        try {
+            return getFacebookTemplate(accessToken)
+                    .userOperations()
+                    .getUserProfile(userId);
+        } catch (ApiException e) {
+            mLogger.error("Facebook access token or user id are incorrect.");
+            mLogger.error(e.getMessage());
+
+            throw e;
+        }
     }
 
     /**
@@ -60,7 +72,7 @@ public class FacebookService {
      * Set user details by user id and access token.
      */
     public com.spontaneous.server.model.entity.User setUserDetails(com.spontaneous.server.model.entity.User user,
-                                                                   String accessToken, String facebookUserId) {
+                                                                   String accessToken, String facebookUserId) throws ApiException {
 
         //Get the user details from Facebook.
         User facebookUser = getUser(accessToken, facebookUserId);
