@@ -8,6 +8,8 @@ import com.spontaneous.server.repository.EventRepository;
 import com.spontaneous.server.repository.InvitedUserRepository;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,17 @@ import java.util.List;
 @Service
 public class EventService {
 
+    private final Logger mLogger;
+
     private final EventRepository mEventRepository;
     private final UserRepository mUserRepository;
     private final InvitedUserRepository mInvitedUserRepository;
 
     @Autowired
     public EventService(EventRepository eventRepository, UserRepository userRepository, InvitedUserRepository invitedUserRepository) {
+
+        mLogger = LoggerFactory.getLogger(this.getClass());
+
         mEventRepository = eventRepository;
         mUserRepository = userRepository;
         mInvitedUserRepository = invitedUserRepository;
@@ -61,6 +68,8 @@ public class EventService {
      * @param event  To invite them to.
      */
     public Event inviteUsers(List<String> emails, Event event) {
+
+        mLogger.info("Inviting the following users: {}", emails);
 
         //The size allocated is for the users in the given list of emails, and for the host.
         ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);

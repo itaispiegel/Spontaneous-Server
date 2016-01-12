@@ -39,24 +39,27 @@ public class InvitedUser extends BaseEntity {
      */
     @Column(name = "is_attending")
     @Expose
-    private Boolean isAttending;
+    private boolean isAttending;
 
     /**
      * Create an empty invited user.
      */
     public InvitedUser() {
         super();
+
+        this.status = "";
+        this.isAttending = false;
     }
 
     public InvitedUser(User user, Event event) {
-        super();
+        this();
 
         this.user = user;
         this.event = event;
     }
 
-    public InvitedUser(User user, Event event, String status, Boolean isAttending) {
-        super();
+    public InvitedUser(User user, Event event, String status, boolean isAttending) {
+        this();
 
         this.user = user;
         this.event = event;
@@ -117,7 +120,7 @@ public class InvitedUser extends BaseEntity {
     /**
      * Sets whether the user is attending the event.
      */
-    public void setIsAttending(Boolean isAttending) {
+    public void setIsAttending(boolean isAttending) {
         this.isAttending = isAttending;
     }
 
