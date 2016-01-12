@@ -2,8 +2,10 @@ package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.request.CreateEventRequest;
 import com.spontaneous.server.repository.EventRepository;
+import com.spontaneous.server.repository.InvitedUserRepository;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,13 @@ public class EventService {
 
     private final EventRepository mEventRepository;
     private final UserRepository mUserRepository;
+    private final InvitedUserRepository mInvitedUserRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, InvitedUserRepository invitedUserRepository) {
         mEventRepository = eventRepository;
         mUserRepository = userRepository;
+        mInvitedUserRepository = invitedUserRepository;
     }
 
     /**
@@ -35,6 +39,7 @@ public class EventService {
      */
     public Event createEvent(CreateEventRequest createEventRequest) {
 
+        //Build the event from the request object.
         Event event = new Event.Builder()
                 .title(createEventRequest.getTitle())
                 .description(createEventRequest.getDescription())
@@ -43,9 +48,10 @@ public class EventService {
                 .host(mUserRepository.findOne(createEventRequest.getHostUserId()))
                 .build();
 
-        event = inviteUsers(createEventRequest.getInvitedUsers(), event);
+        //Save the event, then invite the users to it.
+        event = mEventRepository.save(event);
 
-        return mEventRepository.save(event);
+        return inviteUsers(createEventRequest.getInvitedUsersEmails(), event);
     }
 
     /**
@@ -60,16 +66,22 @@ public class EventService {
         ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);
 
         //Invite the host to the invited users list.
-        invitedUsers.add(new InvitedUser(
-                event.getHost(), event, "", false
+        invitedUsers.add(mInvitedUserRepository.save(
+                new InvitedUser(event.getHost(), event)
         ));
 
         //Loop over each email in the given collection, and invite each user.
         for (String email : emails) {
             //TODO: Send GCM push notification
 
-            InvitedUser invitedUser = new InvitedUser(mUserRepository.findByEmail(email), event, "", false);
-            invitedUsers.add(invitedUser);
+            User user = mUserRepository.findByEmail(email);
+
+            //Only invite the user if he is using spontaneous
+            if (user != null && !user.equals(event.getHost())) {
+                invitedUsers.add(mInvitedUserRepository.save(
+                        new InvitedUser(user, event)
+                ));
+            }
         }
 
         //Set the invited users list to the event entity.

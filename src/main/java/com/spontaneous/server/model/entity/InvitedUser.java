@@ -45,9 +45,19 @@ public class InvitedUser extends BaseEntity {
      * Create an empty invited user.
      */
     public InvitedUser() {
+        super();
+    }
+
+    public InvitedUser(User user, Event event) {
+        super();
+
+        this.user = user;
+        this.event = event;
     }
 
     public InvitedUser(User user, Event event, String status, Boolean isAttending) {
+        super();
+
         this.user = user;
         this.event = event;
         this.status = status;

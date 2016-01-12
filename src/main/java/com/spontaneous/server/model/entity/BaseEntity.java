@@ -82,13 +82,6 @@ public abstract class BaseEntity implements Serializable {
                 && (this == obj || getId() == ((BaseEntity) obj).getId());
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
-        return result;
-    }
-
     /**
      * @return Convert the entity to a JSON representation.
      */

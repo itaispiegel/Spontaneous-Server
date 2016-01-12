@@ -24,15 +24,17 @@ public class CreateEventRequest {
 
     /**
      * Id number of the host user.
+     * NOTICE: The request entity only holds the id - there is no need to hold the full user details.
      */
     @Expose
     private final long hostUserId;
 
     /**
      * Emails of the users to invite.
+     * NOTICE: The request entity only holds the emails - there is no need to hold the full invited users details.
      */
     @Expose
-    private final List<String> invitedUsers;
+    private final List<String> invitedUsersEmails;
 
     /**
      * When the event is.
@@ -46,11 +48,11 @@ public class CreateEventRequest {
     @Expose
     private final String location;
 
-    public CreateEventRequest(String title, String description, long hostUserId, List<String> invitedUsers, DateTime date, String location) {
+    public CreateEventRequest(String title, String description, long hostUserId, List<String> invitedUsersEmails, DateTime date, String location) {
         this.title = title;
         this.description = description;
         this.hostUserId = hostUserId;
-        this.invitedUsers = invitedUsers;
+        this.invitedUsersEmails = invitedUsersEmails;
         this.date = date;
         this.location = location;
     }
@@ -67,8 +69,8 @@ public class CreateEventRequest {
         return hostUserId;
     }
 
-    public List<String> getInvitedUsers() {
-        return invitedUsers;
+    public List<String> getInvitedUsersEmails() {
+        return invitedUsersEmails;
     }
 
     public DateTime getDate() {
@@ -85,7 +87,7 @@ public class CreateEventRequest {
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", hostUserId=" + hostUserId +
-                ", invitedUsers=" + invitedUsers +
+                ", invitedUsersEmails=" + invitedUsersEmails +
                 ", date=" + date +
                 ", location='" + location + '\'' +
                 '}';
