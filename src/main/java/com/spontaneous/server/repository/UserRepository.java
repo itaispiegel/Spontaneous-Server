@@ -17,4 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return The user instance.
      */
     User findByFacebookUserId(@Param(value = "facebookUserId") String facebookUserId);
+
+    /**
+     * Get a user entity given his email address.
+     * @param email Email address of the user.
+     * @return The user entity.
+     */
+    User findByEmail(@Param(value = "email") String email);
 }
