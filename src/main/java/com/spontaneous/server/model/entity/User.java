@@ -28,7 +28,7 @@ public class User extends BaseEntity {
      * The field is ignored since the data is private, and should be kept secured.
      */
     @Column(name = "facebook_token")
-    @JsonIgnore
+    @Expose
     private String facebookToken;
 
     /**

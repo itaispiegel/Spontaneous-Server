@@ -76,11 +76,17 @@ public abstract class BaseEntity implements Serializable {
      * @param obj to compare.
      * @return Whether the given entity is equal to this entity.
      */
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         return !(null == obj || !(obj instanceof BaseEntity))
                 && (this == obj || getId() == ((BaseEntity) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
+        return result;
     }
 
     /**
