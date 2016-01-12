@@ -43,7 +43,7 @@ public class EventService {
                 .host(mUserRepository.findOne(createEventRequest.getHostUserId()))
                 .build();
 
-        inviteUsers(createEventRequest.getInvitedUsers(), event);
+        event = inviteUsers(createEventRequest.getInvitedUsers(), event);
 
         return mEventRepository.save(event);
     }
@@ -54,7 +54,7 @@ public class EventService {
      * @param emails Of users to invite.
      * @param event  To invite them to.
      */
-    public void inviteUsers(List<String> emails, Event event) {
+    public Event inviteUsers(List<String> emails, Event event) {
 
         //The size allocated is for the users in the given list of emails, and for the host.
         ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);
@@ -74,6 +74,7 @@ public class EventService {
 
         //Set the invited users list to the event entity.
         event.setInvitedUsers(invitedUsers);
+        return event;
     }
 
     /**
