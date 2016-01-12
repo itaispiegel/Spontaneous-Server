@@ -1,6 +1,7 @@
 package com.spontaneous.server.controller;
 
 import com.spontaneous.server.model.entity.Event;
+import com.spontaneous.server.model.request.CreateEventRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
 import org.hibernate.service.spi.ServiceException;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * This is a REST controller for event operations.
+ * This is a REST controller for createEventRequest operations.
  */
 @RestController
 @RequestMapping(value = "/API/events")
@@ -27,19 +28,19 @@ public class EventController {
     }
 
     /**
-     * A controller method for creating a new event, given the event details.
+     * A controller method for creating a new createEventRequest, given the createEventRequest details.
      * In case of {@link ServiceException}, return the error.
      *
-     * @param event The details of the event - given in JSON.
+     * @param createEventRequest The details of the createEventRequest - given in JSON.
      * @return {@link BaseResponse} stating the result of the process.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public BaseResponse createEvent(@RequestBody Event event) {
+    public BaseResponse createEvent(@RequestBody CreateEventRequest createEventRequest) {
 
         try {
 
-            mLogger.info("Create Event Request {}", event);
-            event = mEventService.createEvent(event);
+            mLogger.info("Create Event Request {}", createEventRequest);
+            Event event = mEventService.createEvent(createEventRequest);
 
             return new BaseResponse<>(event);
 

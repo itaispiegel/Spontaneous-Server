@@ -42,7 +42,7 @@ public class UserController {
 
             mLogger.info("FacebookLoginRequest = {}", loginRequest);
 
-            User user = mUserService.login(loginRequest.getFacebookUserId(), loginRequest.getFacebookToken());
+            User user = mUserService.login(loginRequest);
 
             mLogger.info("Login response = {}", user);
             return new BaseResponse<>(user);

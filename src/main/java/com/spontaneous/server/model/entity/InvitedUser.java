@@ -47,6 +47,13 @@ public class InvitedUser extends BaseEntity {
     public InvitedUser() {
     }
 
+    public InvitedUser(User user, Event event, String status, Boolean isAttending) {
+        this.user = user;
+        this.event = event;
+        this.status = status;
+        this.isAttending = isAttending;
+    }
+
     /**
      * @return User reference.
      */

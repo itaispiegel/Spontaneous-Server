@@ -1,6 +1,7 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -48,13 +49,15 @@ public class UserService {
     /**
      * Login a user given his Facebook User Id and Facebook Token.
      *
-     * @param facebookUserId Facebook id of the user.
-     * @param facebookToken  Facebook auth token of the user.
+     * @param loginRequest The Facebook login request entity.
      * @return User details of the logged in user.
      */
-    public User login(String facebookUserId, String facebookToken) {
+    public User login(FacebookLoginRequest loginRequest) {
 
         try {
+
+            String facebookUserId = loginRequest.getFacebookUserId();
+            String facebookToken = loginRequest.getFacebookToken();
 
             //Find the user
             User user = mUserRepository.findByFacebookUserId(facebookUserId);

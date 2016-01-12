@@ -1,12 +1,15 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
+import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.request.CreateEventRequest;
 import com.spontaneous.server.repository.EventRepository;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,11 +30,50 @@ public class EventService {
     /**
      * Store event in database.
      *
-     * @param event to store.
+     * @param createEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event createEvent(Event event) {
+    public Event createEvent(CreateEventRequest createEventRequest) {
+
+        Event event = new Event.Builder()
+                .title(createEventRequest.getTitle())
+                .description(createEventRequest.getDescription())
+                .date(createEventRequest.getDate())
+                .location(createEventRequest.getLocation())
+                .host(mUserRepository.findOne(createEventRequest.getHostUserId()))
+                .build();
+
+        inviteUsers(createEventRequest.getInvitedUsers(), event);
+
         return mEventRepository.save(event);
+    }
+
+    /**
+     * Invite list of users to an event.
+     *
+     * @param emails Of users to invite.
+     * @param event  To invite them to.
+     */
+    public void inviteUsers(List<String> emails, Event event) {
+
+        //The size allocated is for the users in the given list of emails, and for the host.
+        ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);
+
+        //Invite the host to the invited users list.
+        invitedUsers.add(new InvitedUser(
+                event.getHost(), event, "", false
+        ));
+
+        //Loop over each email in the given collection, and invite each user.
+        for (String email : emails) {
+            //TODO: Send GCM push notification
+
+            InvitedUser invitedUser = new InvitedUser(mUserRepository.findByEmail(email), event, "", false);
+            invitedUsers.add(invitedUser);
+        }
+
+        //Set the invited users list to the event entity.
+        event.setInvitedUsers(invitedUsers);
     }
 
     /**
