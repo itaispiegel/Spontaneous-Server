@@ -3,7 +3,7 @@ package com.spontaneous.server.model.request;
 import com.google.gson.annotations.Expose;
 import org.joda.time.DateTime;
 
-import java.util.List;
+import java.util.HashSet;
 
 /**
  * This class represents an HTTP POST request to create a new event.
@@ -31,10 +31,11 @@ public class CreateEventRequest {
 
     /**
      * Emails of the users to invite.
-     * NOTICE: The request entity only holds the emails - there is no need to hold the full invited users details.
+     * NOTICE: The request entity only holds the emails - there is no need to hold the full invited users details (memory cost).
+     * A {@link HashSet} is good in this case, since we want the emails to be unique.
      */
     @Expose
-    private final List<String> invitedUsersEmails;
+    private final HashSet<String> invitedUsersEmails;
 
     /**
      * When the event is.
@@ -48,7 +49,7 @@ public class CreateEventRequest {
     @Expose
     private final String location;
 
-    public CreateEventRequest(String title, String description, long hostUserId, List<String> invitedUsersEmails, DateTime date, String location) {
+    public CreateEventRequest(String title, String description, long hostUserId, HashSet<String> invitedUsersEmails, DateTime date, String location) {
         this.title = title;
         this.description = description;
         this.hostUserId = hostUserId;
@@ -69,7 +70,7 @@ public class CreateEventRequest {
         return hostUserId;
     }
 
-    public List<String> getInvitedUsersEmails() {
+    public HashSet<String> getInvitedUsersEmails() {
         return invitedUsersEmails;
     }
 

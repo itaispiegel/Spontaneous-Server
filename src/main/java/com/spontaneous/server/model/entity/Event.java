@@ -26,9 +26,8 @@ public class Event extends BaseEntity {
     /**
      * Users attending to the event.
      * One event has many users attending.
-     * A {@link List} is good in this case, since we want our guests to be unique.
      */
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Expose
     private List<InvitedUser> invitedUsers;
 

@@ -56,18 +56,20 @@ public class FacebookService {
     }
 
     /**
+     * Get a profile picture url given the user id.
+     * <br/>NOTICE: The default image size is {@link ImageType#LARGE}.
+     *
      * @param accessToken Facebook access token of the user.
      * @param userId      Facebook id of the user.
-     * @param imageType   The type of the image.
      * @return Facebook profile picture URL.
      */
-    private String fetchProfilePictureURL(String accessToken, String userId, ImageType imageType) {
+    private String fetchProfilePictureUrl(String accessToken, String userId) {
 
         FacebookTemplate facebookTemplate = getFacebookTemplate(accessToken);
 
         //Build the URL of the HTTP request.
         URI uri = URIBuilder.fromUri(facebookTemplate.getBaseGraphApiUrl() + userId + "/picture" +
-                "?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
+                "?type=" + ImageType.LARGE.toString().toLowerCase() + "&redirect=false").build();
 
         //Send an HTTP request and get the URL.
         JsonNode response = facebookTemplate.getRestTemplate().getForObject(uri, JsonNode.class);
@@ -89,7 +91,7 @@ public class FacebookService {
         //Get the user details from Facebook.
         User facebookUser = getUser(accessToken, facebookUserId);
 
-        user.setProfilePicture(fetchProfilePictureURL(accessToken, facebookUserId, ImageType.LARGE));
+        user.setProfilePicture(fetchProfilePictureUrl(accessToken, facebookUserId));
 
         user.setEmail(facebookUser.getEmail());
         user.setName(facebookUser.getName());

@@ -35,7 +35,6 @@ public class UserService {
      * @return The user.
      * @throws ServiceException Is caught in case there no user found with the given id.
      */
-
     public User getUserById(long id) throws ServiceException {
         User user = mUserRepository.findOne(id);
 
@@ -44,6 +43,33 @@ public class UserService {
         }
 
         return user;
+    }
+
+    /**
+     * Find a user with the given email address.
+     *
+     * @param email Email address of the user to find.
+     * @return The user entity.
+     * @throws ServiceException Is thrown in case that no such user was found.
+     */
+    public User getUserByEmail(String email) throws ServiceException {
+        User user = mUserRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new ServiceException(String.format("No such user with the the email: %s.", email));
+        }
+
+        return user;
+    }
+
+    /**
+     * Returns whether an entity with the given id exists.
+     *
+     * @param id Of the user.
+     * @return true if an entity with the given id exists, false otherwise
+     */
+    public boolean exists(long id) {
+        return mUserRepository.exists(id);
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.spontaneous.server.controller;
 
 import com.spontaneous.server.model.entity.Event;
+import com.spontaneous.server.model.entity.InvitedUser;
 import com.spontaneous.server.model.request.CreateEventRequest;
+import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
 import org.hibernate.service.spi.ServiceException;
@@ -56,13 +58,33 @@ public class EventController {
      * @return {@link BaseResponse} stating the result of the process.
      */
     @RequestMapping(value = "/getUserEvents", method = RequestMethod.GET)
-    public BaseResponse getUserEvents(@RequestParam("user_id") long id) {
+    public BaseResponse getUserEvents(@RequestParam("id") long id) {
 
         try {
 
             mLogger.info("Getting user events for user with id #{}", id);
             return new BaseResponse<>(mEventService.getUserEvents(id));
 
+        } catch (ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * A controller method for updating an {@link InvitedUser}.
+     *
+     * @param id            The id of the invited user, we wish to update.
+     * @param updateRequest The new details of the invited user.
+     * @return {@link BaseResponse} representing the updated invited user, or the error occurred.
+     */
+    @RequestMapping(value = "/updateInvitedUser", method = RequestMethod.PUT)
+    public BaseResponse updateInvitedUser(@RequestParam("id") long id, @RequestBody UpdateInvitedUserRequest updateRequest) {
+
+        try {
+            mLogger.info("Updating invited user with id #{}", id);
+
+            InvitedUser invitedUser = mEventService.updateInvitedUser(id, updateRequest);
+            return new BaseResponse<>(invitedUser);
         } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }

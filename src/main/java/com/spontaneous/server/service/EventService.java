@@ -4,9 +4,9 @@ import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.request.CreateEventRequest;
+import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.repository.EventRepository;
 import com.spontaneous.server.repository.InvitedUserRepository;
-import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -25,16 +26,16 @@ public class EventService {
     private final Logger mLogger;
 
     private final EventRepository mEventRepository;
-    private final UserRepository mUserRepository;
+    private final UserService mUserService;
     private final InvitedUserRepository mInvitedUserRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserRepository userRepository, InvitedUserRepository invitedUserRepository) {
+    public EventService(EventRepository eventRepository, UserService userService, InvitedUserRepository invitedUserRepository) {
 
         mLogger = LoggerFactory.getLogger(this.getClass());
 
         mEventRepository = eventRepository;
-        mUserRepository = userRepository;
+        mUserService = userService;
         mInvitedUserRepository = invitedUserRepository;
     }
 
@@ -44,30 +45,38 @@ public class EventService {
      * @param createEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event createEvent(CreateEventRequest createEventRequest) {
+    public Event createEvent(CreateEventRequest createEventRequest) throws ServiceException {
 
-        //Build the event from the request object.
-        Event event = new Event.Builder()
-                .title(createEventRequest.getTitle())
-                .description(createEventRequest.getDescription())
-                .date(createEventRequest.getDate())
-                .location(createEventRequest.getLocation())
-                .host(mUserRepository.findOne(createEventRequest.getHostUserId()))
-                .build();
+        try {
+            //Build the event from the request object.
+            Event event = new Event.Builder()
+                    .title(createEventRequest.getTitle())
+                    .description(createEventRequest.getDescription())
+                    .date(createEventRequest.getDate())
+                    .location(createEventRequest.getLocation())
+                    .host(mUserService.getUserById(createEventRequest.getHostUserId()))
+                    .build();
 
-        //Save the event, then invite the users to it.
-        event = mEventRepository.save(event);
+            //Add the invited users to the event.
+            event = inviteUsers(createEventRequest.getInvitedUsersEmails(), event);
 
-        return inviteUsers(createEventRequest.getInvitedUsersEmails(), event);
+            //Save the event and return it.
+            return mEventRepository.save(event);
+
+        } catch (ServiceException e) {
+            //ServiceException is caught in case that the host user does not exist.
+            mLogger.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
-     * Invite list of users to an event.
+     * Invite a list of users to an event.
      *
      * @param emails Of users to invite.
      * @param event  To invite them to.
      */
-    public Event inviteUsers(List<String> emails, Event event) {
+    public Event inviteUsers(HashSet<String> emails, Event event) {
 
         mLogger.info("Inviting the following users: {}", emails);
 
@@ -75,21 +84,25 @@ public class EventService {
         ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);
 
         //Invite the host to the invited users list.
-        invitedUsers.add(mInvitedUserRepository.save(
-                new InvitedUser(event.getHost(), event)
-        ));
+        invitedUsers.add(new InvitedUser(event.getHost(), event));
 
         //Loop over each email in the given collection, and invite each user.
         for (String email : emails) {
-            //TODO: Send GCM push notification
+            //TODO: Send GCM push notification to the user.
 
-            User user = mUserRepository.findByEmail(email);
+            try {
 
-            //Only invite the user if he is using spontaneous
-            if (user != null && !user.equals(event.getHost())) {
-                invitedUsers.add(mInvitedUserRepository.save(
-                        new InvitedUser(user, event)
-                ));
+                User user = mUserService.getUserByEmail(email);
+
+                //Invite the user in case that he is not the host.
+                if (!user.equals(event.getHost())) {
+                    invitedUsers.add(new InvitedUser(user, event));
+                }
+
+            } catch (ServiceException e) {
+                //The ServiceException is caught in case that there is no user with the given email.
+                //In this case, print the exception and don't invite the user.
+                mLogger.info(e.getMessage());
             }
         }
 
@@ -108,10 +121,32 @@ public class EventService {
     public List<Event> getUserEvents(long userId) throws ServiceException {
 
         //In case there is no such user, throw an exception.
-        if (!mUserRepository.exists(userId)) {
+        if (!mUserService.exists(userId)) {
             throw new ServiceException(String.format("No such user with id #%d.", userId));
         }
 
         return mEventRepository.findByInvitedUser(userId);
+    }
+
+    /**
+     * Update an {@link InvitedUser} according to the given {@link UpdateInvitedUserRequest}.
+     *
+     * @param id            Id of the {@link InvitedUser} we wish to update.
+     * @param updateRequest The update request.
+     * @return The updated {@link InvitedUser} entity.
+     * @throws ServiceException In case that there is no such {@link InvitedUser} with the given id.
+     */
+    public InvitedUser updateInvitedUser(long id, UpdateInvitedUserRequest updateRequest) throws ServiceException {
+        InvitedUser invitedUser = mInvitedUserRepository.findOne(id);
+
+        if (invitedUser == null) {
+            throw new ServiceException(String.format("There is no InvitedUser with the id #%s.", id));
+        }
+
+        //Update the InvitedUser fields.
+        invitedUser.setIsAttending(updateRequest.isAttending());
+        invitedUser.setStatus(updateRequest.getStatus());
+
+        return mInvitedUserRepository.save(invitedUser);
     }
 }

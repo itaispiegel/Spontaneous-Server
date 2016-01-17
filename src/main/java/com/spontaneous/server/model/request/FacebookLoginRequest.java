@@ -21,7 +21,7 @@ public class FacebookLoginRequest {
     private final String facebookToken;
 
     /**
-     * Create a new FacebookLoginRequest
+     * Create a new FacebookLoginRequest.
      */
     public FacebookLoginRequest(String facebookUserId, String facebookToken) {
         this.facebookUserId = facebookUserId;

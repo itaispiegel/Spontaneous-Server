@@ -60,7 +60,7 @@ public class UserController {
      * @return The user instance.
      */
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public BaseResponse findUserById(@RequestParam("user_id") long id) {
+    public BaseResponse findUserById(@RequestParam("id") long id) {
 
         try {
             return new BaseResponse<>(mUserService.getUserById(id));
