@@ -89,4 +89,20 @@ public class EventController {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public BaseResponse deleteEvent(@RequestParam("id") long id) {
+
+        try {
+
+            mLogger.info("Deleting event with id #{}", id);
+
+            Event deletedEvent = mEventService.deleteEvent(id);
+            return new BaseResponse<>(deletedEvent);
+
+        } catch (ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+
+    }
 }

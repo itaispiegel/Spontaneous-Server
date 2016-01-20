@@ -139,6 +139,8 @@ public class EventService {
      * @throws ServiceException In case that there is no such {@link InvitedUser} with the given id.
      */
     public InvitedUser updateInvitedUser(long id, UpdateInvitedUserRequest updateRequest) throws ServiceException {
+
+        //Throw an exception if there is no user with the given id.
         InvitedUser invitedUser = mInvitedUserRepository.findOne(id);
 
         if (invitedUser == null) {
@@ -146,9 +148,20 @@ public class EventService {
         }
 
         //Update the InvitedUser fields.
-        invitedUser.setIsAttending(updateRequest.isAttending());
-        invitedUser.setStatus(updateRequest.getStatus());
+        invitedUser.update(updateRequest);
 
         return mInvitedUserRepository.save(invitedUser);
+    }
+
+    public Event deleteEvent(long id) throws ServiceException {
+        Event deletedEvent = mEventRepository.findOne(id);
+
+        if(deletedEvent == null) {
+            throw new ServiceException(String.format("No such event with id #%d.", id));
+        }
+
+        mEventRepository.delete(id);
+
+        return deletedEvent;
     }
 }

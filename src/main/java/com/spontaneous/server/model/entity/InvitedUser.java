@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 
 import javax.persistence.*;
 
@@ -58,15 +59,6 @@ public class InvitedUser extends BaseEntity {
         this.event = event;
     }
 
-    public InvitedUser(User user, Event event, String status, boolean isAttending) {
-        this();
-
-        this.user = user;
-        this.event = event;
-        this.status = status;
-        this.isAttending = isAttending;
-    }
-
     /**
      * @return User reference.
      */
@@ -122,6 +114,15 @@ public class InvitedUser extends BaseEntity {
      */
     public void setIsAttending(boolean isAttending) {
         this.isAttending = isAttending;
+    }
+
+    /**
+     * Update the InvitedUser according to the given {@link UpdateInvitedUserRequest}.
+     * @param updateRequest The request to update the invited user.
+     */
+    public void update(UpdateInvitedUserRequest updateRequest) {
+        this.isAttending = updateRequest.isAttending();
+        this.status = updateRequest.getStatus();
     }
 
     @Override
