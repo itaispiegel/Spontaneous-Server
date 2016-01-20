@@ -72,6 +72,8 @@ public class EventService {
 
     /**
      * Invite a list of users to an event.
+     * If a user in the given {@link HashSet} of emails isn't using Spontaneous, then print a relevant message to the logger.
+     * The method also sends a push notification to each user invited.
      *
      * @param emails Of users to invite.
      * @param event  To invite them to.
