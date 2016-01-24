@@ -28,15 +28,17 @@ public class EventService {
     private final EventRepository mEventRepository;
     private final UserService mUserService;
     private final InvitedUserRepository mInvitedUserRepository;
+    private final GcmService mGcmService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserService userService, InvitedUserRepository invitedUserRepository) {
+    public EventService(EventRepository eventRepository, UserService userService, InvitedUserRepository invitedUserRepository, GcmService gcmService) {
 
         mLogger = LoggerFactory.getLogger(this.getClass());
 
         mEventRepository = eventRepository;
         mUserService = userService;
         mInvitedUserRepository = invitedUserRepository;
+        mGcmService = gcmService;
     }
 
     /**
@@ -80,36 +82,38 @@ public class EventService {
      */
     public Event inviteUsers(HashSet<String> emails, Event event) {
 
-        mLogger.info("Inviting the following users: {}", emails);
+        try {
 
-        //The size allocated is for the users in the given list of emails, and for the host.
-        ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size() + 1);
+            //Add the host to the set of emails.
+            emails.add(event.getHost().getEmail());
 
-        //Invite the host to the invited users list.
-        invitedUsers.add(new InvitedUser(event.getHost(), event));
+            mLogger.info("Inviting the following users: {}", emails);
 
-        //Loop over each email in the given collection, and invite each user.
-        for (String email : emails) {
-            //TODO: Send GCM push notification to the user.
+            //The size allocated is for the users in the given set of emails.
+            ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size());
 
-            try {
-
+            //Loop over each email in the given collection, and invite each user.
+            for (String email : emails) {
                 User user = mUserService.getUserByEmail(email);
+                InvitedUser invitedUser = new InvitedUser(user, event);
 
                 //Invite the user in case that he is not the host.
-                if (!user.equals(event.getHost())) {
-                    invitedUsers.add(new InvitedUser(user, event));
-                }
+                invitedUsers.add(invitedUser);
 
-            } catch (ServiceException e) {
-                //The ServiceException is caught in case that there is no user with the given email.
-                //In this case, print the exception and don't invite the user.
-                mLogger.info(e.getMessage());
+                //Notify the user
+                mGcmService.notifyUser(invitedUser);
             }
+
+            //Set the invited users list to the event entity.
+            event.setInvitedUsers(invitedUsers);
+
+        } catch (NullPointerException | ServiceException e) {
+            //The ServiceException is caught in case that there is no user with the given email.
+            //In this case, print the exception and don't invite the user.
+            //TODO: NullPointerException isn't supposed to occur, and it is bad. Catch it and debug it ASAP.
+            mLogger.error(e.getMessage());
         }
 
-        //Set the invited users list to the event entity.
-        event.setInvitedUsers(invitedUsers);
         return event;
     }
 
@@ -153,10 +157,17 @@ public class EventService {
         return mInvitedUserRepository.save(invitedUser);
     }
 
+    /**
+     * Delete an event by it's id.
+     *
+     * @param id Id of the event.
+     * @return The deleted event details.
+     * @throws ServiceException In case there is no such event.
+     */
     public Event deleteEvent(long id) throws ServiceException {
         Event deletedEvent = mEventRepository.findOne(id);
 
-        if(deletedEvent == null) {
+        if (deletedEvent == null) {
             throw new ServiceException(String.format("No such event with id #%d.", id));
         }
 

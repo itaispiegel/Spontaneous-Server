@@ -73,6 +73,10 @@ public class User extends BaseEntity {
     @Expose
     private Gender gender;
 
+    @Column(name = "gcm")
+    @Expose
+    private String gcmToken;
+
     /**
      * Create an empty user object.
      */
@@ -88,6 +92,7 @@ public class User extends BaseEntity {
         this.birthday = builder.birthday;
         this.phoneNumber = builder.phoneNumber;
         this.gender = builder.gender;
+        this.gcmToken = builder.gcmToken;
     }
 
     /**
@@ -219,6 +224,14 @@ public class User extends BaseEntity {
         this.gender = Gender.valueOf(gender);
     }
 
+    public String getGcmToken() {
+        return gcmToken;
+    }
+
+    public void setGcmToken(String gcmToken) {
+        this.gcmToken = gcmToken;
+    }
+
     /**
      * Return a string representation of the user.
      */
@@ -252,6 +265,7 @@ public class User extends BaseEntity {
         private DateTime birthday;
         private String phoneNumber;
         private Gender gender;
+        private String gcmToken;
 
         public Builder() {
         }
@@ -341,6 +355,17 @@ public class User extends BaseEntity {
          */
         public Builder gender(Gender val) {
             gender = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code gcmToken} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code gcmToken} to set
+         * @return a reference to this Builder
+         */
+        public Builder gcmToken(String val) {
+            gcmToken = val;
             return this;
         }
 
