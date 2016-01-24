@@ -20,6 +20,7 @@ import java.net.URL;
 public class GcmService {
 
     private static final String API_KEY = "AIzaSyCZNSEfuv0Lk8AREq9avNappUouZwWtI6I";
+    public static final String GCM_BASE_URL = "https://android.googleapis.com/gcm/send";
 
     private final Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
@@ -36,7 +37,7 @@ public class GcmService {
             jGcmData.put("data", jData);
 
             // Create connection to send GCM Message request.
-            URL url = new URL("https://android.googleapis.com/gcm/send");
+            URL url = new URL(GCM_BASE_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization", "key=" + API_KEY);
             conn.setRequestProperty("Content-Type", "application/json");
@@ -57,7 +58,7 @@ public class GcmService {
         }
     }
 
-    public void notifyUser(InvitedUser invitedUser) {
+    public void notifyInvitedUser(InvitedUser invitedUser) {
         sendNotification("You have been invited to an event!", invitedUser.getUser()
                 .getGcmToken());
     }

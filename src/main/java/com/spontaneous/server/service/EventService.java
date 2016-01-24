@@ -101,7 +101,7 @@ public class EventService {
                 invitedUsers.add(invitedUser);
 
                 //Notify the user
-                mGcmService.notifyUser(invitedUser);
+                mGcmService.notifyInvitedUser(invitedUser);
             }
 
             //Set the invited users list to the event entity.
