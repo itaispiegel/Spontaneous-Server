@@ -32,7 +32,8 @@ public class GcmService {
     }
 
     public void notifyInvitedUser(InvitedUser invitedUser) {
-        sendNotification("You have been invited to an event!", invitedUser.getUser()
+        final String message = "You have been invited to an event!";
+        sendNotification(message, invitedUser.getUser()
                 .getGcmToken());
     }
 
