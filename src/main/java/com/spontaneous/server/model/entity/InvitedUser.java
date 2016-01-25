@@ -42,21 +42,11 @@ public class InvitedUser extends BaseEntity {
     @Expose
     private boolean isAttending;
 
-    /**
-     * Create an empty invited user.
-     */
-    public InvitedUser() {
-        super();
-
-        this.status = "";
-        this.isAttending = false;
-    }
-
     public InvitedUser(User user, Event event) {
-        this();
-
         this.user = user;
         this.event = event;
+        this.status = "";
+        this.isAttending = false;
     }
 
     /**
