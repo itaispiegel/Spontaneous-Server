@@ -60,10 +60,15 @@ public class EventService {
                     .build();
 
             //Add the invited users to the event.
-            event = inviteUsers(createEventRequest.getInvitedUsersEmails(), event);
+            event = addInvitedUsers(createEventRequest.getInvitedUsersEmails(), event);
 
-            //Save the event and return it.
-            return mEventRepository.save(event);
+            //Save the event in the database.
+            event = mEventRepository.save(event);
+
+            //Notify the invitedUsers.
+            event.getInvitedUsers().forEach(mGcmService::notifyInvitedUser);
+
+            return event;
 
         } catch (ServiceException e) {
             //ServiceException is caught in case that the host user does not exist.
@@ -71,6 +76,7 @@ public class EventService {
             throw e;
         }
     }
+
 
     /**
      * Invite a list of users to an event.
@@ -80,42 +86,42 @@ public class EventService {
      * @param emails Of users to invite.
      * @param event  To invite them to.
      */
-    public Event inviteUsers(HashSet<String> emails, Event event) {
+    private Event addInvitedUsers(HashSet<String> emails, Event event) {
 
-        try {
-
-            //Add the host to the set of emails.
-            emails.add(event.getHost().getEmail());
-
-            mLogger.info("Inviting the following users: {}", emails);
-
-            //The size allocated is for the users in the given set of emails.
-            ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size());
-
-            //Loop over each email in the given collection, and invite each user.
-            for (String email : emails) {
-                User user = mUserService.getUserByEmail(email);
-                InvitedUser invitedUser = new InvitedUser(user, event);
-
-                //Invite the user in case that he is not the host.
-                invitedUsers.add(invitedUser);
-
-                //Notify the user
-                mGcmService.notifyInvitedUser(invitedUser);
-            }
-
-            //Set the invited users list to the event entity.
-            event.setInvitedUsers(invitedUsers);
-
-        } catch (NullPointerException | ServiceException e) {
-            //The ServiceException is caught in case that there is no user with the given email.
-            //In this case, print the exception and don't invite the user.
-            //TODO: NullPointerException isn't supposed to occur, and it is bad. Catch it and debug it ASAP.
-            mLogger.error(e.getMessage());
+        //In case no users are invited, invite only the host user.
+        if(emails == null) {
+            emails = new HashSet<>(1);
         }
+
+        //Add the host to the set of emails.
+        emails.add(event.getHost().getEmail());
+
+        mLogger.info("Inviting the following users: {}", emails);
+
+        //The size allocated is for the users in the given set of emails.
+        ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size());
+
+        //Loop over each email in the given collection, and invite each user.
+        for (String email : emails) {
+
+            try {
+
+                User user = mUserService.getUserByEmail(email);
+                invitedUsers.add(new InvitedUser(user, event));
+
+            } catch (ServiceException e) {
+                //The ServiceException is caught in case that there is no user with the given email.
+                //In this case, print the exception and don't invite the user.
+                mLogger.error(e.getMessage());
+            }
+        }
+
+        //Set the invited users list to the event entity.
+        event.setInvitedUsers(invitedUsers);
 
         return event;
     }
+
 
     /**
      * Get events relating to the given user (hosting/invited to).
