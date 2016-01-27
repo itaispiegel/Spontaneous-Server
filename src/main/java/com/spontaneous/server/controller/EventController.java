@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * This is a REST controller for createEventRequest operations.
  */
@@ -46,7 +48,7 @@ public class EventController {
 
             return new BaseResponse<>(event);
 
-        } catch (ServiceException e) {
+        } catch (IOException | ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }

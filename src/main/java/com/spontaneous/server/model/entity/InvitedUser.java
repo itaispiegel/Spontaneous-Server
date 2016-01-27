@@ -42,11 +42,19 @@ public class InvitedUser extends BaseEntity {
     @Expose
     private boolean isAttending;
 
-    public InvitedUser(User user, Event event) {
-        this.user = user;
-        this.event = event;
+    /**
+     * Default constructor.
+     * WHY JPA? WHY?!
+     */
+    public InvitedUser() {
         this.status = "";
         this.isAttending = false;
+    }
+
+    public InvitedUser(User user, Event event) {
+        this();
+        this.user = user;
+        this.event = event;
     }
 
     /**

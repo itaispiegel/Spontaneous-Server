@@ -33,21 +33,14 @@ public class GcmService {
      *
      * @param message The message to send.
      * @param userId  Id of the user we wish to send the notification to.
+     * @throws ServiceException Is thrown in case that no user is found.
+     * @throws IOException      Is thrown in case that the notification was not sent.
      */
-    private void sendNotification(Message message, long userId) {
+    private void sendNotification(Message message, long userId) throws ServiceException, IOException {
+        User recipient = mUserService.getUserById(userId);
 
-        try {
-
-            User recipient = mUserService.getUserById(userId);
-
-            Sender sender = new Sender(API_KEY);
-            sender.sendNoRetry(message, recipient.getGcmToken());
-
-        } catch (ServiceException | IOException e) {
-            //The ServiceException is caught in case that no user is found,
-            //and the IOException is caught in case that the notification was not sent.
-            mLogger.error(e.getMessage());
-        }
+        Sender sender = new Sender(API_KEY);
+        sender.sendNoRetry(message, recipient.getGcmToken());
     }
 
     /**
@@ -55,7 +48,7 @@ public class GcmService {
      *
      * @param invitedUser The invited user we wish to notify.
      */
-    public void notifyInvitedUser(InvitedUser invitedUser) {
+    public void notifyInvitedUser(InvitedUser invitedUser) throws ServiceException, IOException {
         final String messageContent = "You have been invited to an event!";
 
         Message message = new Message.Builder()

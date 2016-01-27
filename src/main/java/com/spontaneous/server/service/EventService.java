@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,34 +48,32 @@ public class EventService {
      * @param createEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event createEvent(CreateEventRequest createEventRequest) throws ServiceException {
+    public Event createEvent(CreateEventRequest createEventRequest) throws ServiceException, IOException {
 
-        try {
-            //Build the event from the request object.
-            Event event = new Event.Builder()
-                    .title(createEventRequest.getTitle())
-                    .description(createEventRequest.getDescription())
-                    .date(createEventRequest.getDate())
-                    .location(createEventRequest.getLocation())
-                    .host(mUserService.getUserById(createEventRequest.getHostUserId()))
-                    .build();
+        //ServiceException is caught in case that the host user does not exist.
+        //IOException is caught in case that the GCMService was unable to send a notification.
 
-            //Add the invited users to the event.
-            event = addInvitedUsers(createEventRequest.getInvitedUsersEmails(), event);
+        //Build the event from the request object.
+        Event event = new Event.Builder()
+                .title(createEventRequest.getTitle())
+                .description(createEventRequest.getDescription())
+                .date(createEventRequest.getDate())
+                .location(createEventRequest.getLocation())
+                .host(mUserService.getUserById(createEventRequest.getHostUserId()))
+                .build();
 
-            //Save the event in the database.
-            event = mEventRepository.save(event);
+        //Add the invited users to the event.
+        event = addInvitedUsers(createEventRequest.getInvitedUsersEmails(), event);
 
-            //Notify the invitedUsers.
-            event.getInvitedUsers().forEach(mGcmService::notifyInvitedUser);
+        //Save the event in the database.
+        event = mEventRepository.save(event);
 
-            return event;
-
-        } catch (ServiceException e) {
-            //ServiceException is caught in case that the host user does not exist.
-            mLogger.error(e.getMessage());
-            throw e;
+        //Notify the invitedUsers.
+        for (InvitedUser invitedUser : event.getInvitedUsers()) {
+            mGcmService.notifyInvitedUser(invitedUser);
         }
+
+        return event;
     }
 
 
@@ -89,7 +88,7 @@ public class EventService {
     private Event addInvitedUsers(HashSet<String> emails, Event event) {
 
         //In case no users are invited, invite only the host user.
-        if(emails == null) {
+        if (emails == null) {
             emails = new HashSet<>(1);
         }
 
