@@ -68,4 +68,13 @@ public class UserController {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
+
+    @RequestMapping(value = "/updateGCM", method = RequestMethod.GET)
+    public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
+        try {
+            return new BaseResponse<>(mUserService.updateGcmToken(id, token));
+        } catch (ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
 }

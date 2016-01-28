@@ -104,4 +104,18 @@ public class UserService {
             throw e;
         }
     }
+
+    /**
+     * Updates a user's GCM token.
+     * @param id Id of the user.
+     * @param token The updated token.
+     * @return The updated user entity.
+     * @throws ServiceException In case there is no user with the given id.
+     */
+    public User updateGcmToken(long id, String token) throws ServiceException {
+        User user = getUserById(id);
+        user.setGcmToken(token);
+
+        return user;
+    }
 }
