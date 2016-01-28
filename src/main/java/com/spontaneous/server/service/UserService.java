@@ -107,7 +107,8 @@ public class UserService {
 
     /**
      * Updates a user's GCM token.
-     * @param id Id of the user.
+     *
+     * @param id    Id of the user.
      * @param token The updated token.
      * @return The updated user entity.
      * @throws ServiceException In case there is no user with the given id.
@@ -116,6 +117,6 @@ public class UserService {
         User user = getUserById(id);
         user.setGcmToken(token);
 
-        return user;
+        return mUserRepository.save(user);
     }
 }

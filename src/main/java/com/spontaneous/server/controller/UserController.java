@@ -69,6 +69,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Update a user's GCM token.
+     * @param id Id of the user.
+     * @param token The updated token.
+     * @return The user instance.
+     */
     @RequestMapping(value = "/updateGCM", method = RequestMethod.GET)
     public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
         try {
