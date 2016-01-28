@@ -2,7 +2,9 @@ package com.spontaneous.server.service;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
+import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.Notification;
 import com.spontaneous.server.model.entity.User;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -31,13 +33,19 @@ public class GcmService {
     /**
      * Send a notification to a given user.
      *
-     * @param message The message to send.
-     * @param userId  Id of the user we wish to send the notification to.
+     * @param notification The notification data.
+     * @param userId       Id of the user we wish to send the notification to.
      * @throws ServiceException Is thrown in case that no user is found.
      * @throws IOException      Is thrown in case that the notification was not sent.
      */
-    private void sendNotification(Message message, long userId) throws ServiceException, IOException {
+    private void sendNotification(Notification notification, long userId) throws ServiceException, IOException {
         User recipient = mUserService.getUserById(userId);
+
+        mLogger.info(String.format("Sending a notification to user with id #%d", userId));
+
+        Message message = new Message.Builder()
+                .addData("notification", notification.toString())
+                .build();
 
         Sender sender = new Sender(API_KEY);
         sender.sendNoRetry(message, recipient.getGcmToken());
@@ -49,14 +57,13 @@ public class GcmService {
      * @param invitedUser The invited user we wish to notify.
      */
     public void notifyInvitedUser(InvitedUser invitedUser) throws ServiceException, IOException {
+        final String messageTitle = "Spontaneous";
         final String messageContent = "You have been invited to an event!";
 
-        Message message = new Message.Builder()
-                .addData("message", messageContent)
-                .addData("event", invitedUser.getEvent().toString())
-                .build();
+        Notification<Event> notification = new Notification<>(messageTitle, messageContent,
+                Notification.NotificationType.INVITATION, invitedUser.getEvent());
 
-        sendNotification(message, invitedUser.getUser()
+        sendNotification(notification, invitedUser.getUser()
                 .getId());
     }
 
