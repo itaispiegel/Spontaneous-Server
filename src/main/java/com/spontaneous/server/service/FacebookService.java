@@ -41,7 +41,7 @@ public class FacebookService {
      * @return User details.
      * @throws ApiException Is caught in case there was no user found with the given access credentials.
      */
-    private User getUser(String accessToken, String userId) throws ApiException {
+    private User getUserProfile(String accessToken, String userId) throws ApiException {
 
         try {
             return getFacebookTemplate(accessToken)
@@ -86,16 +86,16 @@ public class FacebookService {
      * @throws ApiException Is caught in case there was no user found with the given access credentials
      */
     public com.spontaneous.server.model.entity.User setUserDetails(com.spontaneous.server.model.entity.User user,
-                                                                   String accessToken, String facebookUserId) throws ApiException {
+                                                                   String accessToken, String facebookUserId) throws ApiException, IllegalArgumentException {
 
         //Get the user details from Facebook.
-        User facebookUser = getUser(accessToken, facebookUserId);
+        User facebookUser = getUserProfile(accessToken, facebookUserId);
 
         user.setProfilePicture(fetchProfilePictureUrl(accessToken, facebookUserId));
 
         user.setEmail(facebookUser.getEmail());
         user.setName(facebookUser.getName());
-        user.setBirthday(facebookUser.getBirthday());
+        user.setBirthday(facebookUser.getBirthday(), "MM/dd/yyyy");
         user.setGender(facebookUser.getGender());
 
         return user;

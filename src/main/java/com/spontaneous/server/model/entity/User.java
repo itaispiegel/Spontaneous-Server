@@ -3,6 +3,8 @@ package com.spontaneous.server.model.entity;
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -182,8 +184,10 @@ public class User extends BaseEntity {
     /**
      * Sets the birthday of the user.
      */
-    public void setBirthday(String birthday) {
-        this.birthday = new DateTime(birthday);
+    public void setBirthday(String birthday, String pattern) {
+        this.birthday = DateTimeFormat.forPattern(pattern)
+                .withZone(DateTimeZone.UTC)
+                .parseDateTime(birthday);
     }
 
     /**
@@ -219,8 +223,10 @@ public class User extends BaseEntity {
      */
     public void setGender(String gender) {
         //Uppercase the first letter so the string will match the enum pattern.
-        gender = gender.substring(0, 1).toUpperCase()
+        gender = gender.substring(0, 1)
+                .toUpperCase()
                 + gender.substring(1);
+
         this.gender = Gender.valueOf(gender);
     }
 
