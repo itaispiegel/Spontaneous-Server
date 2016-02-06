@@ -41,8 +41,9 @@ public class User extends BaseEntity {
 
     /**
      * The email of the user.
+     * Each user has a unique email.
      */
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Expose
     private String email;
 

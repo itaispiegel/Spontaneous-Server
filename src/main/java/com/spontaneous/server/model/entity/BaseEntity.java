@@ -20,6 +20,7 @@ public abstract class BaseEntity implements Serializable {
 
     /**
      * Id of the entity.
+     * The id of the entity does not have a setter, since it's immutable.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +30,7 @@ public abstract class BaseEntity implements Serializable {
 
     /**
      * When the entity was created.
+     * The creation time of the entity does not have a setter, since it's immutable.
      */
     @Column(name = "creation_time", nullable = false, updatable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -52,24 +54,10 @@ public abstract class BaseEntity implements Serializable {
     }
 
     /**
-     * Sets the entity id number.
-     */
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    /**
      * @return when the entity was created.
      */
     public DateTime getCreationTime() {
         return creationTime;
-    }
-
-    /**
-     * Sets the time that the entity was created.
-     */
-    public void setCreationTime(DateTime creationTime) {
-        this.creationTime = creationTime;
     }
 
     /**
@@ -83,7 +71,7 @@ public abstract class BaseEntity implements Serializable {
     }
 
     /**
-     * @return Convert the entity to a JSON representation.
+     * @return The entity in JSON representation.
      */
     @Override
     public String toString() {
