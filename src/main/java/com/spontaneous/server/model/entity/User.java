@@ -184,15 +184,16 @@ public class User extends BaseEntity {
 
     /**
      * Sets the birthday of the user.
+     * If there is no birthday, then set the birthday's value to the current datetime.
      */
     public void setBirthday(String birthday, String pattern) {
-        if(birthday == null) {
-            return;
+        if (birthday == null) {
+            this.birthday = DateTime.now();
+        } else {
+            this.birthday = DateTimeFormat.forPattern(pattern)
+                    .withZone(DateTimeZone.UTC)
+                    .parseDateTime(birthday);
         }
-
-        this.birthday = DateTimeFormat.forPattern(pattern)
-                .withZone(DateTimeZone.UTC)
-                .parseDateTime(birthday);
     }
 
     /**
