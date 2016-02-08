@@ -186,6 +186,10 @@ public class User extends BaseEntity {
      * Sets the birthday of the user.
      */
     public void setBirthday(String birthday, String pattern) {
+        if(birthday == null) {
+            return;
+        }
+
         this.birthday = DateTimeFormat.forPattern(pattern)
                 .withZone(DateTimeZone.UTC)
                 .parseDateTime(birthday);
