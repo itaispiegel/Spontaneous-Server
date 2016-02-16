@@ -59,7 +59,7 @@ public class EventController {
         try {
 
             mLogger.info("Update Event Request, for event with id #" + id + ": " + saveEventRequest);
-            Event event = mEventService.updateEvent(saveEventRequest);
+            Event event = mEventService.updateEvent(id, saveEventRequest);
             return new BaseResponse<>(event);
 
         } catch (ServiceException | IOException e) {
