@@ -3,7 +3,7 @@ package com.spontaneous.server.service;
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
 import com.spontaneous.server.model.entity.User;
-import com.spontaneous.server.model.request.CreateEventRequest;
+import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.repository.EventRepository;
 import com.spontaneous.server.repository.InvitedUserRepository;
@@ -45,25 +45,56 @@ public class EventService {
     /**
      * Store event in database.
      *
-     * @param createEventRequest The request of the event to create.
+     * @param saveEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event createEvent(CreateEventRequest createEventRequest) throws ServiceException, IOException {
+    public Event updateEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
 
         //ServiceException is caught in case that the host user does not exist.
         //IOException is caught in case that the GCMService was unable to send a notification.
 
         //Build the event from the request object.
         Event event = new Event.Builder()
-                .title(createEventRequest.getTitle())
-                .description(createEventRequest.getDescription())
-                .date(createEventRequest.getDate())
-                .location(createEventRequest.getLocation())
-                .host(mUserService.getUserById(createEventRequest.getHostUserId()))
+                .title(saveEventRequest.getTitle())
+                .description(saveEventRequest.getDescription())
+                .date(saveEventRequest.getDate())
+                .location(saveEventRequest.getLocation())
+                .host(mUserService.getUserById(saveEventRequest.getHostUserId()))
                 .build();
 
         //Add the invited users to the event.
-        event = addInvitedUsers(createEventRequest.getInvitedUsersEmails(), event);
+        event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
+
+        //Save the event in the database.
+        event = mEventRepository.save(event);
+
+        //Notify the invitedUsers.
+        for (InvitedUser invitedUser : event.getInvitedUsers()) {
+            mGcmService.notifyInvitedUser(invitedUser);
+        }
+
+        return event;
+    }
+
+
+    /**
+     * Update an existing event in the database.
+     *
+     * @param saveEventRequest The request of the event to create.
+     * @param id               The id of the event we wish to edit.
+     * @return The stored event.
+     */
+    public Event updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException, IOException {
+        Event event = mEventRepository.findOne(id);
+
+        event.setTitle(saveEventRequest.getTitle());
+        event.setDescription(saveEventRequest.getDescription());
+        event.setDate(saveEventRequest.getDate());
+        event.setLocation(saveEventRequest.getLocation());
+        event.setHost(mUserService.getUserById(saveEventRequest.getHostUserId()));
+
+        //Add the invited users to the event.
+        event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
 
         //Save the event in the database.
         event = mEventRepository.save(event);

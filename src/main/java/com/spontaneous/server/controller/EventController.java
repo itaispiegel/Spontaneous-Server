@@ -2,7 +2,7 @@ package com.spontaneous.server.controller;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
-import com.spontaneous.server.model.request.CreateEventRequest;
+import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 /**
- * This is a REST controller for createEventRequest operations.
+ * This is a REST controller for saveEventRequest operations.
  */
 @RestController
 @RequestMapping(value = "/API/events")
@@ -32,23 +32,37 @@ public class EventController {
     }
 
     /**
-     * A controller method for creating a new createEventRequest, given the createEventRequest details.
+     * A controller method for creating a new saveEventRequest, given the saveEventRequest details.
      * In case of {@link ServiceException}, return the error.
      *
-     * @param createEventRequest The details of the createEventRequest - given in JSON.
+     * @param saveEventRequest The details of the saveEventRequest - given in JSON.
      * @return {@link BaseResponse} stating the result of the process.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public BaseResponse createEvent(@RequestBody CreateEventRequest createEventRequest) {
+    public BaseResponse createEvent(@RequestBody SaveEventRequest saveEventRequest) {
 
         try {
 
-            mLogger.info("Create Event Request {}", createEventRequest);
-            Event event = mEventService.createEvent(createEventRequest);
+            mLogger.info("Create Event Request {}", saveEventRequest);
+            Event event = mEventService.updateEvent(saveEventRequest);
 
             return new BaseResponse<>(event);
 
         } catch (IOException | ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public BaseResponse updateEvent(@RequestParam("id") long id, @RequestBody SaveEventRequest saveEventRequest) {
+
+        try {
+
+            mLogger.info("Update Event Request, for event with id #" + id + ": " + saveEventRequest);
+            Event event = mEventService.updateEvent(saveEventRequest);
+            return new BaseResponse<>(event);
+
+        } catch (ServiceException | IOException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }

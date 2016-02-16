@@ -8,7 +8,7 @@ import java.util.HashSet;
 /**
  * This class represents an HTTP POST request to create a new event.
  */
-public class CreateEventRequest {
+public class SaveEventRequest {
 
     /**
      * The title of the event.
@@ -49,7 +49,7 @@ public class CreateEventRequest {
     @Expose
     private final String location;
 
-    public CreateEventRequest(String title, String description, long hostUserId, HashSet<String> invitedUsersEmails, DateTime date, String location) {
+    public SaveEventRequest(String title, String description, long hostUserId, HashSet<String> invitedUsersEmails, DateTime date, String location) {
         this.title = title;
         this.description = description;
         this.hostUserId = hostUserId;
@@ -84,7 +84,7 @@ public class CreateEventRequest {
 
     @Override
     public String toString() {
-        return "CreateEventRequest{" +
+        return "SaveEventRequest{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", hostUserId=" + hostUserId +
