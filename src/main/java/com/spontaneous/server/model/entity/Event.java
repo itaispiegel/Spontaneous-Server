@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,10 +25,10 @@ public class Event extends BaseEntity {
     private User host;
 
     /**
-     * Users attending to the event.
+     * Users attending the event.
      * One event has many users attending.
      */
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Expose
     private List<InvitedUser> invitedUsers;
 
@@ -65,7 +66,7 @@ public class Event extends BaseEntity {
 
     private Event(Builder builder) {
         setHost(builder.host);
-        setInvitedUsers(builder.invitedUsers);
+        inviteUsers(builder.invitedUsers);
         setTitle(builder.title);
         setDescription(builder.description);
         setDate(builder.date);
@@ -84,8 +85,12 @@ public class Event extends BaseEntity {
         return invitedUsers;
     }
 
-    public void setInvitedUsers(List<InvitedUser> invitedUsers) {
-        this.invitedUsers = invitedUsers;
+    public void inviteUsers(List<InvitedUser> invitedUsers) {
+        if(this.invitedUsers == null) {
+            this.invitedUsers = new ArrayList<>();
+        }
+
+        this.invitedUsers.addAll(invitedUsers);
     }
 
     public void clearInvitedUsers() {

@@ -146,7 +146,7 @@ public class EventService {
         }
 
         //Set the invited users list to the event entity.
-        event.setInvitedUsers(invitedUsers);
+        event.inviteUsers(invitedUsers);
 
         return event;
     }
