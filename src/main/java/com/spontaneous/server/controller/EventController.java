@@ -32,10 +32,10 @@ public class EventController {
     }
 
     /**
-     * A controller method for creating a new saveEventRequest, given the saveEventRequest details.
+     * A controller method for creating a new event, given the saveEventRequest details.
      * In case of {@link ServiceException}, return the error.
      *
-     * @param saveEventRequest The details of the saveEventRequest - given in JSON.
+     * @param saveEventRequest The details of the event - given in JSON.
      * @return {@link BaseResponse} stating the result of the process.
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -53,6 +53,13 @@ public class EventController {
         }
     }
 
+    /**
+     * A controller method for updating an existing event, given the saveEventRequest details.
+     * In case of {@link ServiceException}, return the error.
+     *
+     * @param saveEventRequest The details of the event - given in JSON.
+     * @return {@link BaseResponse} stating the result of the process.
+     */
     @RequestMapping(method = RequestMethod.PUT)
     public BaseResponse updateEvent(@RequestParam("id") long id, @RequestBody SaveEventRequest saveEventRequest) {
 
