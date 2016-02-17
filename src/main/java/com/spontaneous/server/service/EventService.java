@@ -97,14 +97,7 @@ public class EventService {
         event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
 
         //Save the event in the database.
-        event = mEventRepository.save(event);
-
-        //Notify the invitedUsers.
-        for (InvitedUser invitedUser : event.getInvitedUsers()) {
-            mGcmService.notifyInvitedUser(invitedUser);
-        }
-
-        return event;
+        return mEventRepository.save(event);
     }
 
 
