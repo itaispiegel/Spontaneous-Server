@@ -86,8 +86,15 @@ public class Event extends BaseEntity {
     }
 
     public void inviteUsers(List<InvitedUser> invitedUsers) {
+
+        //Initialize the invited users list field if it is null.
         if(this.invitedUsers == null) {
             this.invitedUsers = new ArrayList<>();
+        }
+
+        //Return void if the given list is null.
+        if(invitedUsers == null) {
+            return;
         }
 
         this.invitedUsers.addAll(invitedUsers);
