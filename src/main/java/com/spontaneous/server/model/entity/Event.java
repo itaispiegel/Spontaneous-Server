@@ -88,6 +88,10 @@ public class Event extends BaseEntity {
         this.invitedUsers = invitedUsers;
     }
 
+    public void clearInvitedUsers() {
+        invitedUsers.clear();
+    }
+
     public String getTitle() {
         return title;
     }

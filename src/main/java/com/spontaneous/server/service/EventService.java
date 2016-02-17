@@ -2,7 +2,6 @@ package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
-import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.repository.EventRepository;
@@ -87,6 +86,11 @@ public class EventService {
     public Event updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException, IOException {
         Event event = mEventRepository.findOne(id);
 
+        //In case no such event is found, throw an exception.
+        if(event == null) {
+            throw new ServiceException(String.format("There is no such event with id #%d", id));
+        }
+
         event.setTitle(saveEventRequest.getTitle());
         event.setDescription(saveEventRequest.getDescription());
         event.setDate(saveEventRequest.getDate());
@@ -94,7 +98,7 @@ public class EventService {
         event.setHost(mUserService.getUserById(saveEventRequest.getHostUserId()));
 
         //Clear the invited users list, and add the invited users to the event.
-        event.setInvitedUsers(null);
+        event.clearInvitedUsers();
         event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
 
         //Save the event in the database.
