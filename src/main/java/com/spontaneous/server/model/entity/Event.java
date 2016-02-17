@@ -1,7 +1,6 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
-import com.spontaneous.server.model.request.SaveEventRequest;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 

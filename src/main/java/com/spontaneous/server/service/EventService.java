@@ -93,7 +93,8 @@ public class EventService {
         event.setLocation(saveEventRequest.getLocation());
         event.setHost(mUserService.getUserById(saveEventRequest.getHostUserId()));
 
-        //Add the invited users to the event.
+        //Clear the invited users list, and add the invited users to the event.
+        event.setInvitedUsers(null);
         event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
 
         //Save the event in the database.
@@ -129,8 +130,9 @@ public class EventService {
 
             try {
 
-                User user = mUserService.getUserByEmail(email);
-                invitedUsers.add(new InvitedUser(user, event));
+                InvitedUser invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event);
+
+                invitedUsers.add(invitedUser);
 
             } catch (ServiceException e) {
                 //The ServiceException is caught in case that there is no user with the given email.
