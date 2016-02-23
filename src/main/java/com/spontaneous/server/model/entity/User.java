@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -220,20 +221,8 @@ public class User extends BaseEntity {
     /**
      * Set whether the user is a male or a female.
      */
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    /**
-     * Set whether the user is a male or a female.
-     */
     public void setGender(String gender) {
-        //Uppercase the first letter so the string will match the enum pattern.
-        gender = gender.substring(0, 1)
-                .toUpperCase()
-                + gender.substring(1);
-
-        this.gender = Gender.valueOf(gender);
+        this.gender = Gender.parse(gender);
     }
 
     public String getGcmToken() {
@@ -242,6 +231,23 @@ public class User extends BaseEntity {
 
     public void setGcmToken(String gcmToken) {
         this.gcmToken = gcmToken;
+    }
+
+    /**
+     * @return The age of the user in years.
+     */
+    public int getAge() {
+        DateTime now = DateTime.now();
+        return Years.yearsBetween(birthday, now).getYears();
+    }
+
+    /**
+     * Create a public user profile.
+     *
+     * @return {@link UserProfileRO} of the user.
+     */
+    public UserProfileRO createPublicProfile() {
+        return new UserProfileRO(name, email, profilePicture, getAge());
     }
 
     /**
@@ -262,7 +268,21 @@ public class User extends BaseEntity {
     }
 
     public enum Gender {
-        Male, Female, Unspecified
+        Male, Female, Unspecified;
+
+        /**
+         * Uppercase the first letter so the string will match the enum pattern.
+         *
+         * @param gender Given gender to parse.
+         * @return Gender enum based on the given String value.
+         */
+        public static Gender parse(String gender) {
+            if (gender == null || gender.length() == 0) {
+                return Gender.Unspecified;
+            }
+
+            return Gender.valueOf(gender.substring(0, 1).toUpperCase() + gender.substring(1));
+        }
     }
 
     /**

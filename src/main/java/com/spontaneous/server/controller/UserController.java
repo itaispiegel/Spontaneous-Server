@@ -71,7 +71,8 @@ public class UserController {
 
     /**
      * Update a user's GCM token.
-     * @param id Id of the user.
+     *
+     * @param id    Id of the user.
      * @param token The updated token.
      * @return The user instance.
      */
@@ -79,6 +80,22 @@ public class UserController {
     public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
         try {
             return new BaseResponse<>(mUserService.updateGcmToken(id, token));
+        } catch (ServiceException e) {
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Get the list of friends of the user.
+     *
+     * @param id The id of the user.
+     * @return {@link BaseResponse} representing the result of the request.
+     */
+    @RequestMapping(value = "/friends", method = RequestMethod.GET)
+    public BaseResponse getUsersFriends(@RequestParam("id") long id) {
+
+        try {
+            return new BaseResponse<>(mUserService.getUserFriends(id));
         } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }

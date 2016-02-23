@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.social.ApiException;
-import org.springframework.social.facebook.api.FriendOperations;
 import org.springframework.social.facebook.api.ImageType;
+import org.springframework.social.facebook.api.PagedList;
+import org.springframework.social.facebook.api.Reference;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.support.URIBuilder;
@@ -19,12 +20,12 @@ import java.net.URI;
 @Service
 public class FacebookService {
 
-    private final Logger mLogger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * The namespace of the application.
      */
     private static final String APP_NAMESPACE = "Spontaneous";
+
+    private final Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * @param accessToken Facebook auth access token of the user.
@@ -38,22 +39,26 @@ public class FacebookService {
      * Get user details by his Facebook id and access token.
      *
      * @param accessToken Facebook access token of the user.
-     * @param userId      Facebook user id.
      * @return User details.
      * @throws ApiException Is caught in case there was no user found with the given access credentials.
      */
-    private User getUserProfile(String accessToken, String userId) throws ApiException {
+    private User getUserProfile(String accessToken) throws ApiException {
 
         try {
             return getFacebookTemplate(accessToken)
                     .userOperations()
-                    .getUserProfile(userId);
+                    .getUserProfile();
         } catch (ApiException e) {
             mLogger.error("Facebook access token or user id are incorrect.");
             mLogger.error(e.getMessage());
 
             throw e;
         }
+    }
+
+    public PagedList<Reference> getUserFriends(String accessToken) throws ApiException {
+        return getFacebookTemplate(accessToken)
+                .friendOperations().getFriends();
     }
 
     /**
@@ -90,7 +95,7 @@ public class FacebookService {
                                                                    String accessToken, String facebookUserId) throws ApiException, IllegalArgumentException {
 
         //Get the user details from Facebook.
-        User facebookUser = getUserProfile(accessToken, facebookUserId);
+        User facebookUser = getUserProfile(accessToken);
 
         user.setProfilePicture(fetchProfilePictureUrl(accessToken, facebookUserId));
 

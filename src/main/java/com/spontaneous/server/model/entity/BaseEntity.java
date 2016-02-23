@@ -37,7 +37,7 @@ public abstract class BaseEntity implements Serializable {
     @CreatedDate
     @JsonSerialize(using = DateTimeSerializer.class)
     @Expose
-    private DateTime creationTime;
+    private final DateTime creationTime;
 
     /**
      * Create a new empty entity.

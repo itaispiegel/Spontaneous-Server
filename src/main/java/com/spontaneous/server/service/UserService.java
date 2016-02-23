@@ -1,6 +1,7 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.model.entity.UserProfileRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
@@ -8,7 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.ApiException;
+import org.springframework.social.facebook.api.PagedList;
+import org.springframework.social.facebook.api.Reference;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is part of the service layer of the application and is used for user manipulation in the database.
@@ -57,6 +63,23 @@ public class UserService {
 
         if (user == null) {
             throw new ServiceException(String.format("No such user with the the email: %s.", email));
+        }
+
+        return user;
+    }
+
+    /**
+     * Find a user with the given Facebook id.
+     *
+     * @param facebookUserId Facebook id of the user to find.
+     * @return The user entity.
+     * @throws ServiceException Is thrown in case that no such user was found.
+     */
+    public User getUserByFacebookId(String facebookUserId) throws ServiceException {
+        User user = mUserRepository.findByFacebookUserId(facebookUserId);
+
+        if (user == null) {
+            throw new ServiceException(String.format("No such user with the Facebook id: %s", facebookUserId));
         }
 
         return user;
@@ -118,5 +141,47 @@ public class UserService {
         user.setGcmToken(token);
 
         return mUserRepository.save(user);
+    }
+
+    /**
+     * @param id Id of the given user.
+     * @return The list of Facebook friends of the user using Spontaneous.
+     */
+    public List<UserProfileRO> getUserFriends(long id) throws ServiceException, ApiException {
+
+        //Get list of friends of current user.
+        PagedList<Reference> friends = mFacebookService.getUserFriends(getUserById(id).getFacebookToken());
+
+        //Initialize a list of user profiles.
+        ArrayList<UserProfileRO> friendsProfiles = new ArrayList<>(friends.size());
+
+        //Add each user profile to the list.
+        for (Reference friend : friends) {
+
+            try {
+
+                //Get the friend details from the database.
+                UserProfileRO friendProfile = getUserByFacebookId(friend.getId())
+                        .createPublicProfile();
+
+                friendsProfiles.add(friendProfile);
+
+            } catch (ServiceException e) {
+                //In case there is no such user registered in the database, log the exception.
+                mLogger.error(e.getMessage());
+            }
+        }
+
+        return friendsProfiles;
+    }
+
+    /**
+     * Gets the user profile of a user by his id.
+     *
+     * @param id Id of the given user.
+     * @return Return {@link UserProfileRO} of the user.
+     */
+    public UserProfileRO getUserProfile(long id) throws ServiceException {
+        return getUserById(id).createPublicProfile();
     }
 }

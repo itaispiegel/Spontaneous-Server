@@ -83,7 +83,7 @@ public class EventService {
      * @param id               The id of the event we wish to edit.
      * @return The stored event.
      */
-    public Event updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException, IOException {
+    public Event updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException {
         Event event = mEventRepository.findOne(id);
 
         //In case no such event is found, throw an exception.

@@ -69,7 +69,7 @@ public class EventController {
             Event event = mEventService.updateEvent(id, saveEventRequest);
             return new BaseResponse<>(event);
 
-        } catch (ServiceException | IOException e) {
+        } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
