@@ -1,7 +1,7 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.User;
-import com.spontaneous.server.model.entity.UserProfileRO;
+import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;

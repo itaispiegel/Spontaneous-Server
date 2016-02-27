@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -27,7 +28,6 @@ public class User extends BaseEntity {
 
     /**
      * Facebook token of the user.
-     * The field is ignored since the data is private, and should be kept secured.
      */
     @Column(name = "facebook_token")
     @Expose
@@ -242,15 +242,6 @@ public class User extends BaseEntity {
     }
 
     /**
-     * Create a public user profile.
-     *
-     * @return {@link UserProfileRO} of the user.
-     */
-    public UserProfileRO createPublicProfile() {
-        return new UserProfileRO(name, email, profilePicture, getAge());
-    }
-
-    /**
      * Return a string representation of the user.
      */
     @Override
@@ -265,6 +256,15 @@ public class User extends BaseEntity {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender=" + gender +
                 "} " + super.toString();
+    }
+
+    /**
+     * Create a public user profile.
+     *
+     * @return {@link UserProfileRO} of the user.
+     */
+    public UserProfileRO createRepresentationalObject() {
+        return new UserProfileRO(name, email, profilePicture, getAge());
     }
 
     public enum Gender {

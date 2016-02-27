@@ -1,4 +1,4 @@
-package com.spontaneous.server.model.entity;
+package com.spontaneous.server.model.entity.representational;
 
 import com.google.gson.annotations.Expose;
 

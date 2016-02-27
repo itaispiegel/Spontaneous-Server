@@ -2,6 +2,7 @@ package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.representational.InvitedUserRO;
 import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 import com.spontaneous.server.repository.EventRepository;
@@ -47,7 +48,7 @@ public class EventService {
      * @param saveEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event updateEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
+    public EventRO updateEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
 
         //ServiceException is caught in case that the host user does not exist.
         //IOException is caught in case that the GCMService was unable to send a notification.
@@ -72,7 +73,7 @@ public class EventService {
             mGcmService.notifyInvitedUser(invitedUser);
         }
 
-        return event;
+        return event.createRepresentationalObject();
     }
 
 
@@ -83,7 +84,7 @@ public class EventService {
      * @param id               The id of the event we wish to edit.
      * @return The stored event.
      */
-    public Event updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException {
+    public EventRO updateEvent(long id, SaveEventRequest saveEventRequest) throws ServiceException {
         Event event = mEventRepository.findOne(id);
 
         //In case no such event is found, throw an exception.
@@ -102,7 +103,7 @@ public class EventService {
         event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
 
         //Save the event in the database.
-        return mEventRepository.save(event);
+        return mEventRepository.save(event).createRepresentationalObject();
     }
 
 
@@ -114,7 +115,7 @@ public class EventService {
      * @param emails Of users to invite.
      * @param event  To invite them to.
      */
-    private Event addInvitedUsers(HashSet<String> emails, Event event) {
+    private List<InvitedUserRO> addInvitedUsers(HashSet<String> emails, Event event) {
 
         //In case no users are invited, invite only the host user.
         if (emails == null) {
@@ -127,14 +128,15 @@ public class EventService {
         mLogger.info("Inviting the following users: {}", emails);
 
         //The size allocated is for the users in the given set of emails.
-        ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size());
+        ArrayList<InvitedUserRO> invitedUsers = new ArrayList<>(emails.size());
 
         //Loop over each email in the given collection, and invite each user.
         for (String email : emails) {
 
             try {
 
-                InvitedUser invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event);
+                InvitedUserRO invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event)
+                        .createRepresentationalObject();
 
                 invitedUsers.add(invitedUser);
 
@@ -145,10 +147,7 @@ public class EventService {
             }
         }
 
-        //Set the invited users list to the event entity.
-        event.inviteUsers(invitedUsers);
-
-        return event;
+        return invitedUsers;
     }
 
 
@@ -159,7 +158,7 @@ public class EventService {
      * @return List of events.
      * @throws ServiceException In case there is no such user with the given id.
      */
-    public List<Event> getUserEvents(long userId) throws ServiceException {
+    public List<EventRO> getUserEvents(long userId) throws ServiceException {
 
         //In case there is no such user, throw an exception.
         if (!mUserService.exists(userId)) {

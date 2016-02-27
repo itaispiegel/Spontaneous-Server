@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.entity.representational.InvitedUserRO;
 import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
 
 import javax.persistence.*;
@@ -18,7 +19,6 @@ public class InvitedUser extends BaseEntity {
      * Reference to the user itself.
      */
     @OneToOne(fetch = FetchType.EAGER)
-    @Expose
     private User user;
 
     /**
@@ -44,7 +44,6 @@ public class InvitedUser extends BaseEntity {
 
     /**
      * Default constructor.
-     * WHY JPA? WHY?!
      */
     public InvitedUser() {
         this.status = "";
@@ -57,18 +56,8 @@ public class InvitedUser extends BaseEntity {
         this.event = event;
     }
 
-    /**
-     * @return User reference.
-     */
     public User getUser() {
         return user;
-    }
-
-    /**
-     * Sets the user reference.
-     */
-    public void setUser(User user) {
-        this.user = user;
     }
 
     /**
@@ -76,13 +65,6 @@ public class InvitedUser extends BaseEntity {
      */
     public Event getEvent() {
         return event;
-    }
-
-    /**
-     * Sets the event reference.
-     */
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     /**
@@ -94,13 +76,6 @@ public class InvitedUser extends BaseEntity {
     }
 
     /**
-     * Sets user status on the event.
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
      * @return Whether the user is attending the event.
      */
     public boolean isAttending() {
@@ -108,14 +83,8 @@ public class InvitedUser extends BaseEntity {
     }
 
     /**
-     * Sets whether the user is attending the event.
-     */
-    public void setIsAttending(boolean isAttending) {
-        this.isAttending = isAttending;
-    }
-
-    /**
      * Update the InvitedUser according to the given {@link UpdateInvitedUserRequest}.
+     *
      * @param updateRequest The request to update the invited user.
      */
     public void update(UpdateInvitedUserRequest updateRequest) {
@@ -130,5 +99,9 @@ public class InvitedUser extends BaseEntity {
                 ", status='" + status + '\'' +
                 ", isAttending=" + isAttending +
                 '}';
+    }
+
+    public InvitedUserRO createRepresentationalObject() {
+        return new InvitedUserRO(user.createRepresentationalObject(), event.createRepresentationalObject(), status, isAttending);
     }
 }
