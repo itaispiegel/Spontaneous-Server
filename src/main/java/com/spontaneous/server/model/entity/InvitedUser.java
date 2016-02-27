@@ -44,7 +44,6 @@ public class InvitedUser extends BaseEntity {
 
     /**
      * Default constructor.
-     * WHY JPA? WHY?!
      */
     public InvitedUser() {
         this.status = "";

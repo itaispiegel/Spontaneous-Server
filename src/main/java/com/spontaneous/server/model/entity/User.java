@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -246,7 +247,7 @@ public class User extends BaseEntity {
      *
      * @return {@link UserProfileRO} of the user.
      */
-    public UserProfileRO createPublicProfile() {
+    public UserProfileRO createRepresentationalObject() {
         return new UserProfileRO(name, email, profilePicture, getAge());
     }
 

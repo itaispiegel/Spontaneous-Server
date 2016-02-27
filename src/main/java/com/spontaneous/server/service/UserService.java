@@ -1,7 +1,7 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.User;
-import com.spontaneous.server.model.entity.UserProfileRO;
+import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
@@ -162,7 +162,7 @@ public class UserService {
 
                 //Get the friend details from the database.
                 UserProfileRO friendProfile = getUserByFacebookId(friend.getId())
-                        .createPublicProfile();
+                        .createRepresentationalObject();
 
                 friendsProfiles.add(friendProfile);
 
@@ -182,6 +182,6 @@ public class UserService {
      * @return Return {@link UserProfileRO} of the user.
      */
     public UserProfileRO getUserProfile(long id) throws ServiceException {
-        return getUserById(id).createPublicProfile();
+        return getUserById(id).createRepresentationalObject();
     }
 }
