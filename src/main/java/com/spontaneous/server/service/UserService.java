@@ -162,7 +162,7 @@ public class UserService {
 
                 //Get the friend details from the database.
                 UserProfileRO friendProfile = getUserByFacebookId(friend.getId())
-                        .createPublicProfile();
+                        .createRepresentationalObject();
 
                 friendsProfiles.add(friendProfile);
 
@@ -182,6 +182,6 @@ public class UserService {
      * @return Return {@link UserProfileRO} of the user.
      */
     public UserProfileRO getUserProfile(long id) throws ServiceException {
-        return getUserById(id).createPublicProfile();
+        return getUserById(id).createRepresentationalObject();
     }
 }

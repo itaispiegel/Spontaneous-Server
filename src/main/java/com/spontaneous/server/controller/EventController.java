@@ -44,7 +44,7 @@ public class EventController {
         try {
 
             mLogger.info("Create Event Request {}", saveEventRequest);
-            Event event = mEventService.updateEvent(saveEventRequest);
+            Event event = mEventService.createEvent(saveEventRequest);
 
             return new BaseResponse<>(event);
 
