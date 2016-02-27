@@ -1,11 +1,12 @@
 package com.spontaneous.server.model.entity.representational;
 
+import com.spontaneous.server.model.entity.Event;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
 /**
- * Created by Itai on 27-Feb-16.
+ * This is a representational object for the {@link Event} entity.
  */
 public class EventRO {
 

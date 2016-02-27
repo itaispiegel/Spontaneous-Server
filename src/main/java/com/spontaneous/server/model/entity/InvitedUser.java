@@ -102,6 +102,6 @@ public class InvitedUser extends BaseEntity {
     }
 
     public InvitedUserRO createRepresentationalObject() {
-        return new InvitedUserRO(user.createRepresentationalObject(), event.createRepresentationalObject(), status, isAttending);
+        return new InvitedUserRO(user.createRepresentationalObject(), status, isAttending);
     }
 }

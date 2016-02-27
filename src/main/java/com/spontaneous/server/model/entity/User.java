@@ -264,7 +264,8 @@ public class User extends BaseEntity {
      * @return {@link UserProfileRO} of the user.
      */
     public UserProfileRO createRepresentationalObject() {
-        return new UserProfileRO(name, email, profilePicture, getAge());
+        int age = getAge();
+        return new UserProfileRO(name, email, profilePicture, age);
     }
 
     public enum Gender {

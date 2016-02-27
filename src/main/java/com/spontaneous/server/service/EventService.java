@@ -135,7 +135,6 @@ public class EventService {
             try {
 
                 InvitedUser invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event);
-
                 invitedUsers.add(invitedUser);
 
             } catch (ServiceException e) {
