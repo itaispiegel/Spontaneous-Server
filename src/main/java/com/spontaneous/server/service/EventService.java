@@ -47,7 +47,7 @@ public class EventService {
      * @param saveEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event updateEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
+    public Event createEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
 
         //ServiceException is caught in case that the host user does not exist.
         //IOException is caught in case that the GCMService was unable to send a notification.
@@ -69,7 +69,7 @@ public class EventService {
 
         //Notify the invitedUsers.
         for (InvitedUser invitedUser : event.getInvitedUsers()) {
-            mGcmService.notifyInvitedUser(invitedUser);
+            mGcmService.sendInvitation(invitedUser);
         }
 
         return event;
@@ -87,7 +87,7 @@ public class EventService {
         Event event = mEventRepository.findOne(id);
 
         //In case no such event is found, throw an exception.
-        if(event == null) {
+        if (event == null) {
             throw new ServiceException(String.format("There is no such event with id #%d", id));
         }
 
@@ -135,7 +135,6 @@ public class EventService {
             try {
 
                 InvitedUser invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event);
-
                 invitedUsers.add(invitedUser);
 
             } catch (ServiceException e) {
@@ -209,5 +208,27 @@ public class EventService {
         mEventRepository.delete(id);
 
         return deletedEvent;
+    }
+
+    /**
+     * A service method for sending a broadcast message to all users of an event.
+     *
+     * @param id      The id of the event.
+     * @param message The message to broadcast.
+     */
+    public void notifyGuests(long id, String message) {
+        Event event = mEventRepository.findOne(id);
+
+        for (InvitedUser invitedUser : event.getInvitedUsers()) {
+            if (invitedUser.getUser().equals(event.getHost())) {
+                //TODO: Continue
+            }
+
+            try {
+                mGcmService.sendBroadcastMessage(invitedUser.getUser(), message);
+            } catch (IOException e) {
+                mLogger.error(e.getMessage());
+            }
+        }
     }
 }

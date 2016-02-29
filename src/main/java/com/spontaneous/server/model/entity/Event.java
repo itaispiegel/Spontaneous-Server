@@ -1,12 +1,15 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.entity.representational.EventRO;
+import com.spontaneous.server.model.entity.representational.InvitedUserRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class represents an event persisted in the database.
@@ -64,6 +67,17 @@ public class Event extends BaseEntity {
     public Event() {
     }
 
+    public EventRO createRepresentationalObject() {
+        ArrayList<InvitedUserRO> invitedUserROs = new ArrayList<>(invitedUsers.size());
+
+        //Add all of the user profiles to the list.
+        invitedUserROs.addAll(invitedUsers.stream()
+                .map(InvitedUser::createRepresentationalObject)
+                .collect(Collectors.toList()));
+
+        return new EventRO(host.createRepresentationalObject(), invitedUserROs, title, description, date, location);
+    }
+
     private Event(Builder builder) {
         setHost(builder.host);
         inviteUsers(builder.invitedUsers);
@@ -85,15 +99,20 @@ public class Event extends BaseEntity {
         return invitedUsers;
     }
 
+    /**
+     * Invite a list of users to the event.
+     *
+     * @param invitedUsers The list of users to invite.
+     */
     public void inviteUsers(List<InvitedUser> invitedUsers) {
 
         //Initialize the invited users list field if it is null.
-        if(this.invitedUsers == null) {
+        if (this.invitedUsers == null) {
             this.invitedUsers = new ArrayList<>();
         }
 
         //Return void if the given list is null.
-        if(invitedUsers == null) {
+        if (invitedUsers == null) {
             return;
         }
 

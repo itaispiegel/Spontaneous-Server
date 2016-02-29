@@ -44,7 +44,7 @@ public class EventController {
         try {
 
             mLogger.info("Create Event Request {}", saveEventRequest);
-            Event event = mEventService.updateEvent(saveEventRequest);
+            Event event = mEventService.createEvent(saveEventRequest);
 
             return new BaseResponse<>(event);
 
@@ -113,6 +113,12 @@ public class EventController {
         }
     }
 
+    /**
+     * A controller method for deleting an event.
+     *
+     * @param id Id of the event we wish to delete.
+     * @return {@link BaseResponse} representing the result of the action.
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public BaseResponse deleteEvent(@RequestParam("id") long id) {
 
@@ -127,5 +133,15 @@ public class EventController {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
 
+    }
+
+    /**
+     * A controller method for sending a broadcast message to all users invited to a specific event.
+     * @param id Id of the event to broadcast the message to.
+     * @param message The content of the message to broadcast.
+     */
+    @RequestMapping(value = "/notify", method = RequestMethod.POST)
+    public void notifyGuests(@RequestParam("id") long id, @RequestBody String message) {
+        mEventService.notifyGuests(id, message);
     }
 }

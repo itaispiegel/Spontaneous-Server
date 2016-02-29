@@ -20,11 +20,7 @@ import java.net.URI;
 @Service
 public class FacebookService {
 
-    /**
-     * The namespace of the application.
-     */
     private static final String APP_NAMESPACE = "Spontaneous";
-
     private final Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -56,6 +52,12 @@ public class FacebookService {
         }
     }
 
+    /**
+     * Get the Facebook friends of the authenticated user.
+     * @param accessToken Access token of the authenticated user.
+     * @return List of friends.
+     * @throws ApiException In case of a Facebook error.
+     */
     public PagedList<Reference> getUserFriends(String accessToken) throws ApiException {
         return getFacebookTemplate(accessToken)
                 .friendOperations().getFriends();

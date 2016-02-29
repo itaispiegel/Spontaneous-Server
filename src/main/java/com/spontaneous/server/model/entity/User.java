@@ -28,7 +28,6 @@ public class User extends BaseEntity {
 
     /**
      * Facebook token of the user.
-     * The field is ignored since the data is private, and should be kept secured.
      */
     @Column(name = "facebook_token")
     @Expose
@@ -189,9 +188,13 @@ public class User extends BaseEntity {
      * If there is no birthday, then set the birthday's value to the current datetime.
      */
     public void setBirthday(String birthday, String pattern) {
+
+        //If birthday is null, set the birthday to the current date.
         if (birthday == null) {
             this.birthday = DateTime.now();
         } else {
+
+            //If birthday is not null, set the field value to the given value.
             this.birthday = DateTimeFormat.forPattern(pattern)
                     .withZone(DateTimeZone.UTC)
                     .parseDateTime(birthday);
@@ -268,13 +271,16 @@ public class User extends BaseEntity {
                 "} " + super.toString();
     }
 
+    /**
+     * This enum represents a user's gender.
+     */
     public enum Gender {
         Male, Female, Unspecified;
 
         /**
-         * Uppercase the first letter so the string will match the enum pattern.
+         * Uppercase the first letter so the string will match the enum pattern (Male, Female, Unspecified).
          *
-         * @param gender Given gender to parse.
+         * @param gender Given gender String to parse.
          * @return Gender enum based on the given String value.
          */
         public static Gender parse(String gender) {
