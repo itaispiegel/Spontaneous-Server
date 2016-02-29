@@ -69,7 +69,7 @@ public class EventService {
 
         //Notify the invitedUsers.
         for (InvitedUser invitedUser : event.getInvitedUsers()) {
-            mGcmService.notifyInvitedUser(invitedUser);
+            mGcmService.sendInvitation(invitedUser);
         }
 
         return event;
@@ -208,5 +208,21 @@ public class EventService {
         mEventRepository.delete(id);
 
         return deletedEvent;
+    }
+
+    public void notifyGuests(long id, String message) {
+        Event event = mEventRepository.findOne(id);
+
+        for(InvitedUser invitedUser : event.getInvitedUsers()) {
+            if(invitedUser.getUser().equals(event.getHost())) {
+                //TODO: Continue
+            }
+
+            try {
+                mGcmService.sendBroadcastMessage(invitedUser.getUser(), message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

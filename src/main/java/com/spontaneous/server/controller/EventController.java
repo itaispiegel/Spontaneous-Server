@@ -113,6 +113,12 @@ public class EventController {
         }
     }
 
+    /**
+     * A controller method for deleting an event.
+     *
+     * @param id Id of the event we wish to delete.
+     * @return {@link BaseResponse} representing the result of the action.
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public BaseResponse deleteEvent(@RequestParam("id") long id) {
 
@@ -127,5 +133,10 @@ public class EventController {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
 
+    }
+
+    @RequestMapping(value = "/notify", method = RequestMethod.POST)
+    public void notifyGuests(@RequestParam("id") long id, @RequestBody String message) {
+        mEventService.notifyGuests(id, message);
     }
 }
