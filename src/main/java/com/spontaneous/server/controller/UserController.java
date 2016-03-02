@@ -47,6 +47,7 @@ public class UserController {
             return new BaseResponse<>(user);
 
         } catch (ApiException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -65,6 +66,7 @@ public class UserController {
             mLogger.info("Fetching user with id #{}", id);
             return new BaseResponse<>(mUserService.getUserById(id));
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -82,6 +84,7 @@ public class UserController {
             mLogger.info("Updating gcm token for user with id #{}", id);
             return new BaseResponse<>(mUserService.updateGcmToken(id, token));
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -99,6 +102,7 @@ public class UserController {
             mLogger.info("Fetching list of friends for user with id #{}", id);
             return new BaseResponse<>(mUserService.getUserFriends(id));
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }

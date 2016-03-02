@@ -49,6 +49,7 @@ public class EventController {
             return new BaseResponse<>(event);
 
         } catch (IOException | ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -70,6 +71,7 @@ public class EventController {
             return new BaseResponse<>(event);
 
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -89,6 +91,7 @@ public class EventController {
             return new BaseResponse<>(mEventService.getUserEvents(id));
 
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -109,6 +112,7 @@ public class EventController {
             InvitedUser invitedUser = mEventService.updateInvitedUser(id, updateRequest);
             return new BaseResponse<>(invitedUser);
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
     }
@@ -130,6 +134,7 @@ public class EventController {
             return new BaseResponse<>(deletedEvent);
 
         } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
 
