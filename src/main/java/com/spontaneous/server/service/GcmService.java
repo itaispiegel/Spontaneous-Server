@@ -2,7 +2,7 @@ package com.spontaneous.server.service;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
-import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.Guest;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,31 +38,31 @@ public class GcmService {
     /**
      * Send a broadcast message to a given user.
      *
-     * @param invitedUser The user  to send the message to.
+     * @param guest The user  to send the message to.
      * @param content     The content of the message.
      * @throws ServiceException
      * @throws IOException
      */
-    public void sendBroadcastMessage(InvitedUser invitedUser, String content) throws ServiceException, IOException {
+    public void sendBroadcastMessage(Guest guest, String content) throws ServiceException, IOException {
 
         //The title of the message is the title of the event.
         Message message = new Message.Builder()
                 .addData("type", NotificationType.BROADCAST.toString())
-                .addData("title", invitedUser.getEvent().getTitle())
+                .addData("title", guest.getEvent().getTitle())
                 .addData("content", content)
                 .build();
 
-        sendNotification(message, invitedUser.getUser().getGcmToken());
+        sendNotification(message, guest.getUser().getGcmToken());
     }
 
     /**
-     * Notify an {@link InvitedUser} that he was invited to a new event.
+     * Notify an {@link Guest} that he was invited to a new event.
      *
-     * @param invitedUser The invited user we wish to notify.
+     * @param guest The invited user we wish to notify.
      * @throws ServiceException
      * @throws IOException
      */
-    public void sendInvitation(InvitedUser invitedUser) throws ServiceException, IOException {
+    public void sendInvitation(Guest guest) throws ServiceException, IOException {
         final String title = "Spontaneous";
         final String content = "You have been invited to an event!";
 
@@ -70,10 +70,10 @@ public class GcmService {
                 .addData("type", NotificationType.INVITATION.toString())
                 .addData("title", title)
                 .addData("content", content)
-                .addData("data", invitedUser.getEvent().toString())
+                .addData("data", guest.getEvent().toString())
                 .build();
 
-        sendNotification(message, invitedUser.getUser()
+        sendNotification(message, guest.getUser()
                 .getGcmToken());
     }
 

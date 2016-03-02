@@ -35,7 +35,7 @@ public class SaveEventRequest {
      * A {@link HashSet} is good in this case, since we want the emails to be unique.
      */
     @Expose
-    private final HashSet<String> invitedUsersEmails;
+    private final HashSet<String> guestsEmails;
 
     /**
      * When the event is.
@@ -49,11 +49,11 @@ public class SaveEventRequest {
     @Expose
     private final String location;
 
-    public SaveEventRequest(String title, String description, long hostUserId, HashSet<String> invitedUsersEmails, DateTime date, String location) {
+    public SaveEventRequest(String title, String description, long hostUserId, HashSet<String> guestsEmails, DateTime date, String location) {
         this.title = title;
         this.description = description;
         this.hostUserId = hostUserId;
-        this.invitedUsersEmails = invitedUsersEmails;
+        this.guestsEmails = guestsEmails;
         this.date = date;
         this.location = location;
     }
@@ -70,8 +70,8 @@ public class SaveEventRequest {
         return hostUserId;
     }
 
-    public HashSet<String> getInvitedUsersEmails() {
-        return invitedUsersEmails;
+    public HashSet<String> getGuestsEmails() {
+        return guestsEmails;
     }
 
     public DateTime getDate() {
@@ -88,7 +88,7 @@ public class SaveEventRequest {
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", hostUserId=" + hostUserId +
-                ", invitedUsersEmails=" + invitedUsersEmails +
+                ", guestsEmails=" + guestsEmails +
                 ", date=" + date +
                 ", location='" + location + '\'' +
                 '}';

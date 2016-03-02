@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
+import com.spontaneous.server.model.entity.representational.UserAccountRO;
 import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -250,8 +251,17 @@ public class User extends BaseEntity {
      *
      * @return {@link UserProfileRO} of the user.
      */
-    public UserProfileRO createRepresentationalObject() {
+    public UserProfileRO createUserProfile() {
         return new UserProfileRO(name, email, profilePicture, getAge());
+    }
+
+    /**
+     * Create a representational object of the user account.
+     *
+     * @return {@link UserAccountRO} of the user.
+     */
+    public UserAccountRO createUserAccount() {
+        return new UserAccountRO(name, email, profilePicture, birthday, gcmToken, gender, phoneNumber);
     }
 
     /**
@@ -269,27 +279,6 @@ public class User extends BaseEntity {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender=" + gender +
                 "} " + super.toString();
-    }
-
-    /**
-     * This enum represents a user's gender.
-     */
-    public enum Gender {
-        Male, Female, Unspecified;
-
-        /**
-         * Uppercase the first letter so the string will match the enum pattern (Male, Female, Unspecified).
-         *
-         * @param gender Given gender String to parse.
-         * @return Gender enum based on the given String value.
-         */
-        public static Gender parse(String gender) {
-            if (gender == null || gender.length() == 0) {
-                return Gender.Unspecified;
-            }
-
-            return Gender.valueOf(gender.substring(0, 1).toUpperCase() + gender.substring(1));
-        }
     }
 
     /**

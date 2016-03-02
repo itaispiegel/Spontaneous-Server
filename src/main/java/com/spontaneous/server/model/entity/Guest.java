@@ -1,10 +1,11 @@
 package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
-import com.spontaneous.server.model.entity.representational.InvitedUserRO;
-import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
+import com.spontaneous.server.model.entity.representational.GuestRO;
+import com.spontaneous.server.model.request.UpdateGuestRequest;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * This class represents a user invited to an event.
@@ -12,8 +13,8 @@ import javax.persistence.*;
  * NOTE: This class does not extend the {@code User} class.
  */
 @Entity
-@Table(name = "invited_users")
-public class InvitedUser extends BaseEntity {
+@Table(name = "guests")
+public class Guest extends BaseEntity {
 
     /**
      * Reference to the user itself.
@@ -24,6 +25,7 @@ public class InvitedUser extends BaseEntity {
 
     /**
      * Reference to the event the user is going to.
+     * Each event has many guests.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
@@ -44,14 +46,21 @@ public class InvitedUser extends BaseEntity {
     private boolean isAttending;
 
     /**
+     * A list of items the guest has committed to bring to the event.
+     */
+    @OneToMany(mappedBy = "bringer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Expose
+    private List<Item> items;
+
+    /**
      * Default constructor.
      */
-    public InvitedUser() {
+    public Guest() {
         this.status = "";
         this.isAttending = false;
     }
 
-    public InvitedUser(User user, Event event) {
+    public Guest(User user, Event event) {
         this();
         this.user = user;
         this.event = event;
@@ -83,26 +92,30 @@ public class InvitedUser extends BaseEntity {
         return isAttending;
     }
 
+    public List<Item> getItems() {
+        return items;
+    }
+
     /**
-     * Update the InvitedUser according to the given {@link UpdateInvitedUserRequest}.
+     * Update the Guest according to the given {@link UpdateGuestRequest}.
      *
      * @param updateRequest The request to update the invited user.
      */
-    public void update(UpdateInvitedUserRequest updateRequest) {
+    public void update(UpdateGuestRequest updateRequest) {
         this.isAttending = updateRequest.isAttending();
         this.status = updateRequest.getStatus();
     }
 
     @Override
     public String toString() {
-        return "InvitedUser{" +
+        return "Guest{" +
                 "user=" + user +
                 ", status='" + status + '\'' +
                 ", isAttending=" + isAttending +
                 '}';
     }
 
-    public InvitedUserRO createRepresentationalObject() {
-        return new InvitedUserRO(user.createRepresentationalObject(), status, isAttending);
+    public GuestRO createRepresentationalObject() {
+        return new GuestRO(user, status, isAttending, items);
     }
 }

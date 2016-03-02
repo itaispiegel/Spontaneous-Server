@@ -1,9 +1,11 @@
 package com.spontaneous.server.controller;
 
+import com.spontaneous.server.handler.EventHandler;
 import com.spontaneous.server.model.entity.Event;
-import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.Guest;
+import com.spontaneous.server.model.entity.representational.EventRO;
 import com.spontaneous.server.model.request.SaveEventRequest;
-import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
+import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
 import org.hibernate.service.spi.ServiceException;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * This is a REST controller for saveEventRequest operations.
@@ -24,11 +27,13 @@ public class EventController {
     private final Logger mLogger;
 
     private final EventService mEventService;
+    private final EventHandler mEventHandler;
 
     @Autowired
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, EventHandler eventHandler) {
         mLogger = LoggerFactory.getLogger(this.getClass());
         mEventService = eventService;
+        mEventHandler = eventHandler;
     }
 
     /**
@@ -44,9 +49,10 @@ public class EventController {
         try {
 
             mLogger.info("Create Event Request {}", saveEventRequest);
-            Event event = mEventService.createEvent(saveEventRequest);
 
-            return new BaseResponse<>(event);
+            EventRO createdEvent = mEventHandler.createEvent(saveEventRequest);
+
+            return new BaseResponse<>(createdEvent);
 
         } catch (IOException | ServiceException e) {
             mLogger.error(e.getMessage());
@@ -67,8 +73,10 @@ public class EventController {
         try {
 
             mLogger.info("Update Event Request, for event with id #" + id + ": " + saveEventRequest);
-            Event event = mEventService.updateEvent(id, saveEventRequest);
-            return new BaseResponse<>(event);
+
+            EventRO updatedEvent = mEventHandler.updateEvent(id, saveEventRequest);
+
+            return new BaseResponse<>(updatedEvent);
 
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
@@ -88,7 +96,10 @@ public class EventController {
         try {
 
             mLogger.info("Getting user events for user with id #{}", id);
-            return new BaseResponse<>(mEventService.getUserEvents(id));
+
+            List<EventRO> events = mEventHandler.getUserEvents(id);
+
+            return new BaseResponse<>(events);
 
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
@@ -97,20 +108,20 @@ public class EventController {
     }
 
     /**
-     * A controller method for updating an {@link InvitedUser}.
+     * A controller method for updating an {@link Guest}.
      *
      * @param id            The id of the invited user, we wish to update.
      * @param updateRequest The new details of the invited user.
      * @return {@link BaseResponse} representing the updated invited user, or the error occurred.
      */
-    @RequestMapping(value = "/updateInvitedUser", method = RequestMethod.PUT)
-    public BaseResponse updateInvitedUser(@RequestParam("id") long id, @RequestBody UpdateInvitedUserRequest updateRequest) {
+    @RequestMapping(value = "/updateGuest", method = RequestMethod.PUT)
+    public BaseResponse updateGuest(@RequestParam("id") long id, @RequestBody UpdateGuestRequest updateRequest) {
 
         try {
-            mLogger.info("Updating invited user with id #{}", id);
+            mLogger.info("Updating guest with id #{}", id);
 
-            InvitedUser invitedUser = mEventService.updateInvitedUser(id, updateRequest);
-            return new BaseResponse<>(invitedUser);
+            Guest guest = mEventService.updateGuest(id, updateRequest);
+            return new BaseResponse<>(guest);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -142,7 +153,8 @@ public class EventController {
 
     /**
      * A controller method for sending a broadcast message to all users invited to a specific event.
-     * @param id Id of the event to broadcast the message to.
+     *
+     * @param id      Id of the event to broadcast the message to.
      * @param message The content of the message to broadcast.
      */
     @RequestMapping(value = "/notify", method = RequestMethod.POST)

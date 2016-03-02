@@ -30,8 +30,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return List of events the user is invited to.
      */
     @Query(value = "SELECT DISTINCT e FROM Event e " +
-            "INNER JOIN e.invitedUsers i " +
+            "INNER JOIN e.guests i " +
             "WHERE i.user.id = :user_id " +
             "ORDER BY e.creationTime DESC")
-    List<Event> findByInvitedUser(@Param(value = "user_id") long id);
+    List<Event> findByGuest(@Param(value = "user_id") long id);
 }

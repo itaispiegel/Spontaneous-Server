@@ -2,14 +2,12 @@ package com.spontaneous.server.model.entity;
 
 import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.representational.EventRO;
-import com.spontaneous.server.model.entity.representational.InvitedUserRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class represents an event persisted in the database.
@@ -33,7 +31,7 @@ public class Event extends BaseEntity {
      */
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Expose
-    private List<InvitedUser> invitedUsers;
+    private List<Guest> guests;
 
     /**
      * The title of the event.
@@ -68,19 +66,12 @@ public class Event extends BaseEntity {
     }
 
     public EventRO createRepresentationalObject() {
-        ArrayList<InvitedUserRO> invitedUserROs = new ArrayList<>(invitedUsers.size());
-
-        //Add all of the user profiles to the list.
-        invitedUserROs.addAll(invitedUsers.stream()
-                .map(InvitedUser::createRepresentationalObject)
-                .collect(Collectors.toList()));
-
-        return new EventRO(host.createRepresentationalObject(), invitedUserROs, title, description, date, location);
+        return new EventRO(host, title, description, date, location, guests);
     }
 
     private Event(Builder builder) {
         setHost(builder.host);
-        inviteUsers(builder.invitedUsers);
+        inviteUsers(builder.guests);
         setTitle(builder.title);
         setDescription(builder.description);
         setDate(builder.date);
@@ -95,32 +86,32 @@ public class Event extends BaseEntity {
         this.host = host;
     }
 
-    public List<InvitedUser> getInvitedUsers() {
-        return invitedUsers;
+    public List<Guest> getGuests() {
+        return guests;
     }
 
     /**
      * Invite a list of users to the event.
      *
-     * @param invitedUsers The list of users to invite.
+     * @param guests The list of users to invite.
      */
-    public void inviteUsers(List<InvitedUser> invitedUsers) {
+    public void inviteUsers(List<Guest> guests) {
 
         //Initialize the invited users list field if it is null.
-        if (this.invitedUsers == null) {
-            this.invitedUsers = new ArrayList<>();
+        if (this.guests == null) {
+            this.guests = new ArrayList<>();
         }
 
         //Return void if the given list is null.
-        if (invitedUsers == null) {
+        if (guests == null) {
             return;
         }
 
-        this.invitedUsers.addAll(invitedUsers);
+        this.guests.addAll(guests);
     }
 
-    public void clearInvitedUsers() {
-        invitedUsers.clear();
+    public void clearGuests() {
+        guests.clear();
     }
 
     public String getTitle() {
@@ -161,7 +152,7 @@ public class Event extends BaseEntity {
      */
     public static final class Builder {
         private User host;
-        private List<InvitedUser> invitedUsers;
+        private List<Guest> guests;
         private String title;
         private String description;
         private DateTime date;
@@ -182,13 +173,13 @@ public class Event extends BaseEntity {
         }
 
         /**
-         * Sets the {@code invitedUsers} and returns a reference to this Builder so that the methods can be chained together.
+         * Sets the {@code guests} and returns a reference to this Builder so that the methods can be chained together.
          *
-         * @param val the {@code invitedUsers} to set
+         * @param val the {@code guests} to set
          * @return a reference to this Builder
          */
-        public Builder invitedUsers(List<InvitedUser> val) {
-            invitedUsers = val;
+        public Builder guests(List<Guest> val) {
+            guests = val;
             return this;
         }
 

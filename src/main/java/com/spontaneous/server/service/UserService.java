@@ -144,16 +144,18 @@ public class UserService {
     }
 
     /**
+     * Get a list of friends of the user using Spontaneous.
+     *
      * @param id Id of the given user.
      * @return The list of Facebook friends of the user using Spontaneous.
      */
-    public List<UserProfileRO> getUserFriends(long id) throws ServiceException, ApiException {
+    public List<User> getUserFriends(long id) throws ServiceException, ApiException {
 
         //Get list of friends of current user.
         PagedList<Reference> friends = mFacebookService.getUserFriends(getUserById(id).getFacebookToken());
 
         //Initialize a list of user profiles.
-        ArrayList<UserProfileRO> friendsProfiles = new ArrayList<>(friends.size());
+        ArrayList<User> friendsProfiles = new ArrayList<>(friends.size());
 
         //Add each user profile to the list.
         for (Reference friend : friends) {
@@ -161,10 +163,7 @@ public class UserService {
             try {
 
                 //Get the friend details from the database.
-                UserProfileRO friendProfile = getUserByFacebookId(friend.getId())
-                        .createRepresentationalObject();
-
-                friendsProfiles.add(friendProfile);
+                friendsProfiles.add(getUserByFacebookId(friend.getId()));
 
             } catch (ServiceException e) {
                 //In case there is no such user registered in the database, log the exception.
@@ -182,6 +181,6 @@ public class UserService {
      * @return Return {@link UserProfileRO} of the user.
      */
     public UserProfileRO getUserProfile(long id) throws ServiceException {
-        return getUserById(id).createRepresentationalObject();
+        return getUserById(id).createUserProfile();
     }
 }

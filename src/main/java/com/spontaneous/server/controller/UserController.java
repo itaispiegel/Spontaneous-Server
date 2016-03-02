@@ -1,9 +1,9 @@
 package com.spontaneous.server.controller;
 
-import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.handler.UserHandler;
+import com.spontaneous.server.model.entity.representational.UserAccountRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.model.response.BaseResponse;
-import com.spontaneous.server.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final Logger mLogger;
-    private final UserService mUserService;
+    private final UserHandler mUserHandler;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserHandler userHandler) {
         mLogger = LoggerFactory.getLogger(this.getClass());
-        mUserService = userService;
+        mUserHandler = userHandler;
     }
 
     /**
@@ -41,7 +41,7 @@ public class UserController {
 
             mLogger.info("FacebookLoginRequest = {}", loginRequest);
 
-            User user = mUserService.login(loginRequest);
+            UserAccountRO user = mUserHandler.login(loginRequest);
 
             mLogger.info("Login response = {}", user);
             return new BaseResponse<>(user);
@@ -64,7 +64,7 @@ public class UserController {
 
         try {
             mLogger.info("Fetching user with id #{}", id);
-            return new BaseResponse<>(mUserService.getUserById(id));
+            return new BaseResponse<>(mUserHandler.getUserById(id));
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -82,7 +82,7 @@ public class UserController {
     public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
         try {
             mLogger.info("Updating gcm token for user with id #{}", id);
-            return new BaseResponse<>(mUserService.updateGcmToken(id, token));
+            return new BaseResponse<>(mUserHandler.updateGcmToken(id, token));
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -100,7 +100,7 @@ public class UserController {
 
         try {
             mLogger.info("Fetching list of friends for user with id #{}", id);
-            return new BaseResponse<>(mUserService.getUserFriends(id));
+            return new BaseResponse<>(mUserHandler.getUserFriends(id));
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);

@@ -1,11 +1,11 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
-import com.spontaneous.server.model.entity.InvitedUser;
+import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.request.SaveEventRequest;
-import com.spontaneous.server.model.request.UpdateInvitedUserRequest;
+import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.repository.EventRepository;
-import com.spontaneous.server.repository.InvitedUserRepository;
+import com.spontaneous.server.repository.GuestsRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +27,17 @@ public class EventService {
 
     private final EventRepository mEventRepository;
     private final UserService mUserService;
-    private final InvitedUserRepository mInvitedUserRepository;
+    private final GuestsRepository mGuestsRepository;
     private final GcmService mGcmService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserService userService, InvitedUserRepository invitedUserRepository, GcmService gcmService) {
+    public EventService(EventRepository eventRepository, UserService userService, GuestsRepository guestsRepository, GcmService gcmService) {
 
         mLogger = LoggerFactory.getLogger(this.getClass());
 
         mEventRepository = eventRepository;
         mUserService = userService;
-        mInvitedUserRepository = invitedUserRepository;
+        mGuestsRepository = guestsRepository;
         mGcmService = gcmService;
     }
 
@@ -61,15 +61,15 @@ public class EventService {
                 .host(mUserService.getUserById(saveEventRequest.getHostUserId()))
                 .build();
 
-        //Add the invited users to the event.
-        event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
+        //Add the guests to the event.
+        event = addGuests(saveEventRequest.getGuestsEmails(), event);
 
         //Save the event in the database.
         event = mEventRepository.save(event);
 
-        //Notify the invitedUsers.
-        for (InvitedUser invitedUser : event.getInvitedUsers()) {
-            mGcmService.sendInvitation(invitedUser);
+        //Notify the guests.
+        for (Guest guest : event.getGuests()) {
+            mGcmService.sendInvitation(guest);
         }
 
         return event;
@@ -97,9 +97,9 @@ public class EventService {
         event.setLocation(saveEventRequest.getLocation());
         event.setHost(mUserService.getUserById(saveEventRequest.getHostUserId()));
 
-        //Clear the invited users list, and add the invited users to the event.
-        event.clearInvitedUsers();
-        event = addInvitedUsers(saveEventRequest.getInvitedUsersEmails(), event);
+        //Clear the guests list, and add the guests to the event.
+        event.clearGuests();
+        event = addGuests(saveEventRequest.getGuestsEmails(), event);
 
         //Save the event in the database.
         return mEventRepository.save(event);
@@ -114,7 +114,7 @@ public class EventService {
      * @param emails Of users to invite.
      * @param event  To invite them to.
      */
-    private Event addInvitedUsers(HashSet<String> emails, Event event) {
+    private Event addGuests(HashSet<String> emails, Event event) {
 
         //In case no users are invited, invite only the host user.
         if (emails == null) {
@@ -127,15 +127,15 @@ public class EventService {
         mLogger.info("Inviting the following users: {}", emails);
 
         //The size allocated is for the users in the given set of emails.
-        ArrayList<InvitedUser> invitedUsers = new ArrayList<>(emails.size());
+        ArrayList<Guest> guests = new ArrayList<>(emails.size());
 
         //Loop over each email in the given collection, and invite each user.
         for (String email : emails) {
 
             try {
 
-                InvitedUser invitedUser = new InvitedUser(mUserService.getUserByEmail(email), event);
-                invitedUsers.add(invitedUser);
+                Guest guest = new Guest(mUserService.getUserByEmail(email), event);
+                guests.add(guest);
 
             } catch (ServiceException e) {
                 //The ServiceException is caught in case that there is no user with the given email.
@@ -145,7 +145,7 @@ public class EventService {
         }
 
         //Set the invited users list to the event entity.
-        event.inviteUsers(invitedUsers);
+        event.inviteUsers(guests);
 
         return event;
     }
@@ -165,30 +165,30 @@ public class EventService {
             throw new ServiceException(String.format("No such user with id #%d.", userId));
         }
 
-        return mEventRepository.findByInvitedUser(userId);
+        return mEventRepository.findByGuest(userId);
     }
 
     /**
-     * Update an {@link InvitedUser} according to the given {@link UpdateInvitedUserRequest}.
+     * Update an {@link Guest} according to the given {@link UpdateGuestRequest}.
      *
-     * @param id            Id of the {@link InvitedUser} we wish to update.
+     * @param id            Id of the {@link Guest} we wish to update.
      * @param updateRequest The update request.
-     * @return The updated {@link InvitedUser} entity.
-     * @throws ServiceException In case that there is no such {@link InvitedUser} with the given id.
+     * @return The updated {@link Guest} entity.
+     * @throws ServiceException In case that there is no such {@link Guest} with the given id.
      */
-    public InvitedUser updateInvitedUser(long id, UpdateInvitedUserRequest updateRequest) throws ServiceException {
+    public Guest updateGuest(long id, UpdateGuestRequest updateRequest) throws ServiceException {
 
         //Throw an exception if there is no user with the given id.
-        InvitedUser invitedUser = mInvitedUserRepository.findOne(id);
+        Guest guest = mGuestsRepository.findOne(id);
 
-        if (invitedUser == null) {
-            throw new ServiceException(String.format("There is no InvitedUser with the id #%s.", id));
+        if (guest == null) {
+            throw new ServiceException(String.format("There is no Guest with the id #%s.", id));
         }
 
-        //Update the InvitedUser fields.
-        invitedUser.update(updateRequest);
+        //Update the Guest fields.
+        guest.update(updateRequest);
 
-        return mInvitedUserRepository.save(invitedUser);
+        return mGuestsRepository.save(guest);
     }
 
     /**
@@ -219,17 +219,17 @@ public class EventService {
     public void notifyGuests(long id, String message) {
         Event event = mEventRepository.findOne(id);
 
-        for (InvitedUser invitedUser : event.getInvitedUsers()) {
+        for (Guest guest : event.getGuests()) {
 
             //Don't notify the host of the event.
-            if (invitedUser.getUser().equals(event.getHost())) {
+            if (guest.getUser().equals(event.getHost())) {
                 continue;
             }
 
             try {
 
                 //Try to broadcast the message to each guest.
-                mGcmService.sendBroadcastMessage(invitedUser, message);
+                mGcmService.sendBroadcastMessage(guest, message);
             } catch (IOException e) {
                 mLogger.error(e.getMessage());
             }
