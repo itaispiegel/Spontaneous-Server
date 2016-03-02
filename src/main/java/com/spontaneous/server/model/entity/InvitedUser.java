@@ -19,6 +19,7 @@ public class InvitedUser extends BaseEntity {
      * Reference to the user itself.
      */
     @OneToOne(fetch = FetchType.EAGER)
+    @Expose
     private User user;
 
     /**
