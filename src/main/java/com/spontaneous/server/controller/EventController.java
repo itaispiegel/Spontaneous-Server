@@ -142,6 +142,7 @@ public class EventController {
      */
     @RequestMapping(value = "/notify", method = RequestMethod.POST)
     public void notifyGuests(@RequestParam("id") long id, @RequestBody String message) {
+        mLogger.info("Broadcasting message to guests of event #{}", id);
         mEventService.notifyGuests(id, message);
     }
 }

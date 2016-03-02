@@ -62,6 +62,7 @@ public class UserController {
     public BaseResponse findUserById(@RequestParam("id") long id) {
 
         try {
+            mLogger.info("Fetching user with id #{}", id);
             return new BaseResponse<>(mUserService.getUserById(id));
         } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -78,6 +79,7 @@ public class UserController {
     @RequestMapping(value = "/updateGCM", method = RequestMethod.GET)
     public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
         try {
+            mLogger.info("Updating gcm token for user with id #{}", id);
             return new BaseResponse<>(mUserService.updateGcmToken(id, token));
         } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -94,6 +96,7 @@ public class UserController {
     public BaseResponse getUsersFriends(@RequestParam("id") long id) {
 
         try {
+            mLogger.info("Fetching list of friends for user with id #{}", id);
             return new BaseResponse<>(mUserService.getUserFriends(id));
         } catch (ServiceException e) {
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);

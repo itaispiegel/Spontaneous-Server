@@ -220,11 +220,15 @@ public class EventService {
         Event event = mEventRepository.findOne(id);
 
         for (InvitedUser invitedUser : event.getInvitedUsers()) {
+
+            //Don't notify the host of the event.
             if (invitedUser.getUser().equals(event.getHost())) {
-                //TODO: Continue
+                continue;
             }
 
             try {
+
+                //Try to broadcast the message to each guest.
                 mGcmService.sendBroadcastMessage(invitedUser.getUser(), message);
             } catch (IOException e) {
                 mLogger.error(e.getMessage());
