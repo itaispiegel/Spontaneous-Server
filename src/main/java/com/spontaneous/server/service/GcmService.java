@@ -3,7 +3,6 @@ package com.spontaneous.server.service;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
 import com.spontaneous.server.model.entity.InvitedUser;
-import com.spontaneous.server.model.entity.User;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,21 +38,21 @@ public class GcmService {
     /**
      * Send a broadcast message to a given user.
      *
-     * @param user    User to send the message to.
-     * @param content The content of the message.
+     * @param invitedUser The user  to send the message to.
+     * @param content     The content of the message.
      * @throws ServiceException
      * @throws IOException
      */
-    public void sendBroadcastMessage(User user, String content) throws ServiceException, IOException {
-        final String messageTitle = "Spontaneous";
+    public void sendBroadcastMessage(InvitedUser invitedUser, String content) throws ServiceException, IOException {
 
+        //The title of the message is the title of the event.
         Message message = new Message.Builder()
                 .addData("type", NotificationType.BROADCAST.toString())
-                .addData("title", messageTitle)
+                .addData("title", invitedUser.getEvent().getTitle())
                 .addData("content", content)
                 .build();
 
-        sendNotification(message, user.getGcmToken());
+        sendNotification(message, invitedUser.getUser().getGcmToken());
     }
 
     /**

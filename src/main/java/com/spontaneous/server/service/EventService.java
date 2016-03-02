@@ -229,7 +229,7 @@ public class EventService {
             try {
 
                 //Try to broadcast the message to each guest.
-                mGcmService.sendBroadcastMessage(invitedUser.getUser(), message);
+                mGcmService.sendBroadcastMessage(invitedUser, message);
             } catch (IOException e) {
                 mLogger.error(e.getMessage());
             }
