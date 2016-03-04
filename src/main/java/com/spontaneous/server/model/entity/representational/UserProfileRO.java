@@ -8,6 +8,12 @@ import com.google.gson.annotations.Expose;
 public class UserProfileRO {
 
     /**
+     * Id of the user.
+     */
+    @Expose
+    private final long id;
+
+    /**
      * User full name;
      */
     @Expose
@@ -31,11 +37,16 @@ public class UserProfileRO {
     @Expose
     private final int age;
 
-    public UserProfileRO(String name, String email, String profilePicture, int age) {
+    public UserProfileRO(long id, String name, String email, String profilePicture, int age) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.profilePicture = profilePicture;
         this.age = age;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {

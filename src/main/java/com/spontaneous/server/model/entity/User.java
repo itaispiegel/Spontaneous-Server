@@ -252,7 +252,7 @@ public class User extends BaseEntity {
      * @return {@link UserProfileRO} of the user.
      */
     public UserProfileRO createUserProfile() {
-        return new UserProfileRO(name, email, profilePicture, getAge());
+        return new UserProfileRO(getId(), name, email, profilePicture, getAge());
     }
 
     /**
