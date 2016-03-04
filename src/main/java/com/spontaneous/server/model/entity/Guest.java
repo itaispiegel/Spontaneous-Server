@@ -116,6 +116,6 @@ public class Guest extends BaseEntity {
     }
 
     public GuestRO createRepresentationalObject() {
-        return new GuestRO(user, status, isAttending, items);
+        return new GuestRO(getId(), user, status, isAttending, items);
     }
 }

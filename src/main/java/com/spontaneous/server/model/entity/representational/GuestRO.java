@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 public class GuestRO {
 
     @Expose
+    private final long id;
+
+    @Expose
     private final UserProfileRO userProfile;
 
     @Expose
@@ -26,7 +29,8 @@ public class GuestRO {
     @Expose
     private final List<ItemRO> items;
 
-    public GuestRO(User user, String status, boolean isAttending, List<Item> items) {
+    public GuestRO(long id, User user, String status, boolean isAttending, List<Item> items) {
+        this.id = id;
         this.userProfile = user.createUserProfile();
         this.status = status;
         this.isAttending = isAttending;
@@ -41,6 +45,10 @@ public class GuestRO {
         this.items.addAll(items.stream()
                 .map(Item::createRepresentationalObject)
                 .collect(Collectors.toList()));
+    }
+
+    public long getId() {
+        return id;
     }
 
     public UserProfileRO getUserProfile() {
