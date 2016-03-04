@@ -13,20 +13,17 @@ public class SaveEventRequest {
     /**
      * The title of the event.
      */
-    @Expose
     private final String title;
 
     /**
      * A short description about the event.
      */
-    @Expose
     private final String description;
 
     /**
      * Id number of the host user.
      * NOTICE: The request entity only holds the id - there is no need to hold the full user details.
      */
-    @Expose
     private final long hostUserId;
 
     /**
@@ -34,19 +31,16 @@ public class SaveEventRequest {
      * NOTICE: The request entity only holds the emails - there is no need to hold the full invited users details (memory cost).
      * A {@link HashSet} is good in this case, since we want the emails to be unique.
      */
-    @Expose
     private final HashSet<String> guestsEmails;
 
     /**
      * When the event is.
      */
-    @Expose
     private final DateTime date;
 
     /**
      * Where the event is.
      */
-    @Expose
     private final String location;
 
     public SaveEventRequest(String title, String description, long hostUserId, HashSet<String> guestsEmails, DateTime date, String location) {

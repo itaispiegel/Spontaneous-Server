@@ -12,13 +12,11 @@ public class UpdateGuestRequest {
     /**
      * What the user has to say about the event.
      */
-    @Expose
     private final String status;
 
     /**
      * Whether the user is attending.
      */
-    @Expose
     private final boolean isAttending;
 
     public UpdateGuestRequest(String status, boolean isAttending) {

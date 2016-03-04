@@ -11,13 +11,11 @@ public class FacebookLoginRequest {
     /**
      * Facebook id of the user.
      */
-    @Expose
     private final String facebookUserId;
 
     /**
      * Facebook token of the user.
      */
-    @Expose
     private final String facebookToken;
 
     /**
