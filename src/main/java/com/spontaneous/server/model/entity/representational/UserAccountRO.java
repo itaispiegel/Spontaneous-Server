@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity.representational;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.Gender;
 import org.joda.time.DateTime;
 
@@ -9,28 +8,18 @@ import org.joda.time.DateTime;
  */
 public class UserAccountRO {
 
-    @Expose
+    private final long id;
+
     private final String name;
-
-    @Expose
     private final String email;
-
-    @Expose
     private final String profilePicture;
-
-    @Expose
     private final DateTime birthday;
-
-    @Expose
     private final String gcmToken;
-
-    @Expose
     private final Gender gender;
-
-    @Expose
     private final String phoneNumber;
 
-    public UserAccountRO(String name, String email, String profilePicture, DateTime birthday, String gcmToken, Gender gender, String phoneNumber) {
+    public UserAccountRO(long id, String name, String email, String profilePicture, DateTime birthday, String gcmToken, Gender gender, String phoneNumber) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.profilePicture = profilePicture;
@@ -38,6 +27,10 @@ public class UserAccountRO {
         this.gcmToken = gcmToken;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {

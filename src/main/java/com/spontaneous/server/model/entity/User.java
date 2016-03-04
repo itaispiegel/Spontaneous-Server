@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.representational.UserAccountRO;
 import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import org.hibernate.annotations.Type;
@@ -24,21 +23,18 @@ public class User extends BaseEntity {
      * Facebook id of the user.
      */
     @Column(name = "facebook_user_id", unique = true)
-    @Expose
     private String facebookUserId;
 
     /**
      * Facebook token of the user.
      */
     @Column(name = "facebook_token")
-    @Expose
     private String facebookToken;
 
     /**
      * The name of the user.
      */
     @Column(name = "name")
-    @Expose
     private String name;
 
     /**
@@ -46,14 +42,12 @@ public class User extends BaseEntity {
      * Each user has a unique email.
      */
     @Column(name = "email", unique = true)
-    @Expose
     private String email;
 
     /**
      * Profile picture URL of the user.
      */
     @Column(name = "profile_picture")
-    @Expose
     private String profilePicture;
 
     /**
@@ -61,25 +55,21 @@ public class User extends BaseEntity {
      */
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "birthday")
-    @Expose
     private DateTime birthday;
 
     /**
      * Phone number of the user.
      */
     @Column(name = "phone_number")
-    @Expose
     private String phoneNumber;
 
     /**
      * Is the user a male or a female.
      */
     @Column(name = "gender")
-    @Expose
     private Gender gender;
 
     @Column(name = "gcm")
-    @Expose
     private String gcmToken;
 
     /**
@@ -261,7 +251,7 @@ public class User extends BaseEntity {
      * @return {@link UserAccountRO} of the user.
      */
     public UserAccountRO createUserAccount() {
-        return new UserAccountRO(name, email, profilePicture, birthday, gcmToken, gender, phoneNumber);
+        return new UserAccountRO(getId(), name, email, profilePicture, birthday, gcmToken, gender, phoneNumber);
     }
 
     /**

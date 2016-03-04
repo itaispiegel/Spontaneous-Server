@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.representational.ItemRO;
 
 import javax.persistence.*;
@@ -30,14 +29,12 @@ public class Item extends BaseEntity {
      * The title name of the item.
      */
     @Column(name = "title")
-    @Expose
     private String title;
 
     /**
      * A boolean indicating whether the guest is bringing the item.
      */
     @Column(name = "is_bringing")
-    @Expose
     private boolean isBringing;
 
     /**
@@ -70,7 +67,7 @@ public class Item extends BaseEntity {
     }
 
     public ItemRO createRepresentationalObject() {
-        return new ItemRO(title, isBringing);
+        return new ItemRO(getId(), title, isBringing);
     }
 
     @Override

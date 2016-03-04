@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.representational.EventRO;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -22,7 +21,6 @@ public class Event extends BaseEntity {
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_user_id")
-    @Expose
     private User host;
 
     /**
@@ -30,21 +28,18 @@ public class Event extends BaseEntity {
      * One event has many users attending.
      */
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Expose
     private List<Guest> guests;
 
     /**
      * The title of the event.
      */
     @Column(name = "title")
-    @Expose
     private String title;
 
     /**
      * The description of the event.
      */
     @Column(name = "description")
-    @Expose
     private String description;
 
     /**
@@ -52,21 +47,19 @@ public class Event extends BaseEntity {
      */
     @Column(name = "date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @Expose
     private DateTime date;
 
     /**
      * Where the event is.
      */
     @Column(name = "location")
-    @Expose
     private String location;
 
     public Event() {
     }
 
     public EventRO createRepresentationalObject() {
-        return new EventRO(host, title, description, date, location, guests);
+        return new EventRO(getId(), host, title, description, date, location, guests);
     }
 
     private Event(Builder builder) {

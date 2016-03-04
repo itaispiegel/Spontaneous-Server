@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity.representational;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.entity.User;
@@ -14,19 +13,11 @@ import java.util.stream.Collectors;
  */
 public class GuestRO {
 
-    @Expose
     private final long id;
 
-    @Expose
     private final UserProfileRO userProfile;
-
-    @Expose
     private final String status;
-
-    @Expose
     private final boolean isAttending;
-
-    @Expose
     private final List<ItemRO> items;
 
     public GuestRO(long id, User user, String status, boolean isAttending, List<Item> items) {
@@ -36,7 +27,7 @@ public class GuestRO {
         this.isAttending = isAttending;
 
         //In case that there are no items.
-        if(items == null) {
+        if (items == null) {
             this.items = new ArrayList<>();
             return;
         }

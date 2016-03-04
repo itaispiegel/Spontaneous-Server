@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity.representational;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.User;
@@ -15,25 +14,17 @@ import java.util.stream.Collectors;
  */
 public class EventRO {
 
-    @Expose
+    private final long id;
+
     private final UserProfileRO host;
-
-    @Expose
     private final List<GuestRO> guests;
-
-    @Expose
     private final String title;
-
-    @Expose
     private final String description;
-
-    @Expose
     private final DateTime date;
-
-    @Expose
     private final String location;
 
-    public EventRO(User host, String title, String description, DateTime date, String location, List<Guest> guests) {
+    public EventRO(long id, User host, String title, String description, DateTime date, String location, List<Guest> guests) {
+        this.id = id;
         this.host = host.createUserProfile();
         this.title = title;
         this.description = description;
@@ -41,7 +32,7 @@ public class EventRO {
         this.location = location;
 
         //In case that there are no guests.
-        if(guests == null) {
+        if (guests == null) {
             this.guests = new ArrayList<>();
             return;
         }
@@ -50,6 +41,10 @@ public class EventRO {
         this.guests.addAll(guests.stream()
                 .map(Guest::createRepresentationalObject)
                 .collect(Collectors.toList()));
+    }
+
+    public long getId() {
+        return id;
     }
 
     public UserProfileRO getHost() {

@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.representational.GuestRO;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 
@@ -20,7 +19,6 @@ public class Guest extends BaseEntity {
      * Reference to the user itself.
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @Expose
     private User user;
 
     /**
@@ -35,21 +33,18 @@ public class Guest extends BaseEntity {
      * User status in the event.
      */
     @Column(name = "status")
-    @Expose
     private String status;
 
     /**
      * Is the user attending?
      */
     @Column(name = "is_attending")
-    @Expose
     private boolean isAttending;
 
     /**
      * A list of items the guest has committed to bring to the event.
      */
     @OneToMany(mappedBy = "bringer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Expose
     private List<Item> items;
 
     /**

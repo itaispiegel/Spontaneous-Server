@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.entity.representational;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.Item;
 
 /**
@@ -8,15 +7,19 @@ import com.spontaneous.server.model.entity.Item;
  */
 public class ItemRO {
 
-    @Expose
-    private final String title;
+    private final long id;
 
-    @Expose
+    private final String title;
     private final boolean isBringing;
 
-    public ItemRO(String title, boolean isBringing) {
+    public ItemRO(long id, String title, boolean isBringing) {
+        this.id = id;
         this.title = title;
         this.isBringing = isBringing;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {

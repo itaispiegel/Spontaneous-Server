@@ -25,10 +25,8 @@ public final class GsonFactory {
      */
     public static synchronized Gson getGson() {
         if (sGson == null) {
-            sGson = Converters.registerDateTime(
-                    new GsonBuilder().serializeNulls()
-                            .excludeFieldsWithoutExposeAnnotation()
-            ).create();
+            sGson = Converters.registerDateTime(new GsonBuilder().serializeNulls())
+                    .create();
         }
         return sGson;
     }
