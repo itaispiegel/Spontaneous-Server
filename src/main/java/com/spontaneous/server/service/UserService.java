@@ -59,7 +59,7 @@ public class UserService {
      * @throws ServiceException Is thrown in case that no such user was found.
      */
     public User getUserByEmail(String email) throws ServiceException {
-        User user = mUserRepository.findByEmail(email);
+        User user = mUserRepository.findByEmailIgnoreCase(email);
 
         if (user == null) {
             throw new ServiceException(String.format("No such user with the the email: %s.", email));

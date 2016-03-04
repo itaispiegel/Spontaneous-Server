@@ -254,7 +254,7 @@ public class User extends BaseEntity {
      * @return {@link UserAccountRO} of the user.
      */
     public UserAccountRO createUserAccount(@Nullable List<UserProfileRO> friends) {
-        return new UserAccountRO(getId(), name, email, profilePicture, birthday, gcmToken, gender, phoneNumber, friends);
+        return new UserAccountRO(this, friends);
     }
 
     /**
