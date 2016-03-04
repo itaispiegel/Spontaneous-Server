@@ -52,7 +52,7 @@ public class UserController {
             UserAccountRO userAccount = user.createUserAccount(friends);
 
             mLogger.info("Login response = {}", userAccount);
-            return new BaseResponse<>(user);
+            return new BaseResponse<>(userAccount);
 
         } catch (ApiException e) {
             mLogger.error(e.getMessage());
