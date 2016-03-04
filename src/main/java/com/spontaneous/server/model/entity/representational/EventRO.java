@@ -3,6 +3,7 @@ package com.spontaneous.server.model.entity.representational;
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.util.GsonFactory;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -69,5 +70,10 @@ public class EventRO {
 
     public String getLocation() {
         return location;
+    }
+
+    @Override
+    public String toString() {
+        return GsonFactory.getGson().toJson(this);
     }
 }

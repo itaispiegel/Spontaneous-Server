@@ -4,6 +4,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.model.entity.representational.EventRO;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,11 +88,14 @@ public class GcmService {
         final String title = "Spontaneous";
         final String content = "You have been invited to an event!";
 
+        EventRO eventRO = guest.getEvent()
+                .createRepresentationalObject();
+
         Message message = new Message.Builder()
                 .addData("type", NotificationType.INVITATION.toString())
                 .addData("title", title)
                 .addData("content", content)
-                .addData("data", guest.getEvent().toString())
+                .addData("data", eventRO.toString())
                 .build();
 
         try {
