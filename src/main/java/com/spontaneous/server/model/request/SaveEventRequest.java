@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.request;
 
-import com.google.gson.annotations.Expose;
 import org.joda.time.DateTime;
 
 import java.util.HashSet;

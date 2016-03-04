@@ -1,7 +1,5 @@
 package com.spontaneous.server.model.request;
 
-import com.google.gson.annotations.Expose;
-
 /**
  * This class represents an HTTP POST request to login to the application.
  * Contains Facebook user id and Facebook access token.

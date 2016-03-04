@@ -1,6 +1,5 @@
 package com.spontaneous.server.model.request;
 
-import com.google.gson.annotations.Expose;
 import com.spontaneous.server.model.entity.Guest;
 
 

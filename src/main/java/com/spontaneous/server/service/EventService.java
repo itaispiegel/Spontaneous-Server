@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +46,7 @@ public class EventService {
      * @param saveEventRequest The request of the event to create.
      * @return The stored event.
      */
-    public Event createEvent(SaveEventRequest saveEventRequest) throws ServiceException, IOException {
+    public Event createEvent(SaveEventRequest saveEventRequest) throws ServiceException {
 
         //ServiceException is caught in case that the host user does not exist.
         //IOException is caught in case that the GCMService was unable to send a notification.

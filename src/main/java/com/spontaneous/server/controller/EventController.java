@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -53,7 +52,7 @@ public class EventController {
 
             return new BaseResponse<>(createdEvent);
 
-        } catch (IOException | ServiceException e) {
+        } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
