@@ -8,9 +8,11 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * This class represents a user persisted in the database.
@@ -248,10 +250,11 @@ public class User extends BaseEntity {
     /**
      * Create a representational object of the user account.
      *
+     * @param friends List of friends of the user.
      * @return {@link UserAccountRO} of the user.
      */
-    public UserAccountRO createUserAccount() {
-        return new UserAccountRO(getId(), name, email, profilePicture, birthday, gcmToken, gender, phoneNumber);
+    public UserAccountRO createUserAccount(@Nullable List<UserProfileRO> friends) {
+        return new UserAccountRO(getId(), name, email, profilePicture, birthday, gcmToken, gender, phoneNumber, friends);
     }
 
     /**

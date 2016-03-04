@@ -3,6 +3,8 @@ package com.spontaneous.server.model.entity.representational;
 import com.spontaneous.server.model.entity.Gender;
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 /**
  * This entity represents a user account.
  */
@@ -17,9 +19,11 @@ public class UserAccountRO {
     private final String gcmToken;
     private final Gender gender;
     private final String phoneNumber;
+    private final List<UserProfileRO> friends;
 
-    public UserAccountRO(long id, String name, String email, String profilePicture, DateTime birthday, String gcmToken, Gender gender, String phoneNumber) {
+    public UserAccountRO(long id, String name, String email, String profilePicture, DateTime birthday, String gcmToken, Gender gender, String phoneNumber, List<UserProfileRO> friends) {
         this.id = id;
+
         this.name = name;
         this.email = email;
         this.profilePicture = profilePicture;
@@ -27,6 +31,7 @@ public class UserAccountRO {
         this.gcmToken = gcmToken;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
+        this.friends = friends;
     }
 
     public long getId() {
@@ -59,5 +64,9 @@ public class UserAccountRO {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public List<UserProfileRO> getFriends() {
+        return friends;
     }
 }

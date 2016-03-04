@@ -46,10 +46,12 @@ public class UserController {
 
             mLogger.info("FacebookLoginRequest = {}", loginRequest);
 
-            UserAccountRO user = mUserService.login(loginRequest)
-                    .createUserAccount();
+            User user = mUserService.login(loginRequest);
 
-            mLogger.info("Login response = {}", user);
+            List<UserProfileRO> friends = Converter.convertList(mUserService.getUserFriends(user.getId()), User::createUserProfile);
+            UserAccountRO userAccount = user.createUserAccount(friends);
+
+            mLogger.info("Login response = {}", userAccount);
             return new BaseResponse<>(user);
 
         } catch (ApiException e) {
@@ -72,10 +74,12 @@ public class UserController {
 
             mLogger.info("Fetching user with id #{}", id);
 
-            UserAccountRO user = mUserService.getUserById(id)
-                    .createUserAccount();
+            User user = mUserService.getUserById(id);
 
-            return new BaseResponse<>(user);
+            List<UserProfileRO> friends = Converter.convertList(mUserService.getUserFriends(user.getId()), User::createUserProfile);
+            UserAccountRO userAccount = user.createUserAccount(friends);
+
+            return new BaseResponse<>(userAccount);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -96,10 +100,12 @@ public class UserController {
 
             mLogger.info("Updating gcm token for user with id #{}", id);
 
-            UserAccountRO user = mUserService.updateGcmToken(id, token)
-                    .createUserAccount();
+            User user = mUserService.updateGcmToken(id, token);
 
-            return new BaseResponse<>(user);
+            List<UserProfileRO> friends = Converter.convertList(mUserService.getUserFriends(user.getId()), User::createUserProfile);
+            UserAccountRO userAccount = user.createUserAccount(friends);
+
+            return new BaseResponse<>(userAccount);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
