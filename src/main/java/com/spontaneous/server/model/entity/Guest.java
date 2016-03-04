@@ -19,7 +19,7 @@ public class Guest extends BaseEntity {
     /**
      * Reference to the user itself.
      */
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Expose
     private User user;
 

@@ -3,6 +3,7 @@ package com.spontaneous.server.service;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
 import com.spontaneous.server.model.entity.Guest;
+import com.spontaneous.server.model.entity.User;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,27 +24,42 @@ public class GcmService {
     /**
      * Send a notificationType to a given user.
      *
-     * @param message        The notification details.
-     * @param recipientToken The GCM token of the recipient.
-     * @throws ServiceException Is thrown in case that no user is found.
-     * @throws IOException      Is thrown in case that the notificationType was not sent.
+     * @param message The notification details.
+     * @param user    User to notify.
+     * @throws ServiceException Is thrown in case that the given user does not have a GCM token.
      */
-    private void sendNotification(Message message, String recipientToken) throws ServiceException, IOException {
-        mLogger.info(String.format("Notifying user with token #%s", recipientToken));
+    private void sendNotification(Message message, User user) throws ServiceException {
 
-        Sender sender = new Sender(API_KEY);
-        sender.sendNoRetry(message, recipientToken);
+        //Throw a service exception in case that the user does not have a GCM token.
+        if (user == null) {
+            throw new ServiceException("The recipient user is null.");
+        }
+
+        //Throw a service exception if the user does not have a GCM token.
+        if (user.getGcmToken() == null) {
+            throw new ServiceException(("The recipient does not have a GCM token."));
+        }
+
+        mLogger.info(String.format("Notifying user with token #%s", user.getGcmToken()));
+
+        try {
+            Sender sender = new Sender(API_KEY);
+            sender.sendNoRetry(message, user.getGcmToken());
+        } catch (IOException e) {
+
+            //Is thrown in case that the notificationType was not sent - Not supposed to occur.
+            mLogger.error(e.getMessage());
+        }
     }
 
     /**
      * Send a broadcast message to a given user.
      *
-     * @param guest The user  to send the message to.
-     * @param content     The content of the message.
-     * @throws ServiceException
-     * @throws IOException
+     * @param guest   The user  to send the message to.
+     * @param content The content of the message.
+     * @throws ServiceException If the notification was not able to be sent.
      */
-    public void sendBroadcastMessage(Guest guest, String content) throws ServiceException, IOException {
+    public void sendBroadcastMessage(Guest guest, String content) throws ServiceException {
 
         //The title of the message is the title of the event.
         Message message = new Message.Builder()
@@ -52,17 +68,22 @@ public class GcmService {
                 .addData("content", content)
                 .build();
 
-        sendNotification(message, guest.getUser().getGcmToken());
+        try {
+            sendNotification(message, guest.getUser());
+        } catch (ServiceException e) {
+            //In case that the notification was not sent successfully.
+            mLogger.error(e.getMessage());
+        }
     }
 
     /**
      * Notify an {@link Guest} that he was invited to a new event.
      *
      * @param guest The invited user we wish to notify.
-     * @throws ServiceException
-     * @throws IOException
+     * @throws ServiceException If the notification was not able to be sent.
      */
-    public void sendInvitation(Guest guest) throws ServiceException, IOException {
+    public void sendInvitation(Guest guest) throws ServiceException {
+
         final String title = "Spontaneous";
         final String content = "You have been invited to an event!";
 
@@ -73,8 +94,12 @@ public class GcmService {
                 .addData("data", guest.getEvent().toString())
                 .build();
 
-        sendNotification(message, guest.getUser()
-                .getGcmToken());
+        try {
+            sendNotification(message, guest.getUser());
+        } catch (ServiceException e) {
+            //In case that the notification was not sent successfully.
+            mLogger.error(e.getMessage());
+        }
     }
 
     /**

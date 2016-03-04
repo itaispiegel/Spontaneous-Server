@@ -31,6 +31,12 @@ public class GuestRO {
         this.status = status;
         this.isAttending = isAttending;
 
+        //In case that there are no items.
+        if(items == null) {
+            this.items = new ArrayList<>();
+            return;
+        }
+
         this.items = new ArrayList<>(items.size());
         this.items.addAll(items.stream()
                 .map(Item::createRepresentationalObject)

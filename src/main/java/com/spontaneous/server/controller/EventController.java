@@ -1,13 +1,14 @@
 package com.spontaneous.server.controller;
 
-import com.spontaneous.server.handler.EventHandler;
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.representational.EventRO;
+import com.spontaneous.server.model.entity.representational.GuestRO;
 import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.model.response.BaseResponse;
 import com.spontaneous.server.service.EventService;
+import com.spontaneous.server.util.Converter;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +26,12 @@ import java.util.List;
 public class EventController {
 
     private final Logger mLogger;
-
     private final EventService mEventService;
-    private final EventHandler mEventHandler;
 
     @Autowired
-    public EventController(EventService eventService, EventHandler eventHandler) {
+    public EventController(EventService eventService) {
         mLogger = LoggerFactory.getLogger(this.getClass());
         mEventService = eventService;
-        mEventHandler = eventHandler;
     }
 
     /**
@@ -50,7 +48,8 @@ public class EventController {
 
             mLogger.info("Create Event Request {}", saveEventRequest);
 
-            EventRO createdEvent = mEventHandler.createEvent(saveEventRequest);
+            EventRO createdEvent = mEventService.createEvent(saveEventRequest)
+                    .createRepresentationalObject();
 
             return new BaseResponse<>(createdEvent);
 
@@ -74,7 +73,8 @@ public class EventController {
 
             mLogger.info("Update Event Request, for event with id #" + id + ": " + saveEventRequest);
 
-            EventRO updatedEvent = mEventHandler.updateEvent(id, saveEventRequest);
+            EventRO updatedEvent = mEventService.updateEvent(id, saveEventRequest)
+                    .createRepresentationalObject();
 
             return new BaseResponse<>(updatedEvent);
 
@@ -97,7 +97,7 @@ public class EventController {
 
             mLogger.info("Getting user events for user with id #{}", id);
 
-            List<EventRO> events = mEventHandler.getUserEvents(id);
+            List<EventRO> events = Converter.convertList(mEventService.getUserEvents(id), Event::createRepresentationalObject);
 
             return new BaseResponse<>(events);
 
@@ -120,7 +120,9 @@ public class EventController {
         try {
             mLogger.info("Updating guest with id #{}", id);
 
-            Guest guest = mEventService.updateGuest(id, updateRequest);
+            GuestRO guest = mEventService.updateGuest(id, updateRequest)
+                    .createRepresentationalObject();
+
             return new BaseResponse<>(guest);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
@@ -141,9 +143,10 @@ public class EventController {
 
             mLogger.info("Deleting event with id #{}", id);
 
-            Event deletedEvent = mEventService.deleteEvent(id);
-            return new BaseResponse<>(deletedEvent);
+            EventRO deletedEvent = mEventService.deleteEvent(id)
+                    .createRepresentationalObject();
 
+            return new BaseResponse<>(deletedEvent);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);

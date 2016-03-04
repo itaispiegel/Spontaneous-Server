@@ -1,6 +1,6 @@
 package com.spontaneous.server;
 
-import com.spontaneous.server.config.GsonFactory;
+import com.spontaneous.server.util.GsonFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.boot.SpringApplication;

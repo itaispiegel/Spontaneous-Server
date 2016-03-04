@@ -40,6 +40,12 @@ public class EventRO {
         this.date = date;
         this.location = location;
 
+        //In case that there are no guests.
+        if(guests == null) {
+            this.guests = new ArrayList<>();
+            return;
+        }
+
         this.guests = new ArrayList<>(guests.size());
         this.guests.addAll(guests.stream()
                 .map(Guest::createRepresentationalObject)

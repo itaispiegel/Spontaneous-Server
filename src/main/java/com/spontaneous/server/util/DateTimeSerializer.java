@@ -1,4 +1,4 @@
-package com.spontaneous.server.config;
+package com.spontaneous.server.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

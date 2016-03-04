@@ -68,9 +68,7 @@ public class EventService {
         event = mEventRepository.save(event);
 
         //Notify the guests.
-        for (Guest guest : event.getGuests()) {
-            mGcmService.sendInvitation(guest);
-        }
+        event.getGuests().forEach(mGcmService::sendInvitation);
 
         return event;
     }
@@ -226,13 +224,7 @@ public class EventService {
                 continue;
             }
 
-            try {
-
-                //Try to broadcast the message to each guest.
-                mGcmService.sendBroadcastMessage(guest, message);
-            } catch (IOException e) {
-                mLogger.error(e.getMessage());
-            }
+            mGcmService.sendBroadcastMessage(guest, message);
         }
     }
 }

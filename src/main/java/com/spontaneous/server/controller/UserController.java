@@ -1,15 +1,20 @@
 package com.spontaneous.server.controller;
 
-import com.spontaneous.server.handler.UserHandler;
+import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.entity.representational.UserAccountRO;
+import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.model.response.BaseResponse;
+import com.spontaneous.server.service.UserService;
+import com.spontaneous.server.util.Converter;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.ApiException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * This is a REST controller for user operations.
@@ -19,12 +24,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final Logger mLogger;
-    private final UserHandler mUserHandler;
+    private final UserService mUserService;
 
     @Autowired
-    public UserController(UserHandler userHandler) {
+    public UserController(UserService userService) {
         mLogger = LoggerFactory.getLogger(this.getClass());
-        mUserHandler = userHandler;
+        mUserService = userService;
     }
 
     /**
@@ -41,7 +46,8 @@ public class UserController {
 
             mLogger.info("FacebookLoginRequest = {}", loginRequest);
 
-            UserAccountRO user = mUserHandler.login(loginRequest);
+            UserAccountRO user = mUserService.login(loginRequest)
+                    .createUserAccount();
 
             mLogger.info("Login response = {}", user);
             return new BaseResponse<>(user);
@@ -63,8 +69,13 @@ public class UserController {
     public BaseResponse findUserById(@RequestParam("id") long id) {
 
         try {
+
             mLogger.info("Fetching user with id #{}", id);
-            return new BaseResponse<>(mUserHandler.getUserById(id));
+
+            UserAccountRO user = mUserService.getUserById(id)
+                    .createUserAccount();
+
+            return new BaseResponse<>(user);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
@@ -80,13 +91,20 @@ public class UserController {
      */
     @RequestMapping(value = "/updateGCM", method = RequestMethod.GET)
     public BaseResponse updateUserGcmToken(@RequestParam("id") long id, @RequestParam("token") String token) {
+
         try {
+
             mLogger.info("Updating gcm token for user with id #{}", id);
-            return new BaseResponse<>(mUserHandler.updateGcmToken(id, token));
+
+            UserAccountRO user = mUserService.updateGcmToken(id, token)
+                    .createUserAccount();
+
+            return new BaseResponse<>(user);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
         }
+
     }
 
     /**
@@ -99,8 +117,12 @@ public class UserController {
     public BaseResponse getUsersFriends(@RequestParam("id") long id) {
 
         try {
+
             mLogger.info("Fetching list of friends for user with id #{}", id);
-            return new BaseResponse<>(mUserHandler.getUserFriends(id));
+
+            List<UserProfileRO> friendsProfiles = Converter.convertList(mUserService.getUserFriends(id), User::createUserProfile);
+
+            return new BaseResponse<>(friendsProfiles);
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);

@@ -2,8 +2,8 @@ package com.spontaneous.server.model.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.gson.annotations.Expose;
-import com.spontaneous.server.config.DateTimeSerializer;
-import com.spontaneous.server.config.GsonFactory;
+import com.spontaneous.server.util.DateTimeSerializer;
+import com.spontaneous.server.util.GsonFactory;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;

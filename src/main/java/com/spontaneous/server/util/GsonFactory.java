@@ -1,4 +1,4 @@
-package com.spontaneous.server.config;
+package com.spontaneous.server.util;
 
 import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
