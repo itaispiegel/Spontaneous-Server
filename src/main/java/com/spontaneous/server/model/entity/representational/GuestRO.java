@@ -3,10 +3,10 @@ package com.spontaneous.server.model.entity.representational;
 import com.spontaneous.server.model.entity.Guest;
 import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.entity.User;
+import com.spontaneous.server.util.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This is a representational object for the {@link Guest} entity.
@@ -32,10 +32,8 @@ public class GuestRO {
             return;
         }
 
-        this.items = new ArrayList<>(items.size());
-        this.items.addAll(items.stream()
-                .map(Item::createRepresentationalObject)
-                .collect(Collectors.toList()));
+        //Add all items to the guest object.
+        this.items = Converter.convertList(items, Item::createRepresentationalObject);
     }
 
     public long getId() {

@@ -4,6 +4,7 @@ import com.spontaneous.server.model.entity.representational.GuestRO;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,6 +90,20 @@ public class Guest extends BaseEntity {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    /**
+     * Add an item to the guest's list of items.
+     *
+     * @param item Item to add to the list.
+     */
+    public void addItem(Item item) {
+        //If items list is null, initialize it.
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+
+        items.add(item);
     }
 
     /**

@@ -164,4 +164,17 @@ public class EventController {
         mLogger.info("Broadcasting message to guests of event #{}", id);
         mEventService.notifyGuests(id, message);
     }
+
+    @RequestMapping(value = "/assign", method = RequestMethod.GET)
+    public BaseResponse assignItem(@RequestParam("id") long id, @RequestParam("title") String title) {
+        mLogger.info("Assigning item '{}' for guest with id #{}", title, id);
+
+        try {
+            Guest guest = mEventService.assignItem(id, title);
+            return new BaseResponse<>(guest.createRepresentationalObject());
+        } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
 }

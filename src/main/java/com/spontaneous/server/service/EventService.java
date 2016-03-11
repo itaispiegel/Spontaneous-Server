@@ -2,6 +2,7 @@ package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
+import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.repository.EventRepository;
@@ -225,5 +226,24 @@ public class EventService {
 
             mGcmService.sendBroadcastMessage(guest, message);
         }
+    }
+
+    /**
+     * A service method for assigning an item to a guest.
+     *
+     * @param id    Id of the guest.
+     * @param title Title of the item.
+     */
+    public Guest assignItem(long id, String title) throws ServiceException {
+        Guest guest = mGuestsRepository.getOne(id);
+
+        if (guest == null) {
+            throw new ServiceException(String.format("No such guest with id #%d", id));
+        }
+
+        Item newItem = new Item(guest, guest.getEvent(), title, false);
+        guest.addItem(newItem);
+
+        return mGuestsRepository.save(guest);
     }
 }
