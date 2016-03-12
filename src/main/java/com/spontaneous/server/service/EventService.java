@@ -7,6 +7,7 @@ import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.repository.EventRepository;
 import com.spontaneous.server.repository.GuestsRepository;
+import com.spontaneous.server.repository.ItemsRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +29,21 @@ public class EventService {
     private final EventRepository mEventRepository;
     private final UserService mUserService;
     private final GuestsRepository mGuestsRepository;
+    private final ItemsRepository mItemsRepository;
+
     private final GcmService mGcmService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserService userService, GuestsRepository guestsRepository, GcmService gcmService) {
+    public EventService(EventRepository eventRepository, UserService userService, GuestsRepository guestsRepository,
+                        ItemsRepository itemsRepository, GcmService gcmService) {
 
         mLogger = LoggerFactory.getLogger(this.getClass());
 
         mEventRepository = eventRepository;
         mUserService = userService;
         mGuestsRepository = guestsRepository;
+        mItemsRepository = itemsRepository;
+
         mGcmService = gcmService;
     }
 
@@ -245,5 +251,16 @@ public class EventService {
         guest.addItem(newItem);
 
         return mGuestsRepository.save(guest);
+    }
+
+    public Item deleteItem(long id) throws ServiceException {
+        Item item = mItemsRepository.findOne(id);
+
+        if(item == null) {
+            throw new ServiceException(String.format("No such item with id #%d", id));
+        }
+
+        mItemsRepository.delete(id);
+        return item;
     }
 }

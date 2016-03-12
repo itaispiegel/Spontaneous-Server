@@ -2,6 +2,7 @@ package com.spontaneous.server.controller;
 
 import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
+import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.entity.representational.EventRO;
 import com.spontaneous.server.model.entity.representational.GuestRO;
 import com.spontaneous.server.model.request.SaveEventRequest;
@@ -35,10 +36,10 @@ public class EventController {
 
     /**
      * A controller method for creating a new event, given the saveEventRequest details.
-     * In case of {@link ServiceException}, return the error.
+     * In case of {@code ServiceException}, return the error.
      *
      * @param saveEventRequest The details of the event - given in JSON.
-     * @return {@link BaseResponse} stating the result of the process.
+     * @return {@code BaseResponse} stating the result of the process.
      */
     @RequestMapping(method = RequestMethod.POST)
     public BaseResponse createEvent(@RequestBody SaveEventRequest saveEventRequest) {
@@ -111,7 +112,7 @@ public class EventController {
      *
      * @param id            The id of the invited user, we wish to update.
      * @param updateRequest The new details of the invited user.
-     * @return {@link BaseResponse} representing the updated invited user, or the error occurred.
+     * @return {@code BaseResponse} representing the updated invited user, or the error occurred.
      */
     @RequestMapping(value = "/updateGuest", method = RequestMethod.PUT)
     public BaseResponse updateGuest(@RequestParam("id") long id, @RequestBody UpdateGuestRequest updateRequest) {
@@ -133,7 +134,7 @@ public class EventController {
      * A controller method for deleting an event.
      *
      * @param id Id of the event we wish to delete.
-     * @return {@link BaseResponse} representing the result of the action.
+     * @return {@code BaseResponse} representing the result of the action.
      */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public BaseResponse deleteEvent(@RequestParam("id") long id) {
@@ -165,6 +166,13 @@ public class EventController {
         mEventService.notifyGuests(id, message);
     }
 
+    /**
+     * A controller method for assigning an item to a guest.
+     *
+     * @param id Id of the guest to assign the item to.
+     * @param title Title of the item.
+     * @return {@code BaseResponse} Stating the result of the process.
+     */
     @RequestMapping(value = "/assign", method = RequestMethod.GET)
     public BaseResponse assignItem(@RequestParam("id") long id, @RequestParam("title") String title) {
         mLogger.info("Assigning item '{}' for guest with id #{}", title, id);
@@ -172,6 +180,27 @@ public class EventController {
         try {
             Guest guest = mEventService.assignItem(id, title);
             return new BaseResponse<>(guest.createRepresentationalObject());
+        } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * A controller method for assigning an item to a guest.
+     *
+     * @param id Id of the item to delete.
+     * @return {@code BaseResponse} Stating the result of the process.
+     */
+    @RequestMapping(value = "/item", method = RequestMethod.DELETE)
+    public BaseResponse deleteItem(@RequestParam("id") long id) {
+        mLogger.info("Deleting item with id #{}", id);
+
+        try {
+
+            Item item = mEventService.deleteItem(id);
+            return new BaseResponse<>(item.createRepresentationalObject());
+
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());
             return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
