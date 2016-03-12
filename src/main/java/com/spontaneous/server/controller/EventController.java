@@ -169,7 +169,7 @@ public class EventController {
     /**
      * A controller method for assigning an item to a guest.
      *
-     * @param id Id of the guest to assign the item to.
+     * @param id    Id of the guest to assign the item to.
      * @param title Title of the item.
      * @return {@code BaseResponse} Stating the result of the process.
      */
@@ -200,6 +200,27 @@ public class EventController {
 
             Item item = mEventService.deleteItem(id);
             return new BaseResponse<>(item.createRepresentationalObject());
+
+        } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * A controller method for deleting a guest.
+     *
+     * @param id Id of the guest to delete.
+     * @return {@code BaseResponse} Stating the result of process.
+     */
+    @RequestMapping(value = "/guest", method = RequestMethod.DELETE)
+    public BaseResponse deleteGuest(@RequestParam("id") long id) {
+        mLogger.info("Deleting guest with id #{}", id);
+
+        try {
+
+            Guest guest = mEventService.deleteGuest(id);
+            return new BaseResponse<>(guest.createRepresentationalObject());
 
         } catch (ServiceException e) {
             mLogger.error(e.getMessage());

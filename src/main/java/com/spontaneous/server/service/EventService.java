@@ -253,14 +253,39 @@ public class EventService {
         return mGuestsRepository.save(guest);
     }
 
+    /**
+     * Delete an item with a given id.
+     *
+     * @param id Given id of the item to delete.
+     * @return The deleted item.
+     * @throws ServiceException In case that there is no such item.
+     */
     public Item deleteItem(long id) throws ServiceException {
         Item item = mItemsRepository.findOne(id);
 
-        if(item == null) {
+        if (item == null) {
             throw new ServiceException(String.format("No such item with id #%d", id));
         }
 
         mItemsRepository.delete(id);
         return item;
+    }
+
+    /**
+     * Delete a guest with a given id.
+     *
+     * @param id Id of the guest to delete.
+     * @return The deleted guest.
+     * @throws ServiceException In case that there is no such guest.
+     */
+    public Guest deleteGuest(long id) throws ServiceException {
+        Guest guest = mGuestsRepository.findOne(id);
+
+        if (guest == null) {
+            throw new ServiceException(String.format("No such guest with id #%d", id));
+        }
+
+        mGuestsRepository.delete(id);
+        return guest;
     }
 }
