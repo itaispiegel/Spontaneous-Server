@@ -2,7 +2,9 @@ package com.spontaneous.server.service;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
+import com.spontaneous.server.model.entity.Event;
 import com.spontaneous.server.model.entity.Guest;
+import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.entity.User;
 import com.spontaneous.server.model.entity.representational.EventRO;
 import org.hibernate.service.spi.ServiceException;
@@ -38,7 +40,7 @@ public class GcmService {
 
         //Throw a service exception if the user does not have a GCM token.
         if (user.getGcmToken() == null) {
-            throw new ServiceException(("The recipient does not have a GCM token."));
+            throw new ServiceException("The recipient does not have a GCM token.");
         }
 
         mLogger.info(String.format("Notifying user with token #%s", user.getGcmToken()));
@@ -71,6 +73,33 @@ public class GcmService {
 
         try {
             sendNotification(message, guest.getUser());
+        } catch (ServiceException e) {
+            //In case that the notification was not sent successfully.
+            mLogger.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Notify a guest that he was assigned to bring an item to an event.
+     *
+     * @param item Item that the guest was assigned to bring.
+     * @throws ServiceException In case that there is no such user/event/item.
+     */
+    public void assignItem(Item item) throws ServiceException {
+
+        Event event = item.getEvent();
+        Guest bringer = item.getBringer();
+
+        String messageContent = String.format("Will it be possible for you to bring '%s' to the event?", item.getTitle());
+
+        Message message = new Message.Builder()
+                .addData("type", NotificationType.ASSIGN_ITEM.toString())
+                .addData("title", event.getTitle())
+                .addData("content", messageContent)
+                .build();
+
+        try {
+            sendNotification(message, bringer.getUser());
         } catch (ServiceException e) {
             //In case that the notification was not sent successfully.
             mLogger.error(e.getMessage());
@@ -115,6 +144,11 @@ public class GcmService {
          * Invitation to a created event.
          */
         INVITATION,
+
+        /**
+         * Assign an item to a guest.
+         */
+        ASSIGN_ITEM,
 
         /**
          * The event host can send a broadcast message to his guests.

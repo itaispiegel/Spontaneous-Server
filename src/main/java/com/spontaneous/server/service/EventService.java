@@ -250,6 +250,8 @@ public class EventService {
         Item newItem = new Item(guest, guest.getEvent(), title, false);
         guest.addItem(newItem);
 
+        mGcmService.assignItem(newItem);
+
         return mGuestsRepository.save(guest);
     }
 
