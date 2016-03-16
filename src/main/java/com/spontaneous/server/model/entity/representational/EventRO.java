@@ -74,6 +74,7 @@ public class EventRO {
 
     @Override
     public String toString() {
-        return GsonFactory.getGson().toJson(this);
+        return GsonFactory.getGson()
+                .toJson(this);
     }
 }

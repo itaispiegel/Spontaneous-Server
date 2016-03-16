@@ -96,6 +96,7 @@ public class GcmService {
                 .addData("type", NotificationType.ASSIGN_ITEM.toString())
                 .addData("title", event.getTitle())
                 .addData("content", messageContent)
+                .addData("data", item.createRepresentationalObject().toString())
                 .build();
 
         try {

@@ -1,6 +1,7 @@
 package com.spontaneous.server.model.entity.representational;
 
 import com.spontaneous.server.model.entity.Item;
+import com.spontaneous.server.util.GsonFactory;
 
 /**
  * This is a representational object for the {@link Item} entity.
@@ -32,9 +33,7 @@ public class ItemRO {
 
     @Override
     public String toString() {
-        return "ItemRO{" +
-                "title='" + title + '\'' +
-                ", isBringing=" + isBringing +
-                '}';
+        return GsonFactory.getGson()
+                .toJson(this);
     }
 }
