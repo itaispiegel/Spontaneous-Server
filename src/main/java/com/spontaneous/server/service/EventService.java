@@ -290,4 +290,15 @@ public class EventService {
         mGuestsRepository.delete(id);
         return guest;
     }
+
+    public Item updateItem(long id, boolean isBringing) throws ServiceException {
+        Item item = mItemsRepository.findOne(id);
+
+        if (item == null) {
+            throw new ServiceException(String.format("No such item with id #%d", id));
+        }
+
+        item.setBringing(isBringing);
+        return mItemsRepository.save(item);
+    }
 }

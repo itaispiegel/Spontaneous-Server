@@ -208,6 +208,27 @@ public class EventController {
     }
 
     /**
+     * A controller method for assigning an item to a guest.
+     *
+     * @param id Id of the item to delete.
+     * @return {@code BaseResponse} Stating the result of the process.
+     */
+    @RequestMapping(value = "/item", method = RequestMethod.PUT)
+    public BaseResponse updateItem(@RequestParam("id") long id, @RequestParam("bringing") boolean isBringing) {
+        mLogger.info("Updating item with id #{}", id);
+
+        try {
+
+            Item item = mEventService.updateItem(id, isBringing);
+            return new BaseResponse<>(item.createRepresentationalObject());
+
+        } catch (ServiceException e) {
+            mLogger.error(e.getMessage());
+            return new BaseResponse<>(e.getMessage(), BaseResponse.INTERNAL_ERROR);
+        }
+    }
+
+    /**
      * A controller method for deleting a guest.
      *
      * @param id Id of the guest to delete.

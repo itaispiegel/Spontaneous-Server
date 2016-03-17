@@ -79,4 +79,8 @@ public class Item extends BaseEntity {
                 ", isBringing=" + isBringing +
                 '}';
     }
+
+    public void setBringing(boolean bringing) {
+        this.isBringing = bringing;
+    }
 }
