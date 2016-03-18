@@ -250,9 +250,12 @@ public class EventService {
         Item newItem = new Item(guest, guest.getEvent(), title, false);
         guest.addItem(newItem);
 
+        //Save the new item and notify the guest.
+        newItem = mItemsRepository.save(newItem);
         mGcmService.assignItem(newItem);
 
-        return mGuestsRepository.save(guest);
+        //Return the guest entity.
+        return mGuestsRepository.findOne(guest.getId());
     }
 
     /**

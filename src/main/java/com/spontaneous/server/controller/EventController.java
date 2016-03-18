@@ -208,9 +208,10 @@ public class EventController {
     }
 
     /**
-     * A controller method for assigning an item to a guest.
+     * A controller method for updating an item with the given id.
      *
-     * @param id Id of the item to delete.
+     * @param id         Id of the item to delete.
+     * @param isBringing Whether the guest is bringing the item.
      * @return {@code BaseResponse} Stating the result of the process.
      */
     @RequestMapping(value = "/item", method = RequestMethod.PUT)
