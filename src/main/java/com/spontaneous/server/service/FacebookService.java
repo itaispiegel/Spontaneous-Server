@@ -60,7 +60,8 @@ public class FacebookService {
      */
     public PagedList<Reference> getUserFriends(String accessToken) throws ApiException {
         return getFacebookTemplate(accessToken)
-                .friendOperations().getFriends();
+                .friendOperations()
+                .getFriends();
     }
 
     /**
@@ -98,6 +99,9 @@ public class FacebookService {
 
         //Get the user details from Facebook.
         User facebookUser = getUserProfile(accessToken);
+
+        user.setFacebookToken(accessToken);
+        user.setFacebookUserId(facebookUserId);
 
         user.setProfilePicture(fetchProfilePictureUrl(accessToken, facebookUserId));
 

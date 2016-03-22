@@ -1,7 +1,6 @@
 package com.spontaneous.server.service;
 
 import com.spontaneous.server.model.entity.User;
-import com.spontaneous.server.model.entity.representational.UserProfileRO;
 import com.spontaneous.server.model.request.FacebookLoginRequest;
 import com.spontaneous.server.repository.UserRepository;
 import org.hibernate.service.spi.ServiceException;
@@ -121,6 +120,7 @@ public class UserService {
 
             //Set the user details from Facebook
             user = mFacebookService.setUserDetails(user, facebookToken, facebookUserId);
+
             return mUserRepository.save(user);
         } catch (ApiException e) {
             mLogger.trace(e.getMessage());
@@ -172,15 +172,5 @@ public class UserService {
         }
 
         return friendsProfiles;
-    }
-
-    /**
-     * Gets the user profile of a user by his id.
-     *
-     * @param id Id of the given user.
-     * @return Return {@link UserProfileRO} of the user.
-     */
-    public UserProfileRO getUserProfile(long id) throws ServiceException {
-        return getUserById(id).createUserProfile();
     }
 }
