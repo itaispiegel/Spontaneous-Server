@@ -6,8 +6,8 @@ import com.spontaneous.server.model.entity.Item;
 import com.spontaneous.server.model.request.SaveEventRequest;
 import com.spontaneous.server.model.request.UpdateGuestRequest;
 import com.spontaneous.server.repository.EventRepository;
-import com.spontaneous.server.repository.GuestsRepository;
-import com.spontaneous.server.repository.ItemsRepository;
+import com.spontaneous.server.repository.GuestRepository;
+import com.spontaneous.server.repository.ItemRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +28,21 @@ public class EventService {
 
     private final EventRepository mEventRepository;
     private final UserService mUserService;
-    private final GuestsRepository mGuestsRepository;
-    private final ItemsRepository mItemsRepository;
+    private final GuestRepository mGuestRepository;
+    private final ItemRepository mItemRepository;
 
     private final GcmService mGcmService;
 
     @Autowired
-    public EventService(EventRepository eventRepository, UserService userService, GuestsRepository guestsRepository,
-                        ItemsRepository itemsRepository, GcmService gcmService) {
+    public EventService(EventRepository eventRepository, UserService userService, GuestRepository guestRepository,
+                        ItemRepository itemRepository, GcmService gcmService) {
 
         mLogger = LoggerFactory.getLogger(this.getClass());
 
         mEventRepository = eventRepository;
         mUserService = userService;
-        mGuestsRepository = guestsRepository;
-        mItemsRepository = itemsRepository;
+        mGuestRepository = guestRepository;
+        mItemRepository = itemRepository;
 
         mGcmService = gcmService;
     }
@@ -183,7 +183,7 @@ public class EventService {
     public Guest updateGuest(long id, UpdateGuestRequest updateRequest) throws ServiceException {
 
         //Throw an exception if there is no user with the given id.
-        Guest guest = mGuestsRepository.findOne(id);
+        Guest guest = mGuestRepository.findOne(id);
 
         if (guest == null) {
             throw new ServiceException(String.format("There is no Guest with the id #%s.", id));
@@ -192,7 +192,7 @@ public class EventService {
         //Update the Guest fields.
         guest.update(updateRequest);
 
-        return mGuestsRepository.save(guest);
+        return mGuestRepository.save(guest);
     }
 
     /**
@@ -241,7 +241,7 @@ public class EventService {
      * @param title Title of the item.
      */
     public Guest assignItem(long id, String title) throws ServiceException {
-        Guest guest = mGuestsRepository.getOne(id);
+        Guest guest = mGuestRepository.getOne(id);
 
         if (guest == null) {
             throw new ServiceException(String.format("No such guest with id #%d", id));
@@ -251,11 +251,11 @@ public class EventService {
         guest.addItem(newItem);
 
         //Save the new item and notify the guest.
-        newItem = mItemsRepository.save(newItem);
+        newItem = mItemRepository.save(newItem);
         mGcmService.assignItem(newItem);
 
         //Return the guest entity.
-        return mGuestsRepository.findOne(guest.getId());
+        return mGuestRepository.findOne(guest.getId());
     }
 
     /**
@@ -266,13 +266,13 @@ public class EventService {
      * @throws ServiceException In case that there is no such item.
      */
     public Item deleteItem(long id) throws ServiceException {
-        Item item = mItemsRepository.findOne(id);
+        Item item = mItemRepository.findOne(id);
 
         if (item == null) {
             throw new ServiceException(String.format("No such item with id #%d", id));
         }
 
-        mItemsRepository.delete(id);
+        mItemRepository.delete(id);
         return item;
     }
 
@@ -284,24 +284,24 @@ public class EventService {
      * @throws ServiceException In case that there is no such guest.
      */
     public Guest deleteGuest(long id) throws ServiceException {
-        Guest guest = mGuestsRepository.findOne(id);
+        Guest guest = mGuestRepository.findOne(id);
 
         if (guest == null) {
             throw new ServiceException(String.format("No such guest with id #%d", id));
         }
 
-        mGuestsRepository.delete(id);
+        mGuestRepository.delete(id);
         return guest;
     }
 
     public Item updateItem(long id, boolean isBringing) throws ServiceException {
-        Item item = mItemsRepository.findOne(id);
+        Item item = mItemRepository.findOne(id);
 
         if (item == null) {
             throw new ServiceException(String.format("No such item with id #%d", id));
         }
 
         item.setBringing(isBringing);
-        return mItemsRepository.save(item);
+        return mItemRepository.save(item);
     }
 }
